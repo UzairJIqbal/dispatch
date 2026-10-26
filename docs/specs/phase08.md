@@ -19,7 +19,7 @@ Deploys work from main. Nothing checks a pull request, so a worse prompt would g
   - schema-valid rate dropped by more than 2 points
   - p95 latency rose by more than 15%
   - cost per request rose by more than 15%
-- **The table**: baseline, candidate, change and pass/fail for each rule, with n. Posted as one PR comment that is updated on each push (not a new comment each time), and in the job summary.
+- **The table**: baseline, candidate, change and pass/fail for each rule, with n. Below it, both-correct per slice (baseline vs candidate, with n) for information only; slices are too small to gate on. Posted as one PR comment that is updated on each push (not a new comment each time), and in the job summary.
 - **Branch protection** on main: both workflows must pass to merge.
 - **Without the provider secret** (a PR from a fork), the gate says "skipped: no key" and fails, never passes silently.
 - **Promote the baseline**: after a PR that changed the prompt merges, the main run's result becomes the new baseline; `results/baseline.json` in the repo is updated by you for each release, for the README.

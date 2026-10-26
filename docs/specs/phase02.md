@@ -11,13 +11,14 @@ The golden set from Phase 1, versioned and split. No model call exists. Add a Ce
 ## Build
 
 - **The output schema** in Zod: category (from the one list), priority (`low | medium | high`), summary (1 to 120 characters).
-- **The first prompt file**, `prompts/triage/v1.yaml`: system prompt, model alias, temperature 0, `max_tokens`, and the instruction to answer only with the JSON. A loader validates it.
+- **The first prompt file**, `prompts/triage/v1.yaml`: system prompt, model alias, temperature 0, `max_tokens`, and the instruction to answer only with the JSON. The ticket goes in a clearly fenced block that the prompt calls data, not instructions. A loader validates it.
 - **The model config**: aliases `fast` → Cerebras and a model name, `fallback` → Mistral and a model name, each with its base URL and key variable. Check both providers' current docs for model names that support JSON output.
 - **A provider interface** with three implementations: Cerebras and Mistral through the `openai` package with their base URLs, and the **mock**, which answers deterministically from the ticket text and can be told to be slow. No retries, no fallback yet: one plain call.
 - **`triage(text, version)`**: loads the prompt file, makes the call, parses and validates the JSON. Returns the answer plus tokens in/out, latency, provider, model and prompt version. A broken answer is returned as a `schema_fail` result, not thrown.
 - **The response cache** in SQLite, keyed by provider, model, prompt version, parameters and ticket text. `--no-cache` skips it.
 - **The graders**, as pure functions: category, priority, both correct, dangerous miss, the summary checks from the project specs.
 - **A dated price table** in the config: list price per million input and output tokens for each model, with the date you copied it.
+- **The report card breaks both-correct down by slice** (`bitext`, `messy`), each with its n, under the total. Shown, never gated.
 - **`pnpm eval --split dev|test [--version] [--provider] [--no-cache]`**: runs the tickets a few at a time, prints the report card and writes `results/<timestamp>-<version>-<split>.json` with every ticket's answer and grade. `--write-baseline` writes `results/baseline.json`.
 - **`pnpm eval:noise`**: runs the test split twice uncached at temperature 0 and prints how many tickets flipped between the two runs. Written into the baseline as the noise floor.
 
@@ -38,8 +39,9 @@ The golden set from Phase 1, versioned and split. No model call exists. Add a Ce
 2. `pnpm eval --split dev` runs on Cerebras. The report card has every number from the project specs, with n.
 3. Run it again. It finishes in a few seconds, every call cached, and latency says "no uncached calls".
 4. `pnpm eval --split dev --provider mistral` runs on the fallback model, so you know how good the fallback is.
-5. Look at five dev mistakes, make `v2` of the prompt, and rerun dev. The report shows `v2` and the cache missed for every ticket.
+5. Look at five dev mistakes, make `v2` of the prompt, and rerun dev. The report shows `v2` and the cache missed for every ticket. The five mistakes and what `v2` changed because of them are written down in a short error-analysis note in the repo (dev only, never test). It's an interview story later.
 6. `pnpm eval:noise` prints the flip count. Then `pnpm eval --split test --no-cache --write-baseline` saves `results/baseline.json` with the version, dataset version, noise floor and every number.
+7. The report card shows the `messy` slice separately from `bitext`, each with n.
 
 ## Not in this phase
 

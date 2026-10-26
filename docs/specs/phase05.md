@@ -12,16 +12,17 @@ The service with the full gateway. What happened to a request is only in the log
 
 - **OpenTelemetry's Node SDK** set up once at startup, exporting over OTLP/HTTP to Langfuse's OpenTelemetry endpoint. Follow Langfuse's current docs for the endpoint and auth header.
 - **A root span per request**, `triage.request`, with the route, status, client name, prompt version, release (`stable` for now), error class and `fallback`.
-- **A child span per model attempt**, `gen_ai.chat`, with the GenAI attributes (`gen_ai.system`, `gen_ai.request.model`, `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens`, `gen_ai.response.finish_reasons`) and ours (`app.provider`, `app.attempt`, `app.error_class`).
+- **A child span per model attempt**, `gen_ai.chat`, with the GenAI attributes (`gen_ai.provider.name`, `gen_ai.request.model`, `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens`, `gen_ai.response.finish_reasons`) and ours (`app.provider`, `app.attempt`, `app.error_class`).
 - **Span events** for decisions: a retry wait (with its length), a circuit opening, a fallback, a repair retry.
 - **The trace id on every log line** and in the response's `meta.trace_id`, so a log line or a client's complaint leads straight to its trace.
 - **Sampling** set in the config: 100% normally, lowered to 10% for load tests by one setting.
 - **The eval is traced too**, each eval run under one session name in Langfuse, so you can open the trace for a dev mistake.
-- **Write down which version of the GenAI semantic conventions you followed** in the README draft.
+- **Write down which version of the GenAI semantic conventions you followed** in the README draft, and that they're still marked Development. Check the current names before writing the attributes: they were renamed in 2025–2026 and moved to their own repo.
+- **A short "Data handling" note** in the README draft: what leaves the process (labels, tokens, timings) and what never does (ticket text, keys).
 
 ## Constraints
 
-- **No ticket text or summary in spans by default.** A config switch turns on input/output capture for local debugging only, and it's off in Docker.
+- **No ticket text or summary in spans by default.** A config switch turns on input/output capture for local debugging only, and it's off in Docker. When it's on, emails and phone numbers are redacted before export, and a test proves it.
 - **No key in any span attribute.**
 - **Tracing never breaks a request.** If Langfuse is down or the keys are wrong, requests still work and one warning line is logged.
 - Shutdown flushes pending spans.
@@ -35,6 +36,7 @@ The service with the full gateway. What happened to a request is only in the log
 4. Copy a trace id from a log line and find the same trace in Langfuse.
 5. Break the Langfuse key. Requests still succeed and a single warning is logged.
 6. Run `pnpm eval --split dev --provider mock`. The run appears in Langfuse as one session.
+7. Turn debug capture on locally and send a ticket with an email and a phone number in it. The trace shows the text with both redacted.
 
 ## Not in this phase
 

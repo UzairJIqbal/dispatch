@@ -1,0 +1,272 @@
+{"id":"bitext-02a829aa8c","source":"bitext","category":"order","text":"what do i need to do to do a purchase"}
+{"id":"bitext-0335d3c2b6","source":"bitext","category":"subscription","text":"help me sign up to the corporate newsletter"}
+{"id":"bitext-03c6a229ce","source":"bitext","category":"payment","text":"I am trying to report errors with payments"}
+{"id":"bitext-05ba49fb53","source":"bitext","category":"invoice","text":"canuhelp me to get the bills from {{Person Name}}"}
+{"id":"bitext-06084cb5a2","source":"bitext","category":"account","text":"i want help to open a {{Account Category}} account"}
+{"id":"bitext-061d931dcd","source":"bitext","category":"payment","text":"how can I report a trouble with online payment?"}
+{"id":"bitext-063cdd95c6","source":"bitext","category":"feedback","text":"I want help to leave feedback for your services"}
+{"id":"bitext-0674f31ff1","source":"bitext","category":"invoice","text":"how can i get my bill from {{Person Name}}"}
+{"id":"bitext-06d9cd996a","source":"bitext","category":"delivery","text":"d uship to {{Delivery City}}"}
+{"id":"bitext-07724226a6","source":"bitext","category":"delivery","text":"assistance seeing what shipping methods are there"}
+{"id":"bitext-08587fe9f2","source":"bitext","category":"invoice","text":"I do not know what I need to do to download invoice #37777"}
+{"id":"bitext-0f853fe297","source":"bitext","category":"shipping","text":"troubles entering a secondary delivery address"}
+{"id":"bitext-108e95fc19","source":"bitext","category":"account","text":"I would like to delete my premium account"}
+{"id":"bitext-10e5927f40","source":"bitext","category":"refund","text":"could I see if there is anything new on my refund?"}
+{"id":"bitext-1472128377","source":"bitext","category":"invoice","text":"i need help looking for my invoice #37777"}
+{"id":"bitext-167845ea78","source":"bitext","category":"account","text":"correcting info on freemium account"}
+{"id":"bitext-18b0f35240","source":"bitext","category":"shipping","text":"assistance to submit the secondary shipping address"}
+{"id":"bitext-1c73f5f4ce","source":"bitext","category":"order","text":"I have to edit order {{Order Number}}, how do I do it?"}
+{"id":"bitext-1cad5df969","source":"bitext","category":"delivery","text":"I am trying to find shipping periods"}
+{"id":"bitext-1de5b8d3b9","source":"bitext","category":"feedback","text":"want help making an customer claim against your business"}
+{"id":"bitext-1ebff30df7","source":"bitext","category":"account","text":"I want help informing of a problem with signup"}
+{"id":"bitext-2194a66e74","source":"bitext","category":"subscription","text":"i want help to subscribe to the goddamn corporate newsletter"}
+{"id":"bitext-21a62bf9d9","source":"bitext","category":"account","text":"i cant open a user account help me report sign-up errors"}
+{"id":"bitext-21f0319607","source":"bitext","category":"cancel","text":"I have to check the withdrawal fees, could you help me ?"}
+{"id":"bitext-238a2b7df3","source":"bitext","category":"invoice","text":"want help getting the bill #85632"}
+{"id":"bitext-23a6407f3a","source":"bitext","category":"subscription","text":"can uhelp me cancelling the subscription to the newsletter"}
+{"id":"bitext-23aee0bd4d","source":"bitext","category":"subscription","text":"i cannot subscribe to the newsltter"}
+{"id":"bitext-24383a8db2","source":"bitext","category":"cancel","text":"I cannot find the termination fees, I need assistance"}
+{"id":"bitext-2462644db4","source":"bitext","category":"subscription","text":"sign up to company newsletter"}
+{"id":"bitext-24c130dfc3","source":"bitext","category":"subscription","text":"what do I need to do to receive the corporate newsletter?"}
+{"id":"bitext-24ce4860c3","source":"bitext","category":"order","text":"I need help buying several of your article"}
+{"id":"bitext-25a0e74cf5","source":"bitext","category":"shipping","text":"I want help to set up another delivery address"}
+{"id":"bitext-27218ff1a6","source":"bitext","category":"refund","text":"how to ask for my money back"}
+{"id":"bitext-273b62a9aa","source":"bitext","category":"order","text":"where could I check purchase {{Order Number}} current status?"}
+{"id":"bitext-28da896bd5","source":"bitext","category":"payment","text":"how can i see the accepted payment modalities"}
+{"id":"bitext-298939a055","source":"bitext","category":"refund","text":"help me to see in what cases can I ask for reimbursements"}
+{"id":"bitext-2a9c6cd13a","source":"bitext","category":"refund","text":"I expect a rebate of {{Refund Amount}} dollars, was it processed already"}
+{"id":"bitext-2b9365e5c4","source":"bitext","category":"payment","text":"i have got to list ur accepted payment options can uhelp me"}
+{"id":"bitext-2c3d811446","source":"bitext","category":"subscription","text":"I have got to unsubscribe to the newsletter"}
+{"id":"bitext-2f5ee04bcd","source":"bitext","category":"contact","text":"what do I need to do to contact an operator?"}
+{"id":"bitext-318776ec09","source":"bitext","category":"cancel","text":"can uhelp me check the bloody early termination charge"}
+{"id":"bitext-319db8fa0b","source":"bitext","category":"subscription","text":"I do not know how I could unsubscribe to your newsletter"}
+{"id":"bitext-32ef9d7fef","source":"bitext","category":"order","text":"can you help me to earn some of your product?"}
+{"id":"bitext-336fa8c5da","source":"bitext","category":"account","text":"I  need to retrieve my user account PIN code"}
+{"id":"bitext-36d292f122","source":"bitext","category":"payment","text":"i have got to inform of issues with payments"}
+{"id":"bitext-3a5c049f06","source":"bitext","category":"delivery","text":"is it possible to place an order from {{Delivery Country}}"}
+{"id":"bitext-3af299829e","source":"bitext","category":"refund","text":"I want assistance to demand reimbursements of money"}
+{"id":"bitext-3cc23ba7b1","source":"bitext","category":"shipping","text":"help updating my shipping address"}
+{"id":"bitext-3dbf08fe82","source":"bitext","category":"feedback","text":"i dont know how to send some feedback for ur services"}
+{"id":"bitext-3fba0aecdb","source":"bitext","category":"order","text":"I want assistance earning several of your item"}
+{"id":"bitext-4038407068","source":"bitext","category":"cancel","text":"i try to see the withdrawal fees"}
+{"id":"bitext-403cac0ef9","source":"bitext","category":"subscription","text":"can uhelp me subscribe to ur newsletter"}
+{"id":"bitext-415fb84cca","source":"bitext","category":"cancel","text":"I want assistance seeing the bloody cancellation fee"}
+{"id":"bitext-41d574d86b","source":"bitext","category":"shipping","text":"the secondary shipping address is not valid, help me"}
+{"id":"bitext-41daf1fc64","source":"bitext","category":"delivery","text":"I have got to check how long the shipping takes, I need help"}
+{"id":"bitext-42bfd6e300","source":"bitext","category":"account","text":"I want help resetting the pwd of my account"}
+{"id":"bitext-444895f4b0","source":"bitext","category":"delivery","text":"where can I check how soon can I expect the item?"}
+{"id":"bitext-45fb6693fd","source":"bitext","category":"feedback","text":"I need to lodge a claim against your organization"}
+{"id":"bitext-470f4df16f","source":"bitext","category":"feedback","text":"I want to file a damn reclamation, how can I do it?"}
+{"id":"bitext-4715229046","source":"bitext","category":"payment","text":"report payment problems"}
+{"id":"bitext-4770b8127e","source":"bitext","category":"feedback","text":"I call to make a customer complaint"}
+{"id":"bitext-47aeef5f25","source":"bitext","category":"order","text":"wanna see hte eta of order {{Order Number}} help me"}
+{"id":"bitext-47b71d3343","source":"bitext","category":"delivery","text":"I don't know how I can check what shipping options you offer"}
+{"id":"bitext-4819f58099","source":"bitext","category":"contact","text":"help to chat with a damn operator"}
+{"id":"bitext-4871bee3d2","source":"bitext","category":"order","text":"how to check the status of purchase {{Order Number}}?"}
+{"id":"bitext-4b445c485d","source":"bitext","category":"subscription","text":"where can I receive your company newsletter?"}
+{"id":"bitext-4b65d1c8f7","source":"bitext","category":"contact","text":"need assistance talking to customer service"}
+{"id":"bitext-4b8bc9efc8","source":"bitext","category":"invoice","text":"I don't know how to download my bill #00108"}
+{"id":"bitext-4d0bceb0fe","source":"bitext","category":"cancel","text":"can you help me to see the early exit fees?"}
+{"id":"bitext-4e7fc51734","source":"bitext","category":"contact","text":"I need to check at what time I can reach customer assistance"}
+{"id":"bitext-4e86c12c57","source":"bitext","category":"shipping","text":"I need help to set a secondary shipping address up"}
+{"id":"bitext-50c9d70f9a","source":"bitext","category":"payment","text":"need to report an issue with paymentr"}
+{"id":"bitext-51897a848d","source":"bitext","category":"invoice","text":"I would like to download my invoices from {{Person Name}}, help me"}
+{"id":"bitext-52d1683037","source":"bitext","category":"cancel","text":"wanna see the withdrawal charges how can i do it"}
+{"id":"bitext-539e21e56b","source":"bitext","category":"order","text":"I'm trying to modify purchase {{Order Number}}"}
+{"id":"bitext-55d9480827","source":"bitext","category":"contact","text":"I cannot understand anything you say, contact an agent"}
+{"id":"bitext-56212531ec","source":"bitext","category":"payment","text":"want help notifying of a trouble with paymenst"}
+{"id":"bitext-57658989ac","source":"bitext","category":"feedback","text":"I am trying to leave my feedback for a service"}
+{"id":"bitext-57a6b63362","source":"bitext","category":"cancel","text":"I want assistance seeing the withdrawal penalty"}
+{"id":"bitext-58405215b8","source":"bitext","category":"feedback","text":"assistance to send some feedback about ur company"}
+{"id":"bitext-5845e5493c","source":"bitext","category":"order","text":"i need assistance editing purchase {{Order Number}}"}
+{"id":"bitext-58e09b39e1","source":"bitext","category":"delivery","text":"I need to see how soon can I expect my product"}
+{"id":"bitext-591c5d6e73","source":"bitext","category":"delivery","text":"I call to see when my goddamn package is going to arrive"}
+{"id":"bitext-5948d95bb5","source":"bitext","category":"feedback","text":"I would like to file a consumer reclamation"}
+{"id":"bitext-596f9aaf90","source":"bitext","category":"shipping","text":"ido not know how i can submit the new shipping address"}
+{"id":"bitext-5a51d90565","source":"bitext","category":"invoice","text":"I lost my invoice from {{Person Name}}, find it for me"}
+{"id":"bitext-5b07dbb7de","source":"bitext","category":"cancel","text":"I have got to see the cancellation charge, how to do it?"}
+{"id":"bitext-5dcd6a741a","source":"bitext","category":"feedback","text":"how to send some feedback about your company?"}
+{"id":"bitext-5e1a02d119","source":"bitext","category":"subscription","text":"I want information about cancel my newsletter subscription"}
+{"id":"bitext-5e6371caef","source":"bitext","category":"cancel","text":"can ushow me the early exit charge"}
+{"id":"bitext-5eae44f303","source":"bitext","category":"account","text":"i have got to change my user info"}
+{"id":"bitext-5f6a04ce40","source":"bitext","category":"refund","text":"I need to receive a refund of my money"}
+{"id":"bitext-60622eb8cd","source":"bitext","category":"account","text":"I want to report a signup error"}
+{"id":"bitext-6153de2bf4","source":"bitext","category":"cancel","text":"i dont know what i need to do to see the withdrawal fee"}
+{"id":"bitext-632f3c96a9","source":"bitext","category":"account","text":"I have got to use the damn pro profile, could you help me?"}
+{"id":"bitext-6337822dce","source":"bitext","category":"invoice","text":"I don't know how to download the invoice from {{Person Name}}"}
+{"id":"bitext-640e6f2d55","source":"bitext","category":"shipping","text":"problem changing address"}
+{"id":"bitext-644143113c","source":"bitext","category":"subscription","text":"I have to cancel my newsletter subscription, how do I do it?"}
+{"id":"bitext-6675cc12d1","source":"bitext","category":"invoice","text":"I do not know what I have to do to download the bill #37777"}
+{"id":"bitext-66c9327beb","source":"bitext","category":"contact","text":"I have got to call customer service, how to do it?"}
+{"id":"bitext-69761de0be","source":"bitext","category":"account","text":"I don't know what to do to remove a {{Account Category}} aaccount"}
+{"id":"bitext-6a10ad7848","source":"bitext","category":"delivery","text":"how to check how soon can I expect the order?"}
+{"id":"bitext-6a3e416dec","source":"bitext","category":"cancel","text":"need assistance seeing the withdrawal penalty"}
+{"id":"bitext-6b13149ee1","source":"bitext","category":"account","text":"I want assistance to switch to the standard account"}
+{"id":"bitext-6b824dc7df","source":"bitext","category":"shipping","text":"I want to update my delivery address, help me"}
+{"id":"bitext-6bc1ba4ba7","source":"bitext","category":"contact","text":"how can I check what hours I can call customer support?"}
+{"id":"bitext-6e8142a12b","source":"bitext","category":"shipping","text":"I want to correct the shipping address, can you help me?"}
+{"id":"bitext-6fd5993e5d","source":"bitext","category":"feedback","text":"how can I make a consumer reclamation against your business?"}
+{"id":"bitext-70da4c5967","source":"bitext","category":"subscription","text":"can utell me about cancel the subscrption to ur newsletter"}
+{"id":"bitext-7146cd43a9","source":"bitext","category":"shipping","text":"I cannot change the addreas"}
+{"id":"bitext-7327865ec6","source":"bitext","category":"delivery","text":"is it possible to check when my purchase is going to arrive?"}
+{"id":"bitext-73e0812369","source":"bitext","category":"subscription","text":"need help to subscribe to your corporate newsletter"}
+{"id":"bitext-744e36f5af","source":"bitext","category":"shipping","text":"help me to set up my secondary shipping address"}
+{"id":"bitext-749b7487ff","source":"bitext","category":"refund","text":"where to see if there are any updates on my restitution"}
+{"id":"bitext-7a39876530","source":"bitext","category":"order","text":"i dont know how to cancel purchase {{Order Number}}"}
+{"id":"bitext-7b616e1f40","source":"bitext","category":"contact","text":"can you help me get in touch with customer service?"}
+{"id":"bitext-7c61444f5e","source":"bitext","category":"feedback","text":"help me lodge a consumer complaint against ur business"}
+{"id":"bitext-7c7ecb2dd5","source":"bitext","category":"shipping","text":"information about a delivery address correction"}
+{"id":"bitext-7ec79ef081","source":"bitext","category":"payment","text":"i have got to report issues with online payment"}
+{"id":"bitext-7f02cf3b56","source":"bitext","category":"shipping","text":"i have issues editing the address"}
+{"id":"bitext-81735ee0d2","source":"bitext","category":"contact","text":"uarent helpful can i chat with somebody"}
+{"id":"bitext-83d1661d94","source":"bitext","category":"invoice","text":"I want assistance to locate my bill #00108"}
+{"id":"bitext-841524fb51","source":"bitext","category":"invoice","text":"I  need assistance to download invoice #85632"}
+{"id":"bitext-8415f16253","source":"bitext","category":"payment","text":"I want assistance to check the goddamn payment methods"}
+{"id":"bitext-85c54c41ff","source":"bitext","category":"cancel","text":"I don't know what I have to do to see the cancellation fees"}
+{"id":"bitext-8618996355","source":"bitext","category":"account","text":"correcting details on pro account"}
+{"id":"bitext-86965c5826","source":"bitext","category":"shipping","text":"errors entering my new shipping address"}
+{"id":"bitext-8696b1f757","source":"bitext","category":"refund","text":"i need help seeing ur monbey back policy"}
+{"id":"bitext-86c349fe1d","source":"bitext","category":"account","text":"what do i need to do to change to the {{Account Type}} account"}
+{"id":"bitext-86ff36d3a1","source":"bitext","category":"cancel","text":"i cant find anything about the cancellation fees"}
+{"id":"bitext-8711f923f3","source":"bitext","category":"invoice","text":"i have toget invoice #00108 can ya help me"}
+{"id":"bitext-893a609e40","source":"bitext","category":"cancel","text":"how can I check the withdrawal charges?"}
+{"id":"bitext-8a967335b0","source":"bitext","category":"shipping","text":"where could i update the adress"}
+{"id":"bitext-8b1762558c","source":"bitext","category":"payment","text":"I do not know how I can notify of an error with payments"}
+{"id":"bitext-8b3d802a5c","source":"bitext","category":"account","text":"could you help me to change to the goddamn platinum account?"}
+{"id":"bitext-8b99e0cd25","source":"bitext","category":"payment","text":"I need assistance checking your available payment modalities"}
+{"id":"bitext-8be54ff56c","source":"bitext","category":"order","text":"need assistance witgh cancelling order {{Order Number}}"}
+{"id":"bitext-8c3d09a59d","source":"bitext","category":"feedback","text":"i dont know how i can leave feedback"}
+{"id":"bitext-8c6efac599","source":"bitext","category":"feedback","text":"help writing a review for your company"}
+{"id":"bitext-8d18e6cd33","source":"bitext","category":"invoice","text":"i want help seeing the bill from {{Person Name}}"}
+{"id":"bitext-8d4cdeba2a","source":"bitext","category":"payment","text":"i dont know how to inform of a payment problem"}
+{"id":"bitext-8e38afc312","source":"bitext","category":"cancel","text":"where do I see the termination penalties?"}
+{"id":"bitext-8ef75837c0","source":"bitext","category":"payment","text":"i have to se ur available payment methods could ya help me"}
+{"id":"bitext-8fd20278a9","source":"bitext","category":"contact","text":"I don't know what I need to do to speak to customer service"}
+{"id":"bitext-8ffa82b9ae","source":"bitext","category":"feedback","text":"is there an e-mail to submit a comment for your services?"}
+{"id":"bitext-90218bd716","source":"bitext","category":"refund","text":"I am trying to receive a restitution of money"}
+{"id":"bitext-9121a07a08","source":"bitext","category":"cancel","text":"I have to see the termination fee"}
+{"id":"bitext-917814e017","source":"bitext","category":"delivery","text":"I have to see when will my product arrive, how to do it?"}
+{"id":"bitext-935d875e41","source":"bitext","category":"invoice","text":"can I get the bill from {{Person Name}}?"}
+{"id":"bitext-9591b8a39f","source":"bitext","category":"contact","text":"need help to check whathours i can call customer assistance"}
+{"id":"bitext-95c2e5c358","source":"bitext","category":"refund","text":"i cannot see if there is anything new on my refund"}
+{"id":"bitext-95dfba8a33","source":"bitext","category":"payment","text":"check what payment  methods ya accept"}
+{"id":"bitext-96ede1b14d","source":"bitext","category":"delivery","text":"hrlp me check when will my product arrive"}
+{"id":"bitext-9af6567923","source":"bitext","category":"feedback","text":"I want to lodge a consumer complaint against your company"}
+{"id":"bitext-9c66e15e70","source":"bitext","category":"shipping","text":"problems submitting the shipping address"}
+{"id":"bitext-9d4559d998","source":"bitext","category":"feedback","text":"i want assistance submitting feedback about an service"}
+{"id":"bitext-9e5096fa33","source":"bitext","category":"order","text":"what do I ned to do to cancel order {{Order Number}}?"}
+{"id":"bitext-9e90dc4611","source":"bitext","category":"account","text":"correct information on Goldaccount"}
+{"id":"bitext-9f2bc37c57","source":"bitext","category":"account","text":"need help to open a freemium account for my daughter"}
+{"id":"bitext-a08edfa586","source":"bitext","category":"subscription","text":"help me unsubscribing from the corporate newsletter"}
+{"id":"bitext-a3a70a621e","source":"bitext","category":"feedback","text":"I do not kow how to lodge a consumer claim"}
+{"id":"bitext-a4367f267e","source":"bitext","category":"delivery","text":"were can I see how long it takes for my package to arrive?"}
+{"id":"bitext-a60c04dae9","source":"bitext","category":"feedback","text":"I want assistance to leave feedback about a product"}
+{"id":"bitext-a8b87ca6c4","source":"bitext","category":"invoice","text":"how do I get invoice #37777?"}
+{"id":"bitext-a900294e45","source":"bitext","category":"refund","text":"I need to see in what cases can I request reimbursements"}
+{"id":"bitext-a9464bd84c","source":"bitext","category":"order","text":"could you help me shop a few of your article?"}
+{"id":"bitext-a9adf6d70a","source":"bitext","category":"payment","text":"how can I list your available payment methods?"}
+{"id":"bitext-a9fad2cb80","source":"bitext","category":"cancel","text":"I have to check the early exit charge, help me"}
+{"id":"bitext-ad71a3cc0d","source":"bitext","category":"contact","text":"want assistance to talk with a live agent"}
+{"id":"bitext-ae9c0f3abe","source":"bitext","category":"order","text":"help to see order {{Order Number}} status"}
+{"id":"bitext-b0022d3a4d","source":"bitext","category":"contact","text":"want help to speak to someone"}
+{"id":"bitext-b0419480c7","source":"bitext","category":"refund","text":"I have to see in which cases can I request a refund"}
+{"id":"bitext-b0a79d1ee2","source":"bitext","category":"cancel","text":"want assistance seeing the cancellation penalty"}
+{"id":"bitext-b1f2c66109","source":"bitext","category":"refund","text":"can you help me see the current status of my reimbursement?"}
+{"id":"bitext-b2e479b417","source":"bitext","category":"refund","text":"where to ask for reimbursements of money ?"}
+{"id":"bitext-b5880e5146","source":"bitext","category":"feedback","text":"I need to make a complaint against your business"}
+{"id":"bitext-b71979c7d8","source":"bitext","category":"feedback","text":"assistance to leave some feedback about a product"}
+{"id":"bitext-b7d430cce5","source":"bitext","category":"refund","text":"I need help to know if there is anything new on my rebate"}
+{"id":"bitext-b7e7283e05","source":"bitext","category":"refund","text":"how can I ask for a restitution of my money?"}
+{"id":"bitext-b81e2d46e1","source":"bitext","category":"subscription","text":"help to receive your newslettyer"}
+{"id":"bitext-b8fd253d2a","source":"bitext","category":"shipping","text":"where can I get information about updating my address?"}
+{"id":"bitext-b93debb5f6","source":"bitext","category":"account","text":"I need assistance canceling a fucking premium account"}
+{"id":"bitext-bccdf5acdd","source":"bitext","category":"order","text":"i want help to cancel order {{Order Number}}"}
+{"id":"bitext-bcd45ee9ca","source":"bitext","category":"delivery","text":"wanna see how soon can i expect the shipment help me"}
+{"id":"bitext-bcff59ba1b","source":"bitext","category":"delivery","text":"need help checking how soon can I expect my item"}
+{"id":"bitext-bd1ca13013","source":"bitext","category":"delivery","text":"I need help checking what fucking shipping options I have"}
+{"id":"bitext-c26942b1a5","source":"bitext","category":"feedback","text":"i want help sending some feedback about a product"}
+{"id":"bitext-c3cd1fe5ed","source":"bitext","category":"invoice","text":"I have to see my bill, help me"}
+{"id":"bitext-c7d6650cae","source":"bitext","category":"contact","text":"you are not helpful, help talking to an operator"}
+{"id":"bitext-c81efc19d9","source":"bitext","category":"cancel","text":"need assistance checking the termiation fee"}
+{"id":"bitext-c88fa6cf43","source":"bitext","category":"shipping","text":"I have to enter a shipping address"}
+{"id":"bitext-c96d51b9f2","source":"bitext","category":"order","text":"I forgot to include some products in purchase {{Order Number}}"}
+{"id":"bitext-ca5f39891c","source":"bitext","category":"delivery","text":"help me check how soon can I expect my order"}
+{"id":"bitext-cb51d51d69","source":"bitext","category":"order","text":"help to see thje ETA of purchase {{Order Number}}"}
+{"id":"bitext-cbbf455ae0","source":"bitext","category":"refund","text":"i want help demanding rebates of my money"}
+{"id":"bitext-ccbc758e94","source":"bitext","category":"shipping","text":"I do not know how to set a secondary shippung address up"}
+{"id":"bitext-cced7fd709","source":"bitext","category":"shipping","text":"there are errors trying to edit my delivery address"}
+{"id":"bitext-cd5e004fb1","source":"bitext","category":"refund","text":"I need hepp requesting compensations"}
+{"id":"bitext-d0acee6e3d","source":"bitext","category":"payment","text":"I don't know what to do to notify of a payment error"}
+{"id":"bitext-d1020392d2","source":"bitext","category":"delivery","text":"show me how long it normally takes for my item to arrive"}
+{"id":"bitext-d1b3a07201","source":"bitext","category":"invoice","text":"getting invoices from last purchase"}
+{"id":"bitext-d1e3b4a0ac","source":"bitext","category":"invoice","text":"getting bill #37777"}
+{"id":"bitext-d220847351","source":"bitext","category":"subscription","text":"assistance signing up to your company newxletter"}
+{"id":"bitext-d2dc255aa2","source":"bitext","category":"account","text":"could I edit the goddamn information on my user?"}
+{"id":"bitext-d5a14331de","source":"bitext","category":"cancel","text":"I want assistance checking the early termination fees"}
+{"id":"bitext-d775095183","source":"bitext","category":"payment","text":"help me to see what payment payment modalities you accept"}
+{"id":"bitext-d89a12d3ec","source":"bitext","category":"contact","text":"want help to talk to customer service"}
+{"id":"bitext-d8bcb7a9a0","source":"bitext","category":"payment","text":"I have to inform of a bloody payment issue"}
+{"id":"bitext-da022b2203","source":"bitext","category":"contact","text":"what do I need to do to talk to customer support?"}
+{"id":"bitext-da8c66bb08","source":"bitext","category":"refund","text":"i have to check ur money back guarantee help me"}
+{"id":"bitext-db340e77d4","source":"bitext","category":"delivery","text":"where could i see when my order is gonna arrive"}
+{"id":"bitext-dc1bfbf7b3","source":"bitext","category":"order","text":"i need assistance to check the eta of the order {{Order Number}}"}
+{"id":"bitext-dc26c2f2b2","source":"bitext","category":"subscription","text":"can you help me to cancel my newsletter subscription?"}
+{"id":"bitext-dd7e6a537d","source":"bitext","category":"subscription","text":"can you help me unsubscribing to your corporate newsletter?"}
+{"id":"bitext-df7e4db1cf","source":"bitext","category":"order","text":"i dont want purchase {{Order Number}}"}
+{"id":"bitext-dfca4e0062","source":"bitext","category":"subscription","text":"can ya tell me about signing up to ur newsletter"}
+{"id":"bitext-e45d3a4a8f","source":"bitext","category":"delivery","text":"I have got to see the delivery methods, how to do it?"}
+{"id":"bitext-e5590f7b4d","source":"bitext","category":"account","text":"I want information about opening {{Account Category}} accounts"}
+{"id":"bitext-e55c71d720","source":"bitext","category":"contact","text":"I do not know how I can contact an operator"}
+{"id":"bitext-e6cdcd8cbf","source":"bitext","category":"order","text":"I want help to purchase some items"}
+{"id":"bitext-ea62aff5e1","source":"bitext","category":"delivery","text":"assistance checking how soon can I  expect the delivery"}
+{"id":"bitext-ebaeac11a2","source":"bitext","category":"cancel","text":"i need assistance to check the cancellation fee"}
+{"id":"bitext-ec995abc80","source":"bitext","category":"contact","text":"ohw to contact a person?"}
+{"id":"bitext-ee30219043","source":"bitext","category":"payment","text":"want help informing of an issue with online payments"}
+{"id":"bitext-eeb0beafa4","source":"bitext","category":"payment","text":"i cant make payments how to inform of issues with payment"}
+{"id":"bitext-ef5c4f11a6","source":"bitext","category":"refund","text":"I can't see if there is anything wrong with the restitution"}
+{"id":"bitext-efc703c5ac","source":"bitext","category":"refund","text":"want help seeing the refund status"}
+{"id":"bitext-f047ad569e","source":"bitext","category":"contact","text":"how to check at what time I can call customer service?"}
+{"id":"bitext-f22c457e69","source":"bitext","category":"account","text":"i cant sign up want assistance to report a signup issue"}
+{"id":"bitext-f26121c2e4","source":"bitext","category":"shipping","text":"i have issues trying to edit my delivery address"}
+{"id":"bitext-f4baaf7b7e","source":"bitext","category":"account","text":"help me opening a standard account"}
+{"id":"bitext-f571b402be","source":"bitext","category":"invoice","text":"I don't know what I need to do to get the bill #85632"}
+{"id":"bitext-f6f3b3a317","source":"bitext","category":"invoice","text":"I do not know how I could download the invoice #85632"}
+{"id":"bitext-f730282c92","source":"bitext","category":"contact","text":"help checking what hours i can reach customer support"}
+{"id":"bitext-f7d8114633","source":"bitext","category":"contact","text":"I need help to speak with a live agent"}
+{"id":"bitext-fb33bef3d4","source":"bitext","category":"subscription","text":"I need to sign up to your corporate newsletter"}
+{"id":"bitext-fcfaa3fd11","source":"bitext","category":"refund","text":"can you help me ask for refunds?"}
+{"id":"bitext-fd18dd5c9d","source":"bitext","category":"payment","text":"I do not know how I can list the accepted payment modalitiws"}
+{"id":"bitext-feaa7e5279","source":"bitext","category":"contact","text":"I need to talk to customer support, how can I do it?"}
+{"id":"bitext-feb532ab36","source":"bitext","category":"invoice","text":"i do not know how to look for the invoice #85632"}
+{"id":"bitext-ff02501d84","source":"bitext","category":"subscription","text":"where can I sign up to the newsletter?"}
+{"id":"bitext-fff43b1988","source":"bitext","category":"order","text":"I want help to see the ETA of order {{Order Number}}"}
+{"id":"messy-01","source":"messy","category":"account","text":"cant log in to my acount since yestrday, it keeps saying pasword incorect but i reset it twice allready?? pls help"}
+{"id":"messy-02","source":"messy","category":"account","text":"Mera account hack ho gaya hai lagta hai. Kisi ne email change kar di hai aur ab main login nahi kar pa rahi. Mera card bhi saved hai is mein, please jaldi kuch karein! Mey phans Gya hun"}
+{"id":"messy-03","source":"messy","category":"account","text":"I want to change the email on my profile to my work one, and also how do I add a second account for my husband? Can both be under the same login?"}
+{"id":"messy-04","source":"messy","category":"cancel","text":"WHY is there a cancellation fee?! Nobody mentioned ANY fee when I signed up. This is a scam and I will be posting about it everywhere if you charge me."}
+{"id":"messy-05","source":"messy","category":"cancel","text":"Agar main abhi cancel karun to kitni fees lagegi? Pehle bataya gaya tha ke koi charge nahi hoga."}
+{"id":"messy-06","source":"messy","category":"contact","text":"Customer service ka number kya hai? Main kal se call kar raha hoon, koi uthata hi nahi."}
+{"id":"messy-07","source":"messy","category":"contact","text":"I have been trying to reach an actual human for THREE days. Chat closes, email bounces, phone line just plays music. Give me a phone number that works or I'm filing a complaint with consumer protection."}
+{"id":"messy-08","source":"messy","category":"delivery","text":"wat delivery options do u have for islamabad? is next day posible"}
+{"id":"messy-09","source":"messy","category":"delivery","text":"Order kitne din mein deliver hoga? Mujhe Friday tak chahiye shaadi ke liye."}
+{"id":"messy-10","source":"messy","category":"delivery","text":"How long does standard delivery take to Lahore, and do you deliver on Sundays? Also is there an express option and how much extra is it?"}
+{"id":"messy-11","source":"messy","category":"feedback","text":"Worst experience ever. The app crashed four times while I was checking out and support was useless. I'm done with you people."}
+{"id":"messy-12","source":"messy","category":"feedback","text":"Bohat acha experience tha, delivery boy bhi bohat polite tha. Bas packaging thori behtar ho sakti hai. Where can I leave a review?"}
+{"id":"messy-13","source":"messy","category":"feedback","text":"i want to complain about the rude agent i spoke to on teh phone today, she hung up on me twice"}
+{"id":"messy-14","source":"messy","category":"invoice","text":"need the invoce for my last purchse for my office expenses, cant find it anywhere in the app"}
+{"id":"messy-15","source":"messy","category":"invoice","text":"Mujhe pichle teen mahine ki invoices chahiye tax ke liye. Kahan se download karun?"}
+{"id":"messy-16","source":"messy","category":"invoice","text":"The invoice for order 48213 shows the wrong company name, and I was also charged 2,400 instead of 2,000 on it. Can you send a corrected invoice and fix the charge?"}
+{"id":"messy-17","source":"messy","category":"order","text":"Galti se same order do dafa place ho gaya. Ek wala cancel kar dein please, payment abhi nahi hui."}
+{"id":"messy-18","source":"messy","category":"order","text":"can i chnage the size on my order before it ships? ordered M need L"}
+{"id":"messy-19","source":"messy","category":"order","text":"My order was supposed to arrive LAST WEEK. Tracking hasn't updated in 9 days. Where is it? I want an answer today or I'm disputing the charge with my bank."}
+{"id":"messy-20","source":"messy","category":"order","text":"Hi, sorry this is going to be long but I need to explain everything because I have already explained it to three different people on chat and every time the chat closes and I have to start again. On the 2nd I ordered a set of kitchen shelves and a lamp. The website said delivery in 3 to 5 working days. On the 4th I got an SMS saying the order was dispatched with tracking number PK-77120 and that it would arrive on the 7th. On the 7th nothing came. The tracking page said 'out for delivery' the whole day and then in the evening it changed to 'delivery attempted, customer not available', which is not true because I work from home and I was here all day, my neighbour was also home and nobody rang. On the 8th I called the courier and they said they don't have the parcel at the local depot and I should contact the seller. Your chat agent told me to wait 48 hours. I waited. On the 10th the tracking still said the same thing. The second agent said she would 'escalate' it and I would get an email in 24 hours. I never got an email. The lamp was a birthday present for my mother and her birthday has now passed. I'm not asking for anything crazy, I just want to know where my parcel actually is and when it will arrive, and if you can't find it then tell me honestly so I can decide what to do. Please don't send me another copy-paste reply about waiting 48 hours."}
+{"id":"messy-21","source":"messy","category":"payment","text":"Payment fail ho gayi lekin paise account se kat gaye hain. Abhi tak order bhi confirm nahi hua. Please check karein."}
+{"id":"messy-22","source":"messy","category":"payment","text":"do u accept jazzcash or easypaisa? my card keeps geting declined"}
+{"id":"messy-23","source":"messy","category":"payment","text":"I want to remove my old card from the account and add a new one. Also do you support Apple Pay?"}
+{"id":"messy-24","source":"messy","category":"refund","text":"I returned the item 3 weeks ago and STILL no refund. You took my money fast enough. If it isn't back by Monday I'm going to a lawyer."}
+{"id":"messy-25","source":"messy","category":"refund","text":"Refund policy kya hai? Agar product kholne ke baad pasand na aaye to wapas ho sakta hai?"}
+{"id":"messy-26","source":"messy","category":"refund","text":"Hello. I'm writing about the refund for my order of a pair of headphones. Here is the whole story so you don't have to ask me again. I bought them on sale for 18,500 rupees. When they arrived the left side didn't work at all. I opened a return request in the app the same day, printed the label, and dropped the box at the courier office on the 3rd. I have the receipt with the drop-off time. The app showed 'return received at warehouse' on the 9th. Your refund policy page says refunds are processed within 5 to 7 working days after the item is received, so I expected the money by the 18th at the latest. It's now the 27th and there's nothing in my account. I checked with my bank twice and they say there is no pending credit from you. In the app the refund status just says 'processing' and has said that for over two weeks. I'm not angry with whoever reads this, I know it's probably not your fault, but this is a lot of money for me and I need to know when it will actually be returned. If something went wrong with the return, please tell me what it is. I can send photos of the receipt and the return label if that helps. Thank you."}
+{"id":"messy-27","source":"messy","category":"shipping","text":"Shipping address change karna hai, main ne ghar shift kar liya hai. New address: House 12, Street 4, G-11 Islamabad. Order abhi ship to nahi hua na?"}
+{"id":"messy-28","source":"messy","category":"shipping","text":"how do i set up a diffrent shipping adress for gifts? want to send something to my mom"}
+{"id":"messy-29","source":"messy","category":"subscription","text":"Newsletter band karna hai, roz roz emails aa rahi hain. Unsubscribe ka link kaam nahi kar raha."}
+{"id":"messy-30","source":"messy","category":"subscription","text":"how do i sign up for ur newsleter? want the discount codes"}

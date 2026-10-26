@@ -1,0 +1,819 @@
+{
+  "bitext-02a829aa8c": {
+    "priority": "low"
+  },
+  "bitext-0335d3c2b6": {
+    "priority": "medium"
+  },
+  "bitext-03c6a229ce": {
+    "priority": "high"
+  },
+  "bitext-05ba49fb53": {
+    "priority": "low"
+  },
+  "bitext-06084cb5a2": {
+    "priority": "medium"
+  },
+  "bitext-061d931dcd": {
+    "priority": "high"
+  },
+  "bitext-063cdd95c6": {
+    "priority": "low"
+  },
+  "bitext-0674f31ff1": {
+    "priority": "medium"
+  },
+  "bitext-06d9cd996a": {
+    "priority": "high"
+  },
+  "bitext-07724226a6": {
+    "priority": "low",
+    "note": "Hello For Testing"
+  },
+  "bitext-08587fe9f2": {
+    "priority": "low"
+  },
+  "bitext-0f853fe297": {
+    "priority": "low"
+  },
+  "bitext-108e95fc19": {
+    "priority": "low"
+  },
+  "bitext-10e5927f40": {
+    "priority": "low"
+  },
+  "bitext-1472128377": {
+    "priority": "low"
+  },
+  "bitext-167845ea78": {
+    "priority": "medium"
+  },
+  "bitext-18b0f35240": {
+    "priority": "medium"
+  },
+  "bitext-1c73f5f4ce": {
+    "priority": "medium"
+  },
+  "bitext-1cad5df969": {
+    "priority": "medium"
+  },
+  "bitext-1de5b8d3b9": {
+    "priority": "medium"
+  },
+  "bitext-1ebff30df7": {
+    "priority": "high"
+  },
+  "bitext-2194a66e74": {
+    "priority": "high"
+  },
+  "bitext-21a62bf9d9": {
+    "priority": "high"
+  },
+  "bitext-21f0319607": {
+    "priority": "high"
+  },
+  "bitext-238a2b7df3": {
+    "priority": "high"
+  },
+  "bitext-23a6407f3a": {
+    "priority": "low"
+  },
+  "bitext-23aee0bd4d": {
+    "priority": "low"
+  },
+  "bitext-24383a8db2": {
+    "priority": "low"
+  },
+  "bitext-2462644db4": {
+    "priority": "low"
+  },
+  "bitext-24c130dfc3": {
+    "priority": "low"
+  },
+  "bitext-24ce4860c3": {
+    "priority": "low"
+  },
+  "bitext-25a0e74cf5": {
+    "priority": "low"
+  },
+  "bitext-27218ff1a6": {
+    "priority": "medium"
+  },
+  "bitext-273b62a9aa": {
+    "priority": "medium"
+  },
+  "bitext-28da896bd5": {
+    "priority": "medium"
+  },
+  "bitext-298939a055": {
+    "priority": "medium"
+  },
+  "bitext-2a9c6cd13a": {
+    "priority": "medium"
+  },
+  "bitext-2b9365e5c4": {
+    "priority": "medium"
+  },
+  "bitext-2c3d811446": {
+    "priority": "high"
+  },
+  "bitext-2f5ee04bcd": {
+    "priority": "high"
+  },
+  "bitext-318776ec09": {
+    "priority": "high"
+  },
+  "bitext-319db8fa0b": {
+    "priority": "high"
+  },
+  "bitext-32ef9d7fef": {
+    "priority": "high"
+  },
+  "bitext-336fa8c5da": {
+    "priority": "high"
+  },
+  "bitext-36d292f122": {
+    "priority": "low"
+  },
+  "bitext-3a5c049f06": {
+    "priority": "low"
+  },
+  "bitext-3af299829e": {
+    "priority": "low"
+  },
+  "bitext-3cc23ba7b1": {
+    "priority": "low"
+  },
+  "bitext-3dbf08fe82": {
+    "priority": "low"
+  },
+  "bitext-3fba0aecdb": {
+    "priority": "low"
+  },
+  "bitext-4038407068": {
+    "priority": "low"
+  },
+  "bitext-403cac0ef9": {
+    "priority": "medium"
+  },
+  "bitext-415fb84cca": {
+    "priority": "medium"
+  },
+  "bitext-41d574d86b": {
+    "priority": "medium"
+  },
+  "bitext-41daf1fc64": {
+    "priority": "medium"
+  },
+  "bitext-42bfd6e300": {
+    "priority": "medium"
+  },
+  "bitext-444895f4b0": {
+    "priority": "medium"
+  },
+  "bitext-45fb6693fd": {
+    "priority": "high"
+  },
+  "bitext-470f4df16f": {
+    "priority": "high"
+  },
+  "bitext-4715229046": {
+    "priority": "high"
+  },
+  "bitext-4770b8127e": {
+    "priority": "high"
+  },
+  "bitext-47aeef5f25": {
+    "priority": "high"
+  },
+  "bitext-47b71d3343": {
+    "priority": "high"
+  },
+  "bitext-4819f58099": {
+    "priority": "low"
+  },
+  "bitext-4871bee3d2": {
+    "priority": "medium"
+  },
+  "bitext-4b445c485d": {
+    "priority": "high"
+  },
+  "bitext-4b65d1c8f7": {
+    "priority": "low"
+  },
+  "bitext-4b8bc9efc8": {
+    "priority": "low"
+  },
+  "bitext-4d0bceb0fe": {
+    "priority": "low"
+  },
+  "bitext-4e7fc51734": {
+    "priority": "low"
+  },
+  "bitext-4e86c12c57": {
+    "priority": "low"
+  },
+  "bitext-50c9d70f9a": {
+    "priority": "low"
+  },
+  "bitext-51897a848d": {
+    "priority": "medium"
+  },
+  "bitext-52d1683037": {
+    "priority": "medium"
+  },
+  "bitext-539e21e56b": {
+    "priority": "medium"
+  },
+  "bitext-55d9480827": {
+    "priority": "medium"
+  },
+  "bitext-56212531ec": {
+    "priority": "medium"
+  },
+  "bitext-57658989ac": {
+    "priority": "medium"
+  },
+  "bitext-57a6b63362": {
+    "priority": "high"
+  },
+  "bitext-58405215b8": {
+    "priority": "high"
+  },
+  "bitext-5845e5493c": {
+    "priority": "high"
+  },
+  "bitext-58e09b39e1": {
+    "priority": "high"
+  },
+  "bitext-591c5d6e73": {
+    "priority": "high"
+  },
+  "bitext-5948d95bb5": {
+    "priority": "low"
+  },
+  "bitext-596f9aaf90": {
+    "priority": "low"
+  },
+  "bitext-5a51d90565": {
+    "priority": "low"
+  },
+  "bitext-5b07dbb7de": {
+    "priority": "medium"
+  },
+  "bitext-5dcd6a741a": {
+    "priority": "medium"
+  },
+  "bitext-5e1a02d119": {
+    "priority": "medium"
+  },
+  "bitext-5e6371caef": {
+    "priority": "high"
+  },
+  "bitext-5eae44f303": {
+    "priority": "high"
+  },
+  "bitext-5f6a04ce40": {
+    "priority": "high"
+  },
+  "bitext-60622eb8cd": {
+    "priority": "low"
+  },
+  "bitext-6153de2bf4": {
+    "priority": "low"
+  },
+  "bitext-632f3c96a9": {
+    "priority": "low"
+  },
+  "bitext-6337822dce": {
+    "priority": "low"
+  },
+  "bitext-640e6f2d55": {
+    "priority": "low"
+  },
+  "bitext-644143113c": {
+    "priority": "low"
+  },
+  "bitext-6675cc12d1": {
+    "priority": "low"
+  },
+  "bitext-66c9327beb": {
+    "priority": "low"
+  },
+  "bitext-69761de0be": {
+    "priority": "low"
+  },
+  "bitext-6a10ad7848": {
+    "priority": "low"
+  },
+  "bitext-6a3e416dec": {
+    "priority": "medium"
+  },
+  "bitext-6b13149ee1": {
+    "priority": "medium"
+  },
+  "bitext-6b824dc7df": {
+    "priority": "medium"
+  },
+  "bitext-6bc1ba4ba7": {
+    "priority": "medium"
+  },
+  "bitext-6e8142a12b": {
+    "priority": "medium"
+  },
+  "bitext-6fd5993e5d": {
+    "priority": "medium"
+  },
+  "bitext-70da4c5967": {
+    "priority": "medium"
+  },
+  "bitext-7146cd43a9": {
+    "priority": "medium"
+  },
+  "bitext-7327865ec6": {
+    "priority": "medium"
+  },
+  "bitext-73e0812369": {
+    "priority": "medium"
+  },
+  "bitext-744e36f5af": {
+    "priority": "high"
+  },
+  "bitext-749b7487ff": {
+    "priority": "high"
+  },
+  "bitext-7a39876530": {
+    "priority": "high"
+  },
+  "bitext-7b616e1f40": {
+    "priority": "high"
+  },
+  "bitext-7c61444f5e": {
+    "priority": "high"
+  },
+  "bitext-7c7ecb2dd5": {
+    "priority": "high"
+  },
+  "bitext-7ec79ef081": {
+    "priority": "high"
+  },
+  "bitext-7f02cf3b56": {
+    "priority": "high"
+  },
+  "bitext-81735ee0d2": {
+    "priority": "high"
+  },
+  "bitext-83d1661d94": {
+    "priority": "high"
+  },
+  "bitext-841524fb51": {
+    "priority": "low"
+  },
+  "bitext-8415f16253": {
+    "priority": "low"
+  },
+  "bitext-85c54c41ff": {
+    "priority": "low"
+  },
+  "bitext-8618996355": {
+    "priority": "low"
+  },
+  "bitext-86965c5826": {
+    "priority": "low"
+  },
+  "bitext-8696b1f757": {
+    "priority": "low"
+  },
+  "bitext-86c349fe1d": {
+    "priority": "low"
+  },
+  "bitext-86ff36d3a1": {
+    "priority": "low"
+  },
+  "bitext-8711f923f3": {
+    "priority": "medium"
+  },
+  "bitext-893a609e40": {
+    "priority": "medium"
+  },
+  "bitext-8a967335b0": {
+    "priority": "medium"
+  },
+  "bitext-8b1762558c": {
+    "priority": "medium"
+  },
+  "bitext-8b3d802a5c": {
+    "priority": "medium"
+  },
+  "bitext-8b99e0cd25": {
+    "priority": "medium"
+  },
+  "bitext-8be54ff56c": {
+    "priority": "medium"
+  },
+  "bitext-8c3d09a59d": {
+    "priority": "medium"
+  },
+  "bitext-8c6efac599": {
+    "priority": "medium"
+  },
+  "bitext-8d18e6cd33": {
+    "priority": "high"
+  },
+  "bitext-8d4cdeba2a": {
+    "priority": "high"
+  },
+  "bitext-8e38afc312": {
+    "priority": "high"
+  },
+  "bitext-8ef75837c0": {
+    "priority": "high"
+  },
+  "bitext-8fd20278a9": {
+    "priority": "high"
+  },
+  "bitext-8ffa82b9ae": {
+    "priority": "high"
+  },
+  "bitext-90218bd716": {
+    "priority": "high"
+  },
+  "bitext-9121a07a08": {
+    "priority": "high"
+  },
+  "bitext-917814e017": {
+    "priority": "high"
+  },
+  "bitext-935d875e41": {
+    "priority": "low"
+  },
+  "bitext-9591b8a39f": {
+    "priority": "low"
+  },
+  "bitext-95c2e5c358": {
+    "priority": "low"
+  },
+  "bitext-95dfba8a33": {
+    "priority": "low"
+  },
+  "bitext-96ede1b14d": {
+    "priority": "low"
+  },
+  "bitext-9af6567923": {
+    "priority": "low"
+  },
+  "bitext-9c66e15e70": {
+    "priority": "low"
+  },
+  "bitext-9d4559d998": {
+    "priority": "low"
+  },
+  "bitext-9e5096fa33": {
+    "priority": "medium"
+  },
+  "bitext-9e90dc4611": {
+    "priority": "medium"
+  },
+  "bitext-9f2bc37c57": {
+    "priority": "medium"
+  },
+  "bitext-a08edfa586": {
+    "priority": "medium"
+  },
+  "bitext-a3a70a621e": {
+    "priority": "medium"
+  },
+  "bitext-a4367f267e": {
+    "priority": "medium"
+  },
+  "bitext-a60c04dae9": {
+    "priority": "medium"
+  },
+  "bitext-a8b87ca6c4": {
+    "priority": "medium"
+  },
+  "bitext-a900294e45": {
+    "priority": "medium"
+  },
+  "bitext-a9464bd84c": {
+    "priority": "high"
+  },
+  "bitext-a9adf6d70a": {
+    "priority": "high"
+  },
+  "bitext-a9fad2cb80": {
+    "priority": "high"
+  },
+  "bitext-ad71a3cc0d": {
+    "priority": "high"
+  },
+  "bitext-ae9c0f3abe": {
+    "priority": "high"
+  },
+  "bitext-b0022d3a4d": {
+    "priority": "high"
+  },
+  "bitext-b0419480c7": {
+    "priority": "high"
+  },
+  "bitext-b0a79d1ee2": {
+    "priority": "high"
+  },
+  "bitext-b1f2c66109": {
+    "priority": "low"
+  },
+  "bitext-b2e479b417": {
+    "priority": "medium"
+  },
+  "bitext-b5880e5146": {
+    "priority": "high"
+  },
+  "bitext-b71979c7d8": {
+    "priority": "low"
+  },
+  "bitext-b7d430cce5": {
+    "priority": "medium"
+  },
+  "bitext-b7e7283e05": {
+    "priority": "high"
+  },
+  "bitext-b81e2d46e1": {
+    "priority": "low"
+  },
+  "bitext-b8fd253d2a": {
+    "priority": "medium"
+  },
+  "bitext-b93debb5f6": {
+    "priority": "high"
+  },
+  "bitext-bccdf5acdd": {
+    "priority": "high"
+  },
+  "bitext-bcd45ee9ca": {
+    "priority": "medium"
+  },
+  "bitext-bcff59ba1b": {
+    "priority": "low"
+  },
+  "bitext-bd1ca13013": {
+    "priority": "medium"
+  },
+  "bitext-c26942b1a5": {
+    "priority": "high"
+  },
+  "bitext-c3cd1fe5ed": {
+    "priority": "high"
+  },
+  "bitext-c7d6650cae": {
+    "priority": "high"
+  },
+  "bitext-c81efc19d9": {
+    "priority": "medium"
+  },
+  "bitext-c88fa6cf43": {
+    "priority": "medium"
+  },
+  "bitext-c96d51b9f2": {
+    "priority": "low"
+  },
+  "bitext-ca5f39891c": {
+    "priority": "low"
+  },
+  "bitext-cb51d51d69": {
+    "priority": "medium"
+  },
+  "bitext-cbbf455ae0": {
+    "priority": "medium"
+  },
+  "bitext-ccbc758e94": {
+    "priority": "high"
+  },
+  "bitext-cced7fd709": {
+    "priority": "high"
+  },
+  "bitext-cd5e004fb1": {
+    "priority": "low"
+  },
+  "bitext-d0acee6e3d": {
+    "priority": "low"
+  },
+  "bitext-d1020392d2": {
+    "priority": "low"
+  },
+  "bitext-d1b3a07201": {
+    "priority": "low"
+  },
+  "bitext-d1e3b4a0ac": {
+    "priority": "medium"
+  },
+  "bitext-d220847351": {
+    "priority": "high"
+  },
+  "bitext-d2dc255aa2": {
+    "priority": "high"
+  },
+  "bitext-d5a14331de": {
+    "priority": "medium"
+  },
+  "bitext-d775095183": {
+    "priority": "low"
+  },
+  "bitext-d89a12d3ec": {
+    "priority": "medium"
+  },
+  "bitext-d8bcb7a9a0": {
+    "priority": "high"
+  },
+  "bitext-da022b2203": {
+    "priority": "medium"
+  },
+  "bitext-da8c66bb08": {
+    "priority": "low"
+  },
+  "bitext-db340e77d4": {
+    "priority": "medium"
+  },
+  "bitext-dc1bfbf7b3": {
+    "priority": "high"
+  },
+  "bitext-dc26c2f2b2": {
+    "priority": "low"
+  },
+  "bitext-dd7e6a537d": {
+    "priority": "low"
+  },
+  "bitext-df7e4db1cf": {
+    "priority": "low"
+  },
+  "bitext-dfca4e0062": {
+    "priority": "low"
+  },
+  "bitext-e45d3a4a8f": {
+    "priority": "low"
+  },
+  "bitext-e5590f7b4d": {
+    "priority": "low"
+  },
+  "bitext-e55c71d720": {
+    "priority": "medium"
+  },
+  "bitext-e6cdcd8cbf": {
+    "priority": "medium"
+  },
+  "bitext-ea62aff5e1": {
+    "priority": "medium"
+  },
+  "bitext-ebaeac11a2": {
+    "priority": "medium"
+  },
+  "bitext-ec995abc80": {
+    "priority": "medium"
+  },
+  "bitext-ee30219043": {
+    "priority": "high"
+  },
+  "bitext-eeb0beafa4": {
+    "priority": "high"
+  },
+  "bitext-ef5c4f11a6": {
+    "priority": "high"
+  },
+  "bitext-efc703c5ac": {
+    "priority": "high"
+  },
+  "bitext-f047ad569e": {
+    "priority": "high"
+  },
+  "bitext-f22c457e69": {
+    "priority": "medium"
+  },
+  "bitext-f26121c2e4": {
+    "priority": "medium"
+  },
+  "bitext-f4baaf7b7e": {
+    "priority": "medium"
+  },
+  "bitext-f571b402be": {
+    "priority": "low"
+  },
+  "bitext-f6f3b3a317": {
+    "priority": "low"
+  },
+  "bitext-f730282c92": {
+    "priority": "low"
+  },
+  "bitext-f7d8114633": {
+    "priority": "medium"
+  },
+  "bitext-fb33bef3d4": {
+    "priority": "medium"
+  },
+  "bitext-fcfaa3fd11": {
+    "priority": "medium"
+  },
+  "bitext-fd18dd5c9d": {
+    "priority": "high"
+  },
+  "bitext-feaa7e5279": {
+    "priority": "high"
+  },
+  "bitext-feb532ab36": {
+    "priority": "high"
+  },
+  "bitext-ff02501d84": {
+    "priority": "low"
+  },
+  "bitext-fff43b1988": {
+    "priority": "low"
+  },
+  "messy-01": {
+    "priority": "low"
+  },
+  "messy-02": {
+    "priority": "medium"
+  },
+  "messy-03": {
+    "priority": "medium"
+  },
+  "messy-04": {
+    "priority": "medium"
+  },
+  "messy-05": {
+    "priority": "high"
+  },
+  "messy-06": {
+    "priority": "high"
+  },
+  "messy-07": {
+    "priority": "high"
+  },
+  "messy-08": {
+    "priority": "low"
+  },
+  "messy-09": {
+    "priority": "low"
+  },
+  "messy-10": {
+    "priority": "low"
+  },
+  "messy-11": {
+    "priority": "low"
+  },
+  "messy-12": {
+    "priority": "low"
+  },
+  "messy-13": {
+    "priority": "low"
+  },
+  "messy-14": {
+    "priority": "low"
+  },
+  "messy-15": {
+    "priority": "low"
+  },
+  "messy-16": {
+    "priority": "medium"
+  },
+  "messy-17": {
+    "priority": "medium"
+  },
+  "messy-18": {
+    "priority": "medium"
+  },
+  "messy-19": {
+    "priority": "medium"
+  },
+  "messy-20": {
+    "priority": "medium"
+  },
+  "messy-21": {
+    "priority": "medium"
+  },
+  "messy-22": {
+    "priority": "high"
+  },
+  "messy-23": {
+    "priority": "high"
+  },
+  "messy-24": {
+    "priority": "high"
+  },
+  "messy-25": {
+    "priority": "high"
+  },
+  "messy-26": {
+    "priority": "high"
+  },
+  "messy-27": {
+    "priority": "high"
+  },
+  "messy-28": {
+    "priority": "low"
+  },
+  "messy-29": {
+    "priority": "low"
+  },
+  "messy-30": {
+    "priority": "medium"
+  }
+}
