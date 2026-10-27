@@ -380,10 +380,11 @@ describe("the circuit breaker", () => {
     const { gateway, request, attempts, lines } = setup(primary);
 
     await run(gateway, request()); // 3 failures
-    const second = await run(gateway, request()); // 2 more: open; the 3rd attempt is skipped
+    const second = await run(gateway, request()); // 2 more: the 5th opens it, and goes straight to the fallback
     expect(lines.find((l) => l.event === "gateway.circuit")).toMatchObject({ provider: "mock", from: "closed", to: "open" });
     expect(attempts("mock")).toHaveLength(5);
-    expect(second.result).toMatchObject({ provider: "mock_fallback", fallback: true });
+    expect(attempts("mock").at(-1)).toMatchObject({ attempt: 2, wait_ms: null, decision: "fallback", reason: "circuit opened" });
+    expect(second.result).toMatchObject({ provider: "mock_fallback", fallback: true, retries: 1 });
 
     const third = await run(gateway, request());
     expect(attempts("mock")).toHaveLength(5);
@@ -406,14 +407,17 @@ describe("the circuit breaker", () => {
     vi.advanceTimersByTime(baseConfig.gateway.circuit.open_ms);
     const o = await run(gateway, request());
     expect(attempts("mock")).toHaveLength(6);
-    expect(o.result).toMatchObject({ provider: "mock_fallback" });
+    expect(o.result).toMatchObject({ provider: "mock_fallback", retries: 0 });
+    expect(o.ms).toBe(0);
     expect(lines.filter((l) => l.event === "gateway.circuit").map((l) => l.to)).toEqual(["open", "half_open", "open"]);
   });
 
   it("a 400 or a broken answer doesn't count against the provider", async () => {
-    const { gateway, request } = setup({ mode: "400" });
-    for (let i = 0; i < 6; i++) await run(gateway, request());
-    expect(gateway.circuit("mock").current()).toBe("closed");
+    for (const mode of ["400", "bad_json"] as const) {
+      const { gateway, request } = setup({ mode });
+      for (let i = 0; i < 6; i++) await run(gateway, request());
+      expect(gateway.circuit("mock").current()).toBe("closed");
+    }
   });
 
   it("a cache hit doesn't close a half-open circuit: only a real answer does", async () => {
@@ -468,6 +472,19 @@ describe("the circuit breaker", () => {
       [null, "success"],
     ]);
     expect(o.result).toMatchObject({ ok: true, provider: "mock", retries: 1 });
+  });
+
+  it("no time left for the fallback: it is skipped with a log line", async () => {
+    // The fallback's circuit is open at the start, so the primary gets all 20 s;
+    // it turns half-open while the primary hangs, but there's no time left.
+    const { gateway, request, lines } = setup({ mode: "hang" });
+    const fb = gateway.circuit("mock_fallback");
+    for (let i = 0; i < baseConfig.gateway.circuit.failures; i++) fb.failure();
+    vi.advanceTimersByTime(baseConfig.gateway.circuit.open_ms - 5_000);
+    const o = await run(gateway, request());
+    expect(o.error?.errorClass).toBe("timeout");
+    expect(o.ms).toBeLessThanOrEqual(20_000);
+    expect(lines.filter((l) => l.event === "gateway.skip").at(-1)).toMatchObject({ provider: "mock_fallback", error_class: "timeout", reason: "no time left", decision: "give_up" });
   });
 
   it("every circuit open: fails fast with circuit_open, and /readyz says why", async () => {

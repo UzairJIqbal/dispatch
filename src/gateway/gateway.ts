@@ -268,6 +268,7 @@ export class Gateway {
       for (let attempt = 1; attempt <= g.max_retries + 1; attempt++) {
         if (end() - Date.now() <= 0) {
           // Out of this provider's time. Not a failure of the provider: nothing was sent.
+          log.warn({ event: "gateway.skip", ...line, attempt, error_class: "timeout", wait_ms: null, decision: next, reason: "no time left" }, `${model.provider} skipped: no time left`);
           lastError ??= new ProviderError("timeout", `no time left before the ${String(g.deadline_ms / 1000)} s deadline`, model.provider);
           break;
         }
@@ -334,6 +335,11 @@ export class Gateway {
           // provider refuses is exactly what it's there for.
           if (!RETRYABLE.has(err.errorClass) || attempt > g.max_retries || Date.now() >= end()) {
             log.warn({ ...fail, wait_ms: null, decision: next }, `${model.provider} failed (${err.errorClass}): ${next}`);
+            break;
+          }
+          // This failure opened the circuit: waiting to retry would only end in a skip.
+          if (circuit.current() === "open") {
+            log.warn({ ...fail, wait_ms: null, decision: next, reason: "circuit opened" }, `${model.provider} failed (${err.errorClass}): circuit opened, ${next}`);
             break;
           }
 
