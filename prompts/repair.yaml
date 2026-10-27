@@ -1,0 +1,7 @@
+# Sent back to the same provider, once, when its answer fails the schema.
+# {{error}} is the Zod error: field names and rules, never the ticket text.
+# A change here is a change to every prompt version's behaviour: it goes into
+# the cache key, and the eval shows its effect as "repairs".
+message: |
+  Your last answer was rejected: {{error}}
+  Answer again with exactly one JSON object that follows the rules above, and nothing else.

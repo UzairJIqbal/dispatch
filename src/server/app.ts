@@ -3,7 +3,7 @@ import express, { type NextFunction, type Request, type Response } from "express
 import type { Logger } from "pino";
 import { z } from "zod";
 import { gitSha } from "../env.js";
-import { ProviderError } from "../gateway/errors.js";
+import { ProviderError, type ErrorClass } from "../gateway/errors.js";
 import { MAX_TICKET_CHARS } from "../golden/schema.js";
 import type { TriageResult } from "../triage/triage.js";
 import { clientForKey, type ClientKeys } from "./clients.js";
@@ -17,8 +17,8 @@ export type AppDeps = {
   limiter: Limiter;
   /** The prompt version this process serves, for logs when a call fails before answering. */
   promptVersion: string;
-  /** The one triage call, bound to the live prompt version and provider. */
-  triage: (text: string) => Promise<TriageResult>;
+  /** The one triage call, bound to the live prompt version and provider. `log` carries the request id. */
+  triage: (text: string, ctx: { log: Logger }) => Promise<TriageResult>;
   /** Each throws with the reason it isn't ready. */
   readiness: Readonly<Record<string, ReadinessCheck>>;
   log: Logger;
@@ -38,10 +38,23 @@ type RequestContext = {
   started: number;
   client?: string;
   errorClass?: HttpErrorClass;
-  causeClass?: string;
   promptVersion?: string;
   model?: string;
   provider?: string;
+  fallback?: boolean;
+};
+
+// What a client reads for each gateway failure. Never the provider's own
+// message: it can name the model, the account or echo the request.
+const GATEWAY_MESSAGES: Readonly<Record<ErrorClass, string>> = {
+  rate_limit: "The model providers are rate-limiting us. Try again shortly.",
+  provider_5xx: "The model providers failed to answer. Try again shortly.",
+  connection: "The model providers could not be reached. Try again shortly.",
+  auth: "The service can't authenticate with its model providers. This is on our side.",
+  circuit_open: "Every model provider is failing right now, so the request was not sent. Try again in a minute.",
+  timeout: "The model did not answer in time.",
+  schema_fail: "The model's answer failed validation.",
+  bad_request: "The model provider refused the request.",
 };
 
 const contexts = new WeakMap<object, RequestContext>();
@@ -82,11 +95,11 @@ export function createApp(deps: AppDeps): express.Express {
           client: c.client ?? null,
           status: res.statusCode,
           error_class: c.errorClass ?? null,
-          ...(c.causeClass ? { cause_class: c.causeClass } : {}),
           latency_ms: Math.round(performance.now() - c.started),
           prompt_version: c.promptVersion ?? null,
           model: c.model ?? null,
           provider: c.provider ?? null,
+          ...(c.fallback ? { fallback: true } : {}),
           ...(res.writableFinished ? {} : { aborted: true }),
         },
         "request",
@@ -158,20 +171,21 @@ export function createApp(deps: AppDeps): express.Express {
     c.promptVersion = deps.promptVersion;
     let result: TriageResult;
     try {
-      result = await deps.triage(text);
+      result = await deps.triage(text, { log: log.child({ request_id: c.requestId }) });
     } catch (err) {
       if (err instanceof ProviderError) {
         c.provider = err.provider;
-        throw new HttpError("provider_error", "The model provider failed to answer. Try again shortly.", {}, err.errorClass);
+        throw new HttpError({ gateway: err.errorClass }, GATEWAY_MESSAGES[err.errorClass]);
       }
       throw err;
     }
     c.promptVersion = result.prompt_version;
     c.model = result.model;
     c.provider = result.provider;
+    c.fallback = result.fallback;
     if (!result.ok) {
       // The raw answer stays out of the response and the log: it can echo the ticket.
-      throw new HttpError("schema_fail", "The model's answer failed validation.");
+      throw new HttpError({ gateway: "schema_fail" }, GATEWAY_MESSAGES.schema_fail);
     }
     res.json({
       ...result.answer,
@@ -179,6 +193,7 @@ export function createApp(deps: AppDeps): express.Express {
         prompt_version: result.prompt_version,
         model: result.model,
         provider: result.provider,
+        fallback: result.fallback,
         git_sha: gitSha(),
         request_id: c.requestId,
         latency_ms: Math.round(performance.now() - c.started),
@@ -208,10 +223,7 @@ export function createApp(deps: AppDeps): express.Express {
         httpErr = new HttpError("internal", "Something went wrong on our side.");
       }
     }
-    if (c) {
-      c.errorClass = httpErr.errorClass;
-      if (httpErr.cause_class) c.causeClass = httpErr.cause_class;
-    }
+    if (c) c.errorClass = httpErr.errorClass;
     if (res.headersSent) {
       res.end();
       return;

@@ -28,6 +28,7 @@ export const paths = {
   models: `${root}config/models.yaml`,
   release: `${root}config/release.yaml`,
   prompts: `${root}prompts/triage`,
+  repairPrompt: `${root}prompts/repair.yaml`,
   results: `${root}results`,
   baseline: `${root}results/baseline.json`,
   noise: `${root}results/noise.json`,

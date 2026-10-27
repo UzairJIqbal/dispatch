@@ -9,7 +9,8 @@ import { createApp, type AppDeps } from "../src/server/app.js";
 import { clientForKey, hashKey, newClientKey, parseClientKeys } from "../src/server/clients.js";
 import { parseServiceConfig } from "../src/server/config.js";
 import { retryAfterSeconds, type Limiter } from "../src/server/ratelimit.js";
-import { Gateway, triage, type TriageResult } from "../src/triage/triage.js";
+import { Gateway, type GatewayOptions } from "../src/gateway/gateway.js";
+import { triage, type TriageResult } from "../src/triage/triage.js";
 
 const ACME = newClientKey();
 const BETA = newClientKey();
@@ -29,16 +30,17 @@ function memoryLimiter(limit: number): Limiter {
 
 type Captured = { lines: Record<string, unknown>[] };
 
-async function serve(overrides: Partial<AppDeps> = {}): Promise<{ url: string; server: Server; logs: Captured }> {
+async function serve(overrides: Partial<AppDeps> = {}, mocks: GatewayOptions["mocks"] = {}): Promise<{ url: string; server: Server; logs: Captured }> {
   const logs: Captured = { lines: [] };
   const log = pino({ base: null }, { write: (s: string) => logs.lines.push(JSON.parse(s) as Record<string, unknown>) });
-  const gateway = new Gateway();
+  // No jitter, so a retry doesn't make the test wait.
+  const gateway = new Gateway({ mocks: { mock: {}, mock_fallback: {}, ...mocks }, log, random: () => 0 });
   const app = createApp({
     clients,
     limiter: memoryLimiter(60),
     promptVersion: "v2",
     // The real triage(), on the mock provider: zero real calls.
-    triage: (text) => triage(text, "v2", { gateway, provider: "mock" }),
+    triage: (text, { log: requestLog }) => triage(text, "v2", { gateway, provider: "mock", log: requestLog }),
     readiness: { config: () => Promise.resolve(), redis: () => Promise.resolve() },
     log,
     isShuttingDown: () => false,
@@ -76,7 +78,7 @@ describe("POST /v1/triage", () => {
     expect(res.status).toBe(200);
     const body = (await res.json()) as Record<string, unknown>;
     expect(body).toMatchObject({ category: "refund", priority: "high" });
-    expect(body.meta).toMatchObject({ prompt_version: "v2", model: "mock-triage-1", provider: "mock", git_sha: gitSha() });
+    expect(body.meta).toMatchObject({ prompt_version: "v2", model: "mock-triage-1", provider: "mock", fallback: false, git_sha: gitSha() });
     const meta = body.meta as Record<string, unknown>;
     expect(meta.request_id).toBe(res.headers.get("x-request-id"));
     expect(typeof meta.latency_ms).toBe("number");
@@ -150,7 +152,7 @@ describe("rate limit", () => {
 });
 
 describe("failures from the model", () => {
-  const meta = { prompt_version: "v2", provider: "mock" as const, model: "mock-triage-1", git_sha: "x", tokens_in: 1, tokens_out: 1, latency_ms: 1, cached: false };
+  const meta = { prompt_version: "v2", provider: "mock" as const, model: "mock-triage-1", git_sha: "x", fallback: false, retries: 0, repaired: false, tokens_in: 1, tokens_out: 1, latency_ms: 1, cached: false };
 
   it("a broken answer is a 502 schema_fail, with the raw answer kept out", async () => {
     const broken: TriageResult = { ok: false, error: { class: "schema_fail", message: "bad" }, raw: "SECRET-ECHO", ...meta };
@@ -166,14 +168,14 @@ describe("failures from the model", () => {
     }
   });
 
-  it("a provider failure is a 503 provider_error, and the log keeps the gateway's class", async () => {
+  it("a provider failure keeps the gateway's class: a timeout is a 504 timeout in the response and the log", async () => {
     const s = await serve({ triage: () => Promise.reject(new ProviderError("timeout", "gemini did not answer", "gemini")) });
     try {
       const res = await post(s.url, { text: TICKET }, ACME);
-      expect(res.status).toBe(503);
-      expect(await res.json()).toMatchObject({ error: { class: "provider_error" } });
+      expect(res.status).toBe(504);
+      expect(await res.json()).toMatchObject({ error: { class: "timeout" } });
       await new Promise((r) => setTimeout(r, 20));
-      expect(s.logs.lines.find((l) => l.event === "request")).toMatchObject({ error_class: "provider_error", cause_class: "timeout", provider: "gemini" });
+      expect(s.logs.lines.find((l) => l.event === "request")).toMatchObject({ error_class: "timeout", provider: "gemini" });
     } finally {
       s.server.close();
     }
@@ -187,6 +189,40 @@ describe("failures from the model", () => {
       const text = await res.text();
       expect(JSON.parse(text)).toMatchObject({ error: { class: "internal" } });
       expect(text).not.toContain("boom");
+    } finally {
+      s.server.close();
+    }
+  });
+});
+
+describe("through the gateway, on the mocks", () => {
+  it("a dead primary is answered by the fallback: meta.fallback is true and the log has 3 primary attempts", async () => {
+    const s = await serve({}, { mock: { mode: "500" } });
+    try {
+      const res = await post(s.url, { text: TICKET }, ACME);
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { meta: Record<string, unknown> };
+      expect(body.meta).toMatchObject({ provider: "mock_fallback", fallback: true });
+      const attempts = s.logs.lines.filter((l) => l.event === "gateway.attempt");
+      const requestId = res.headers.get("x-request-id");
+      expect(attempts.map((l) => [l.provider, l.attempt, l.decision])).toEqual([
+        ["mock", 1, "retry"],
+        ["mock", 2, "retry"],
+        ["mock", 3, "fallback"],
+        ["mock_fallback", 1, "success"],
+      ]);
+      for (const l of attempts) expect(l.request_id).toBe(requestId);
+    } finally {
+      s.server.close();
+    }
+  });
+
+  it("an answer still broken after its repair is a 502 schema_fail", async () => {
+    const s = await serve({}, { mock: { mode: "bad_json" } });
+    try {
+      const res = await post(s.url, { text: TICKET }, ACME);
+      expect(res.status).toBe(502);
+      expect(await res.json()).toMatchObject({ error: { class: "schema_fail" } });
     } finally {
       s.server.close();
     }

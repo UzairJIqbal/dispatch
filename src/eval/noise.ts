@@ -9,7 +9,8 @@ const labelOf = (r: TicketRecord) => `${r.answer?.category ?? "?"}/${r.answer?.p
  *
  * Only tickets answered in both runs are compared. A timeout or a 5xx is the
  * provider having a bad minute, not the model changing its mind; counting it
- * as a flip once made the floor 20 of 74 and the gate useless.
+ * as a flip once made the floor 20 of 74 and the gate useless. An answer from
+ * the fallback is a different model, so it is left out the same way.
  */
 export function compareRuns(
   a: readonly TicketRecord[],
@@ -22,7 +23,7 @@ export function compareRuns(
   for (const r of a) {
     const other = second.get(r.id);
     if (!other) throw new Error(`Ticket ${r.id} is in the first run but not the second.`);
-    if (r.error || other.error) {
+    if (r.error || other.error || r.fallback === true || other.fallback === true) {
       failed.push(r.id);
       continue;
     }

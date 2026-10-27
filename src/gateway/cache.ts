@@ -4,7 +4,7 @@ import { dirname } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { z } from "zod";
 import { paths } from "../paths.js";
-import type { ChatResponse } from "../gateway/providers.js";
+import type { ChatResponse } from "./providers.js";
 
 // The response cache for evals: re-running the same eval is free, and a change
 // to provider, model, prompt or parameters misses. The service never uses it.
@@ -19,12 +19,16 @@ export type CacheKeyParts = {
   maxTokens: number;
   params: Readonly<Record<string, unknown>>;
   text: string;
+  /** Only on a repair call: the repair prompt, the broken answer and the Zod error it is sent back with. */
+  repair?: { sha256: string; raw: string; error: string };
 };
 
 export function cacheKey(parts: CacheKeyParts): string {
-  // Fixed key order, so the same parts always hash the same.
+  // Fixed key order, so the same parts always hash the same. The repair part
+  // is appended only when present, so first-try keys from before Phase 4 still hit.
   const p = parts;
-  const canonical = JSON.stringify([p.provider, p.model, p.promptVersion, p.promptSha256, p.temperature, p.maxTokens, Object.entries(p.params).sort(), p.text]);
+  const base: unknown[] = [p.provider, p.model, p.promptVersion, p.promptSha256, p.temperature, p.maxTokens, Object.entries(p.params).sort(), p.text];
+  const canonical = JSON.stringify(p.repair ? [...base, ["repair", p.repair.sha256, p.repair.raw, p.repair.error]] : base);
   return createHash("sha256").update(canonical).digest("hex");
 }
 

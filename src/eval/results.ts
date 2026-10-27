@@ -31,6 +31,13 @@ export const TicketRecordSchema = z.strictObject({
     summary: z.strictObject({ present: z.boolean(), length_ok: z.boolean(), numbers_ok: z.boolean(), ok: z.boolean() }).nullable(),
   }),
   cached: z.boolean(),
+  // From Phase 4 on. Optional so results files written before it still read.
+  /** Who answered: the primary, or the fallback when `fallback` is true. */
+  provider: ProviderNameSchema.optional(),
+  fallback: z.boolean().optional(),
+  retries: Count.optional(),
+  /** The first answer failed validation and was sent back once. */
+  repaired: z.boolean().optional(),
   latency_ms: Count.nullable(),
   tokens_in: Count,
   tokens_out: Count,
@@ -46,7 +53,7 @@ export const MetricsSchema = z.strictObject({
   category: Rate,
   priority: Rate,
   dangerous_misses: Count,
-  /** Answers that passed Zod first try. Same as success until Phase 4 adds repair and fallback. */
+  /** Answers that passed Zod first try, without a repair. */
   schema_valid: Rate,
   success: Rate,
   summary_ok: Rate,
@@ -57,6 +64,8 @@ export const MetricsSchema = z.strictObject({
   latency_s: z.strictObject({ n: Count, p50: z.number(), p95: z.number(), p99: z.number() }).nullable(),
   tokens: z.strictObject({ in_avg: z.number(), out_avg: z.number(), in_total: Count, out_total: Count }),
   cost_usd: z.strictObject({ per_request: z.number(), total: z.number(), price_date: z.iso.date() }),
+  /** What the gateway did. Absent in results files from before Phase 4. */
+  gateway: z.strictObject({ retries: Count, fallbacks: Count, repairs: Count }).optional(),
 });
 export type Metrics = z.infer<typeof MetricsSchema>;
 
@@ -90,7 +99,7 @@ export const NoiseSchema = z.strictObject({
   /** Tickets whose both-correct verdict changed: how far the headline number can move by chance. */
   both_flips: Count,
   flipped_ids: z.array(z.string()),
-  /** Failed in either run (timeout, 5xx, schema_fail): left out of the flips, listed so nothing hides. */
+  /** Failed or answered by the fallback in either run: left out of the flips, listed so nothing hides. */
   failed_ids: z.array(z.string()),
   both_correct: z.tuple([Rate, Rate]),
 });

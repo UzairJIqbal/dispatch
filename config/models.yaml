@@ -32,8 +32,13 @@ providers:
     # fallback only answers when Gemini is down. Kept under 20 on purpose.
     rpm: 15
   mock:
-    # Runs in-process: no network, no key, no limit.
+    # Runs in-process: no network, no key, no limit. MOCK_MODE breaks it on
+    # purpose for drills.
     base_url: http://mock.invalid/v1
+  mock_fallback:
+    # A second in-process mock with its own circuit, so a drill can break the
+    # primary mock and watch the fallback answer, with zero real calls.
+    base_url: http://mock-fallback.invalid/v1
 
 models:
   fast:
@@ -44,6 +49,8 @@ models:
     # Gemini 3 thinks by default; low keeps it fast and inside max_tokens.
     params:
       reasoning_effort: low
+    # Answers when Gemini's retries are used up or its circuit is open.
+    fallback: fallback
   fallback:
     provider: cohere
     # Dated name (March 2025 release). Not a reasoning model, which is what a
@@ -53,6 +60,30 @@ models:
   mock:
     provider: mock
     model: mock-triage-1
+    fallback: mock_fallback
+  mock_fallback:
+    provider: mock_fallback
+    model: mock-triage-1
+
+# How the gateway treats a provider. One set of numbers for every provider.
+gateway:
+  # Each attempt is cancelled after this long; the whole request (retries and
+  # fallback included) after deadline_ms. Waiting for a free-tier slot (the
+  # rpm pacing above) is our own queue, not the provider, so it isn't counted.
+  attempt_timeout_ms: 10000
+  deadline_ms: 20000
+  # Retries per provider, on rate_limit, timeout, provider_5xx and connection
+  # only. Then the fallback.
+  max_retries: 2
+  # Full jitter: a random wait between 0 and min(cap, base x 2^retry).
+  backoff_base_ms: 500
+  backoff_cap_ms: 4000
+  circuit:
+    # This many failures within window_ms opens a provider's circuit; after
+    # open_ms one trial request goes through.
+    failures: 5
+    window_ms: 30000
+    open_ms: 30000
 
 # List prices, USD per million tokens. The free tiers cost $0; these are what
 # the same traffic would cost on a paid plan.
