@@ -53,6 +53,14 @@ export class Circuit {
     }
   }
 
+  /**
+   * An attempt that tells us nothing about the provider: a cache hit, our own
+   * deadline, a fault of ours. Frees a half-open trial without a verdict.
+   */
+  release(): void {
+    this.trialInFlight = false;
+  }
+
   failure(): void {
     const now = this.now();
     this.trialInFlight = false;

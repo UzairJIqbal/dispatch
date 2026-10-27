@@ -74,11 +74,21 @@ describe("success and the error classes", () => {
     expect(attempts().map((l) => l.decision)).toEqual(["success"]);
   });
 
-  it("a 400 is called exactly once: no retry, no fallback", async () => {
+  it("a 400 is called exactly once: never retried, and the fallback gets its one try", async () => {
     const { gateway, request, attempts } = setup({ mode: "400" });
     const o = await run(gateway, request());
+    expect(attempts("mock")).toMatchObject([{ attempt: 1, error_class: "bad_request", wait_ms: null, decision: "fallback" }]);
+    expect(o.result).toMatchObject({ ok: true, provider: "mock_fallback", fallback: true, retries: 0 });
+  });
+
+  it("a 400 on every provider: each called exactly once, then bad_request", async () => {
+    const { gateway, request, attempts } = setup({ mode: "400" }, { mode: "400" });
+    const o = await run(gateway, request());
     expect(o.error?.errorClass).toBe("bad_request");
-    expect(attempts()).toMatchObject([{ provider: "mock", attempt: 1, error_class: "bad_request", decision: "give_up" }]);
+    expect(attempts().map((l) => [l.provider, l.attempt, l.decision])).toEqual([
+      ["mock", 1, "fallback"],
+      ["mock_fallback", 1, "give_up"],
+    ]);
   });
 
   it("a fault of ours is not blamed on the provider", async () => {
@@ -177,6 +187,8 @@ describe("backoff, Retry-After and the deadline", () => {
   it("a hung primary is cancelled in time for the fallback to answer", async () => {
     const { gateway, request, attempts } = setup({ mode: "hang" });
     const o = await run(gateway, request());
+    // A real hang: held against the provider.
+    expect(attempts("mock")[0]?.reason).toBeUndefined();
     expect(attempts("mock")).toMatchObject([{ error_class: "timeout", decision: "fallback" }]);
     expect(o.result).toMatchObject({ ok: true, provider: "mock_fallback", fallback: true });
     expect(o.ms).toBeLessThanOrEqual(10_000);
@@ -248,7 +260,26 @@ describe("repair", () => {
       [1, "provider_5xx", "retry"],
       [2, "schema_fail", "give_up"],
     ]);
+    // The retry re-sent the repair, not the original prompt.
+    expect(attempts("mock").at(-1)).toMatchObject({ repair: true });
     expect(o.result).toMatchObject({ ok: false, repaired: true });
+  });
+
+  it("a retried repair call can still succeed", async () => {
+    const { gateway, request, attempts } = setup({ mode: ["bad_json", "500", "ok"] });
+    const o = await run(gateway, request());
+    expect(attempts("mock").at(-1)).toMatchObject({ attempt: 2, repair: true, decision: "success" });
+    expect(o.result).toMatchObject({ ok: true, repaired: true, retries: 1, provider: "mock" });
+  });
+
+  it("the fallback's broken answer gets its own repair", async () => {
+    const { gateway, request, attempts } = setup({ mode: ["bad_json", "500"] }, { mode: "bad_json_once" });
+    const o = await run(gateway, request());
+    expect(attempts("mock_fallback").map((l) => [l.error_class, l.decision])).toEqual([
+      ["schema_fail", "repair"],
+      [null, "success"],
+    ]);
+    expect(o.result).toMatchObject({ ok: true, repaired: true, provider: "mock_fallback" });
   });
 
   it("the repair is cached under its own key: a rerun is served entirely from the cache", async () => {
@@ -322,6 +353,17 @@ describe("the circuit breaker", () => {
     expect(changes.map((ch) => ch.to)).toEqual(["open", "half_open", "closed"]);
   });
 
+  it("release frees a half-open trial without a verdict", () => {
+    const { c, tick } = circuit();
+    for (let i = 0; i < cfg.failures; i++) c.failure();
+    tick(cfg.open_ms);
+    expect(c.allow()).toBe(true);
+    expect(c.allow()).toBe(false);
+    c.release();
+    expect(c.current()).toBe("half_open");
+    expect(c.allow()).toBe(true);
+  });
+
   it("half_open -> open again when the trial fails", () => {
     const { c, tick } = circuit();
     for (let i = 0; i < 5; i++) c.failure();
@@ -372,6 +414,60 @@ describe("the circuit breaker", () => {
     const { gateway, request } = setup({ mode: "400" });
     for (let i = 0; i < 6; i++) await run(gateway, request());
     expect(gateway.circuit("mock").current()).toBe("closed");
+  });
+
+  it("a cache hit doesn't close a half-open circuit: only a real answer does", async () => {
+    const cache = new ResponseCache(":memory:");
+    const parts = { promptVersion: "v1", promptSha256: "x", temperature: 0, maxTokens: 100, text: "I want a refund" };
+    const primary: MockOptions = { mode: "ok" };
+    const { gateway, request } = setup(primary);
+    await run(gateway, request({ cache: { store: cache, parts, refresh: false } }));
+    primary.mode = "500";
+    await run(gateway, request());
+    await run(gateway, request());
+    vi.advanceTimersByTime(baseConfig.gateway.circuit.open_ms);
+    const o = await run(gateway, request({ cache: { store: cache, parts, refresh: false } }));
+    cache.close();
+    expect(o.result).toMatchObject({ provider: "mock", cached: true });
+    expect(gateway.circuit("mock").current()).toBe("half_open");
+    // The trial wasn't used up: the next real request still gets it.
+    expect(gateway.circuit("mock").allow()).toBe(true);
+  });
+
+  it("a fault of ours during a half-open trial frees the trial", async () => {
+    const { gateway, request } = setup({ mode: "500" });
+    await run(gateway, request());
+    await run(gateway, request());
+    vi.advanceTimersByTime(baseConfig.gateway.circuit.open_ms);
+    // A closed cache throws on read: a fault of ours, before anything is sent.
+    const broken = new ResponseCache(":memory:");
+    broken.close();
+    const parts = { promptVersion: "v1", promptSha256: "x", temperature: 0, maxTokens: 100, text: "I want a refund" };
+    const settled = gateway.call(request({ cache: { store: broken, parts, refresh: false } })).catch((e: unknown) => e);
+    await vi.runAllTimersAsync();
+    expect(await settled).not.toBeInstanceOf(ProviderError);
+    expect(gateway.circuit("mock").current()).toBe("half_open");
+    expect(gateway.circuit("mock").allow()).toBe(true);
+  });
+
+  it("an attempt cut short by our own deadline isn't held against the provider", async () => {
+    // Each request: a 429 (counted) asking for 6 s, then a hang with only 4 s
+    // of the primary's share left, cut by us (not counted).
+    const { gateway, request, attempts } = setup({ mode: ["429", "hang", "429", "hang", "429", "hang"], retryAfterS: 6 });
+    for (let i = 0; i < 3; i++) await run(gateway, request());
+    expect(attempts("mock").filter((l) => l.reason === "cut by the deadline")).toHaveLength(3);
+    expect(gateway.circuit("mock").current()).toBe("closed");
+  });
+
+  it("with the fallback's circuit open, the primary gets the whole deadline", async () => {
+    const { gateway, request, attempts } = setup({ mode: ["hang", "ok"] });
+    for (let i = 0; i < baseConfig.gateway.circuit.failures; i++) gateway.circuit("mock_fallback").failure();
+    const o = await run(gateway, request());
+    expect(attempts("mock").map((l) => [l.error_class, l.decision])).toEqual([
+      ["timeout", "retry"],
+      [null, "success"],
+    ]);
+    expect(o.result).toMatchObject({ ok: true, provider: "mock", retries: 1 });
   });
 
   it("every circuit open: fails fast with circuit_open, and /readyz says why", async () => {

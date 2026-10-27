@@ -82,9 +82,10 @@ export function classify(err: unknown, provider: ProviderName, signal?: AbortSig
     const headers: unknown = err.headers;
     if (typeof rawStatus !== "number") return new ProviderError("connection", `${provider} connection failed: ${err.message}`, provider);
     const retryAfterS = headers instanceof Headers ? parseRetryAfter(headers.get("retry-after")) : undefined;
-    // Gemini says a wrong key with a 400, not a 401: still auth, so the fallback answers.
+    // Gemini says a wrong key with a 400 ("Please pass a valid API key"), not a
+    // 401: still auth, so it counts against the circuit and is logged as what it is.
     const body = `${err.message} ${JSON.stringify(err.error ?? null)}`;
-    const errorClass = rawStatus === 400 && /api[ _-]?key/i.test(body) ? "auth" : classifyStatus(rawStatus);
+    const errorClass = rawStatus === 400 && /valid API key|API_KEY_INVALID/i.test(body) ? "auth" : classifyStatus(rawStatus);
     return new ProviderError(errorClass, `${provider} HTTP ${String(rawStatus)}: ${err.message}`, provider, rawStatus, retryAfterS);
   }
   return new ProviderError("provider_5xx", `${provider} call failed: ${err instanceof Error ? err.message : String(err)}`, provider);
