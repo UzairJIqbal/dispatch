@@ -33,7 +33,7 @@ Everything works in docker compose on your machine. Nothing is deployed. You'll 
 3. `curl` production with a client key. A valid answer. Without the key: 401.
 4. Open `/metrics` on production without the password: 401.
 5. Grafana Cloud's dashboard shows production's probe traffic after an hour.
-6. Remove production's Cerebras key in Render for 15 minutes. The probe still passes through the fallback, and the dashboard shows the fallback rate jump. Put the key back.
+6. Remove production's Gemini key in Render for 15 minutes. The probe still passes through the fallback, and the dashboard shows the fallback rate jump. Put the key back.
 
 ## Not in this phase
 

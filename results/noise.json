@@ -1,0 +1,31 @@
+{
+  "prompt_version": "v2",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "dataset_version": "v2",
+  "split": "test",
+  "measured_at": "2026-10-27T19:56:23.014Z",
+  "git_sha": "e896e61f1534-dirty",
+  "n": 74,
+  "compared": 74,
+  "flips": 3,
+  "both_flips": 3,
+  "flipped_ids": [
+    "bitext-23aee0bd4d",
+    "bitext-5b07dbb7de",
+    "bitext-6a3e416dec"
+  ],
+  "failed_ids": [],
+  "both_correct": [
+    {
+      "pct": 71.62,
+      "k": 53,
+      "n": 74
+    },
+    {
+      "pct": 72.97,
+      "k": 54,
+      "n": 74
+    }
+  ]
+}

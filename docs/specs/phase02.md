@@ -6,21 +6,21 @@ One command runs every dev ticket through the AI and prints a report card: accur
 
 ## Where this starts
 
-The golden set from Phase 1, versioned and split. No model call exists. Add a Cerebras key and a Mistral key to `.env` (from cloud.cerebras.ai and console.mistral.ai). Not Groq, not Cloudflare.
+The golden set from Phase 1, versioned and split. No model call exists. Add a Gemini key and a Cohere trial key to `.env` (from aistudio.google.com/apikey and dashboard.cohere.com/api-keys). Both are free with no card and work from Pakistan. Not Groq, not Cloudflare.
 
 ## Build
 
 - **The output schema** in Zod: category (from the one list), priority (`low | medium | high`), summary (1 to 120 characters).
 - **The first prompt file**, `prompts/triage/v1.yaml`: system prompt, model alias, temperature 0, `max_tokens`, and the instruction to answer only with the JSON. The ticket goes in a clearly fenced block that the prompt calls data, not instructions. A loader validates it.
-- **The model config**: aliases `fast` → Cerebras and a model name, `fallback` → Mistral and a model name, each with its base URL and key variable. Check both providers' current docs for model names that support JSON output.
-- **A provider interface** with three implementations: Cerebras and Mistral through the `openai` package with their base URLs, and the **mock**, which answers deterministically from the ticket text and can be told to be slow. No retries, no fallback yet: one plain call.
+- **The model config**: aliases `fast` → Gemini and a model name, `fallback` → Cohere and a model name, each with its base URL and key variable. Check both providers' current docs for model names that support JSON output. Each provider also carries its free-tier requests per minute, and calls to it are spaced to stay under that limit. Extra parameters a model needs (such as a reasoning effort) live with the model, not the prompt. Pin dated model names, never a `-latest` alias, so the baseline can't move underneath you.
+- **A provider interface** with three implementations: Gemini and Cohere through the `openai` package with their base URLs, and the **mock**, which answers deterministically from the ticket text and can be told to be slow. No retries, no fallback yet: one plain call.
 - **`triage(text, version)`**: loads the prompt file, makes the call, parses and validates the JSON. Returns the answer plus tokens in/out, latency, provider, model and prompt version. A broken answer is returned as a `schema_fail` result, not thrown.
 - **The response cache** in SQLite, keyed by provider, model, prompt version, parameters and ticket text. `--no-cache` skips it.
 - **The graders**, as pure functions: category, priority, both correct, dangerous miss, the summary checks from the project specs.
 - **A dated price table** in the config: list price per million input and output tokens for each model, with the date you copied it.
 - **The report card breaks both-correct down by slice** (`bitext`, `messy`), each with its n, under the total. Shown, never gated.
 - **`pnpm eval --split dev|test [--version] [--provider] [--no-cache]`**: runs the tickets a few at a time, prints the report card and writes `results/<timestamp>-<version>-<split>.json` with every ticket's answer and grade. `--write-baseline` writes `results/baseline.json`.
-- **`pnpm eval:noise`**: runs the test split twice uncached at temperature 0 and prints how many tickets flipped between the two runs. Written into the baseline as the noise floor.
+- **`pnpm eval:noise`**: runs the test split twice uncached at temperature 0 and prints how many tickets flipped between the two runs. Only tickets answered in both runs are compared; a ticket that failed in either (timeout, 5xx, broken JSON) is the provider, not the model, so it is counted separately, never as a flip. Written into the baseline as the noise floor.
 
 ## Constraints
 
@@ -31,14 +31,15 @@ The golden set from Phase 1, versioned and split. No model call exists. Add a Ce
 - Cost is labelled as a list-price estimate with the table's date; the free tiers cost $0.
 - A missing key fails at startup with the variable name and where to get it.
 - A rate-limit error stops the run with a plain line, and a rerun picks up from the cache.
-- The eval prints its call count before it starts.
+- **A baseline has no failed calls.** If any call fails, the run is still saved but `results/baseline.json` is not written, with a line saying how many failed and why. Retries come in Phase 4.
+- **Stay inside the free plans.** Calls are paced to each provider's free per-minute limit, so a slow run is expected, not a bug. The eval prints the expected time with the call count.- The eval prints its call count before it starts.
 
 ## Acceptance check
 
 1. `pnpm eval --split dev --provider mock` runs with no keys and no network, and prints a full report card.
-2. `pnpm eval --split dev` runs on Cerebras. The report card has every number from the project specs, with n.
+2. `pnpm eval --split dev` runs on Gemini. The report card has every number from the project specs, with n.
 3. Run it again. It finishes in a few seconds, every call cached, and latency says "no uncached calls".
-4. `pnpm eval --split dev --provider mistral` runs on the fallback model, so you know how good the fallback is.
+4. `pnpm eval --split dev --provider cohere` runs on the fallback model, so you know how good the fallback is.
 5. Look at five dev mistakes, make `v2` of the prompt, and rerun dev. The report shows `v2` and the cache missed for every ticket. The five mistakes and what `v2` changed because of them are written down in a short error-analysis note in the repo (dev only, never test). It's an interview story later.
 6. `pnpm eval:noise` prints the flip count. Then `pnpm eval --split test --no-cache --write-baseline` saves `results/baseline.json` with the version, dataset version, noise floor and every number.
 7. The report card shows the `messy` slice separately from `bitext`, each with n.

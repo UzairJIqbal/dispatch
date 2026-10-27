@@ -4,6 +4,7 @@ coverage/
 # Downloaded datasets: re-fetched by `pnpm golden:import`, never committed.
 .cache/
 .env*
+!.env.example
 .DS_Store
 *.tsbuildinfo
 

@@ -1,0 +1,5982 @@
+{
+  "run": {
+    "id": "2026-10-26T20:13:04.772Z-v1-dev",
+    "started_at": "2026-10-26T20:13:04.772Z",
+    "finished_at": "2026-10-26T20:13:04.810Z",
+    "split": "dev",
+    "prompt_version": "v1",
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "dataset_version": "v2",
+    "git_sha": "e896e61f1534-dirty",
+    "cache": "used"
+  },
+  "metrics": {
+    "n": 198,
+    "both": {
+      "pct": 49.49,
+      "k": 98,
+      "n": 198
+    },
+    "category": {
+      "pct": 76.26,
+      "k": 151,
+      "n": 198
+    },
+    "priority": {
+      "pct": 67.17,
+      "k": 133,
+      "n": 198
+    },
+    "dangerous_misses": 6,
+    "schema_valid": {
+      "pct": 95.96,
+      "k": 190,
+      "n": 198
+    },
+    "success": {
+      "pct": 95.96,
+      "k": 190,
+      "n": 198
+    },
+    "summary_ok": {
+      "pct": 100,
+      "k": 190,
+      "n": 190
+    },
+    "by_source": {
+      "bitext": {
+        "pct": 49.44,
+        "k": 88,
+        "n": 178
+      },
+      "messy": {
+        "pct": 50,
+        "k": 10,
+        "n": 20
+      }
+    },
+    "errors": {
+      "schema_fail": 8
+    },
+    "calls": {
+      "cached": 198,
+      "uncached": 0,
+      "failed": 0
+    },
+    "latency_s": null,
+    "tokens": {
+      "in_avg": 348,
+      "out_avg": 33,
+      "in_total": 68847,
+      "out_total": 6491
+    },
+    "cost_usd": {
+      "per_request": 0.00018627070707070707,
+      "total": 0.0368816,
+      "price_date": "2026-10-26"
+    }
+  },
+  "tickets": [
+    {
+      "id": "bitext-02a829aa8c",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "low",
+        "summary": "Customer is asking what is needed to make a purchase."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 4908,
+      "tokens_in": 343,
+      "tokens_out": 28
+    },
+    {
+      "id": "bitext-0335d3c2b6",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants to sign up for the corporate newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 812,
+      "tokens_in": 341,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-03c6a229ce",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is trying to report errors with payments."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 4072,
+      "tokens_in": 341,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-05ba49fb53",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is asking for bills from a person."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1072,
+      "tokens_in": 346,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-061d931dcd",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking how to report an online payment issue."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 4329,
+      "tokens_in": 343,
+      "tokens_out": 28
+    },
+    {
+      "id": "bitext-063cdd95c6",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking for assistance on how to leave feedback for services."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1742,
+      "tokens_in": 342,
+      "tokens_out": 30
+    },
+    {
+      "id": "bitext-07724226a6",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "low",
+        "summary": "Customer is asking for assistance to see available shipping methods."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3078,
+      "tokens_in": 340,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-08587fe9f2",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "low",
+        "summary": "Customer needs to know how to download invoice #37777"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 740,
+      "tokens_in": 351,
+      "tokens_out": 31
+    },
+    {
+      "id": "bitext-0f853fe297",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is having trouble entering a secondary delivery address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1977,
+      "tokens_in": 340,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-108e95fc19",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "medium",
+        "summary": "Customer wants to delete their premium account."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1606,
+      "tokens_in": 341,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-10e5927f40",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking for an update on the status of their refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 6617,
+      "tokens_in": 345,
+      "tokens_out": 30
+    },
+    {
+      "id": "bitext-1472128377",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": null,
+      "error": {
+        "class": "schema_fail",
+        "message": "✖ Invalid input: expected object, received array"
+      },
+      "raw": "[\n  {\n    \"category\": \"invoice\",\n    \"priority\": \"medium\",\n    \"summary\": \"Customer needs help finding invoice #37777.\"\n  }\n]",
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": true,
+      "latency_ms": 1468,
+      "tokens_in": 346,
+      "tokens_out": 43
+    },
+    {
+      "id": "bitext-18b0f35240",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Assistance needed to submit the secondary shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 13061,
+      "tokens_in": 340,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-1cad5df969",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "low",
+        "summary": "Customer is asking about shipping periods."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2277,
+      "tokens_in": 340,
+      "tokens_out": 32
+    },
+    {
+      "id": "bitext-1de5b8d3b9",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "high",
+        "summary": "Customer wants help making a claim against the business."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3037,
+      "tokens_in": 342,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-2194a66e74",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer wants help subscribing to the corporate newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 835,
+      "tokens_in": 344,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-21a62bf9d9",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "high",
+        "summary": "Customer cannot open a user account and needs help reporting sign-up errors."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1050,
+      "tokens_in": 346,
+      "tokens_out": 32
+    },
+    {
+      "id": "bitext-21f0319607",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "low",
+        "summary": "Customer is asking for information regarding withdrawal fees."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1635,
+      "tokens_in": 346,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-238a2b7df3",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is requesting help to get bill #85632."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1672,
+      "tokens_in": 344,
+      "tokens_out": 39
+    },
+    {
+      "id": "bitext-23a6407f3a",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer wants to cancel their newsletter subscription."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1012,
+      "tokens_in": 343,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-24383a8db2",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "low",
+        "summary": "Customer needs assistance finding termination fees."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1007,
+      "tokens_in": 343,
+      "tokens_out": 24
+    },
+    {
+      "id": "bitext-2462644db4",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Request to sign up for the company newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3332,
+      "tokens_in": 338,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-24ce4860c3",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer needs assistance purchasing multiple articles."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 780,
+      "tokens_in": 341,
+      "tokens_out": 24
+    },
+    {
+      "id": "bitext-25a0e74cf5",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "medium",
+        "summary": "Customer wants help setting up another delivery address."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1349,
+      "tokens_in": 342,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-27218ff1a6",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking how to request a refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 4244,
+      "tokens_in": 340,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-28da896bd5",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking how to view accepted payment methods."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 788,
+      "tokens_in": 341,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-298939a055",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking about the cases in which they can request reimbursements."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2333,
+      "tokens_in": 346,
+      "tokens_out": 39
+    },
+    {
+      "id": "bitext-2a9c6cd13a",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking if their refund of {{Refund Amount}} dollars has been processed yet."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1868,
+      "tokens_in": 348,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-2b9365e5c4",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking for a list of accepted payment options."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1728,
+      "tokens_in": 346,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-318776ec09",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "medium",
+        "summary": "Customer is asking to check the early termination charge."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1166,
+      "tokens_in": 343,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-319db8fa0b",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking how to unsubscribe from the newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1197,
+      "tokens_in": 344,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-336fa8c5da",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "high",
+        "summary": "Customer needs to retrieve their user account PIN code."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1304,
+      "tokens_in": 343,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-36d292f122",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is reporting issues with payments."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1055,
+      "tokens_in": 342,
+      "tokens_out": 32
+    },
+    {
+      "id": "bitext-3a5c049f06",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Customer is asking if it is possible to place an order from Delivery Country."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1698,
+      "tokens_in": 345,
+      "tokens_out": 40
+    },
+    {
+      "id": "bitext-3af299829e",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer is requesting assistance to demand reimbursement of money."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3497,
+      "tokens_in": 342,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-3cc23ba7b1",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs help updating their shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1600,
+      "tokens_in": 338,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-3dbf08fe82",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking how to submit feedback for the services."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2011,
+      "tokens_in": 344,
+      "tokens_out": 28
+    },
+    {
+      "id": "bitext-4038407068",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "low",
+        "summary": "Customer wants to know the withdrawal fees."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 6609,
+      "tokens_in": 340,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-403cac0ef9",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking for help to subscribe to the newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3975,
+      "tokens_in": 341,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-415fb84cca",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking for assistance to view the cancellation fee."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2287,
+      "tokens_in": 341,
+      "tokens_out": 28
+    },
+    {
+      "id": "bitext-41daf1fc64",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "low",
+        "summary": "Customer is asking about shipping times and needs help."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2809,
+      "tokens_in": 347,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-42bfd6e300",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "high",
+        "summary": "Customer needs help resetting their account password."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3012,
+      "tokens_in": 342,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-444895f4b0",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Customer is asking how to check the expected delivery time for their item."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 924,
+      "tokens_in": 345,
+      "tokens_out": 31
+    },
+    {
+      "id": "bitext-45fb6693fd",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "high",
+        "summary": "Customer states they need to lodge a claim against the organization."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3159,
+      "tokens_in": 342,
+      "tokens_out": 29
+    },
+    {
+      "id": "bitext-470f4df16f",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to file a reclamation."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 725,
+      "tokens_in": 347,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-4715229046",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is reporting payment problems."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2971,
+      "tokens_in": 336,
+      "tokens_out": 31
+    },
+    {
+      "id": "bitext-47b71d3343",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "low",
+        "summary": "Customer is asking how to check available shipping options."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 772,
+      "tokens_in": 347,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-4819f58099",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking for assistance to chat with an operator."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1899,
+      "tokens_in": 340,
+      "tokens_out": 28
+    },
+    {
+      "id": "bitext-4b445c485d",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking where they can receive the company newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1021,
+      "tokens_in": 341,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-4b65d1c8f7",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer needs assistance talking to customer service."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1293,
+      "tokens_in": 339,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-4b8bc9efc8",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "low",
+        "summary": "Customer is asking how to download bill #00108."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1207,
+      "tokens_in": 349,
+      "tokens_out": 39
+    },
+    {
+      "id": "bitext-4d0bceb0fe",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking how to view early exit fees."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1718,
+      "tokens_in": 344,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-50c9d70f9a",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "high",
+        "summary": "Customer is reporting an issue with payment."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1087,
+      "tokens_in": 341,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-51897a848d",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs help downloading invoices."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1074,
+      "tokens_in": 347,
+      "tokens_out": 31
+    },
+    {
+      "id": "bitext-52d1683037",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking how to view withdrawal charges."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1337,
+      "tokens_in": 344,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-539e21e56b",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer wants to modify purchase {{Order Number}}."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1062,
+      "tokens_in": 344,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-56212531ec",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer wants help notifying about a payment trouble."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 5940,
+      "tokens_in": 343,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-57658989ac",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants to leave feedback for the service"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1371,
+      "tokens_in": 343,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-57a6b63362",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "low",
+        "summary": "Customer wants assistance seeing the withdrawal penalty."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1189,
+      "tokens_in": 340,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-58405215b8",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking for assistance to send feedback about the company."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1088,
+      "tokens_in": 341,
+      "tokens_out": 29
+    },
+    {
+      "id": "bitext-5845e5493c",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer needs assistance editing purchase for order number"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2194,
+      "tokens_in": 342,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-58e09b39e1",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "medium",
+        "summary": "Customer is asking for the expected delivery time of their product."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 5573,
+      "tokens_in": 344,
+      "tokens_out": 37
+    },
+    {
+      "id": "bitext-591c5d6e73",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "medium",
+        "summary": "Customer is asking when their package will arrive."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 780,
+      "tokens_in": 346,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-596f9aaf90",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs to know how to submit a new shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 5554,
+      "tokens_in": 344,
+      "tokens_out": 29
+    },
+    {
+      "id": "bitext-5a51d90565",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is requesting a lost invoice from {{Person Name}}."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1070,
+      "tokens_in": 346,
+      "tokens_out": 37
+    },
+    {
+      "id": "bitext-5eae44f303",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer needs to change their user information."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1075,
+      "tokens_in": 341,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-5f6a04ce40",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer is requesting a refund of their money."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1057,
+      "tokens_in": 342,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-6153de2bf4",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking how to view the withdrawal fee."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2747,
+      "tokens_in": 346,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-632f3c96a9",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer needs help accessing or using the pro profile."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2197,
+      "tokens_in": 348,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-6337822dce",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "low",
+        "summary": "Customer needs to know how to download an invoice."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2209,
+      "tokens_in": 348,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-640e6f2d55",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is having trouble changing their address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2442,
+      "tokens_in": 336,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-644143113c",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking how to cancel their newsletter subscription."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1380,
+      "tokens_in": 347,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-6675cc12d1",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "low",
+        "summary": "Customer is asking how to download bill #37777."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 4432,
+      "tokens_in": 352,
+      "tokens_out": 39
+    },
+    {
+      "id": "bitext-66c9327beb",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to contact customer service."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2913,
+      "tokens_in": 346,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-69761de0be",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer needs help removing an account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2049,
+      "tokens_in": 350,
+      "tokens_out": 32
+    },
+    {
+      "id": "bitext-6a10ad7848",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Customer is asking how to check the expected delivery time for their order."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 4033,
+      "tokens_in": 344,
+      "tokens_out": 39
+    },
+    {
+      "id": "bitext-6b13149ee1",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer wants assistance to switch to the standard account"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 6957,
+      "tokens_in": 342,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-6b824dc7df",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer wants to update their delivery address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2076,
+      "tokens_in": 343,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-6bc1ba4ba7",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking about the customer support operating hours."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 4841,
+      "tokens_in": 345,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-6e8142a12b",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer wants to correct the shipping address for an order."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3088,
+      "tokens_in": 346,
+      "tokens_out": 28
+    },
+    {
+      "id": "bitext-6fd5993e5d",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "high",
+        "summary": "Customer is asking how to file a consumer reclamation against the business."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3864,
+      "tokens_in": 344,
+      "tokens_out": 30
+    },
+    {
+      "id": "bitext-70da4c5967",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking how to cancel their newsletter subscription."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 5701,
+      "tokens_in": 346,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-7146cd43a9",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is unable to change the address."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 842,
+      "tokens_in": 339,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-7327865ec6",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is asking how to check when their purchase will arrive."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1539,
+      "tokens_in": 346,
+      "tokens_out": 29
+    },
+    {
+      "id": "bitext-744e36f5af",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs help setting up a secondary shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1498,
+      "tokens_in": 342,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-7a39876530",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking how to cancel their purchase for order {{Order Number}}."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1142,
+      "tokens_in": 344,
+      "tokens_out": 40
+    },
+    {
+      "id": "bitext-7b616e1f40",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to get in touch with customer service."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1328,
+      "tokens_in": 344,
+      "tokens_out": 29
+    },
+    {
+      "id": "bitext-7c61444f5e",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "high",
+        "summary": "Customer is asking how to lodge a consumer complaint against the business."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1175,
+      "tokens_in": 342,
+      "tokens_out": 30
+    },
+    {
+      "id": "bitext-7c7ecb2dd5",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is requesting information about correcting a delivery address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1373,
+      "tokens_in": 339,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-7ec79ef081",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is reporting issues with online payment."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1177,
+      "tokens_in": 342,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-7f02cf3b56",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is having issues editing their address."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1037,
+      "tokens_in": 339,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-841524fb51",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs assistance to download invoice #85632."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1084,
+      "tokens_in": 346,
+      "tokens_out": 38
+    },
+    {
+      "id": "bitext-8415f16253",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is asking for assistance to check their payment methods."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1052,
+      "tokens_in": 343,
+      "tokens_out": 28
+    },
+    {
+      "id": "bitext-85c54c41ff",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": null,
+      "error": {
+        "class": "schema_fail",
+        "message": "✖ Invalid input: expected object, received array"
+      },
+      "raw": "[\n  {\n    \"category\": \"cancel\",\n    \"priority\": \"low\",\n    \"summary\": \"Customer wants to know how to see cancellation fees.\"\n  }\n]",
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": true,
+      "latency_ms": 1331,
+      "tokens_in": 348,
+      "tokens_out": 41
+    },
+    {
+      "id": "bitext-86965c5826",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is experiencing errors while entering a new shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2010,
+      "tokens_in": 339,
+      "tokens_out": 28
+    },
+    {
+      "id": "bitext-86c349fe1d",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "low",
+        "summary": "Asking how to change to the Account Type account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1109,
+      "tokens_in": 348,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-86ff36d3a1",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "low",
+        "summary": "Customer is asking about information regarding cancellation fees."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3058,
+      "tokens_in": 341,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-8711f923f3",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is requesting invoice #00108."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1879,
+      "tokens_in": 347,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-8a967335b0",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking where they can update their address."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3207,
+      "tokens_in": 339,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-8b1762558c",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking how to report a payment error."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1261,
+      "tokens_in": 346,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-8b3d802a5c",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer wants to upgrade to the platinum account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1874,
+      "tokens_in": 346,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-8b99e0cd25",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking about available payment methods."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 5838,
+      "tokens_in": 341,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-8be54ff56c",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer needs assistance with cancelling order {{Order Number}}."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2353,
+      "tokens_in": 343,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-8c3d09a59d",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking how to leave feedback."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 4443,
+      "tokens_in": 341,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-8c6efac599",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking for help writing a review."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2510,
+      "tokens_in": 340,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-8d18e6cd33",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "low",
+        "summary": "Customer wants help viewing a bill."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1186,
+      "tokens_in": 344,
+      "tokens_out": 32
+    },
+    {
+      "id": "bitext-8d4cdeba2a",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking how to report a payment problem."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1028,
+      "tokens_in": 343,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-8e38afc312",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking where to find the termination penalties."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2389,
+      "tokens_in": 341,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-90218bd716",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is requesting a refund or money restitution."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1942,
+      "tokens_in": 342,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-9121a07a08",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking to see the termination fee."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1373,
+      "tokens_in": 340,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-917814e017",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "medium",
+        "summary": "Customer wants to know how to check when their product will arrive."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1920,
+      "tokens_in": 348,
+      "tokens_out": 30
+    },
+    {
+      "id": "bitext-9591b8a39f",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking for customer assistance operating hours."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1534,
+      "tokens_in": 345,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-95c2e5c358",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking for an update on the status of their refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1691,
+      "tokens_in": 344,
+      "tokens_out": 38
+    },
+    {
+      "id": "bitext-95dfba8a33",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking what payment methods are accepted."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1129,
+      "tokens_in": 340,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-96ede1b14d",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "medium",
+        "summary": "Customer is asking to check when their product will arrive."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1238,
+      "tokens_in": 342,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-9af6567923",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "high",
+        "summary": "Customer wants to lodge a consumer complaint against the company."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1388,
+      "tokens_in": 343,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-9c66e15e70",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is having problems submitting their shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1843,
+      "tokens_in": 338,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-9e5096fa33",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking how to cancel an order."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1863,
+      "tokens_in": 347,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-9f2bc37c57",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "low",
+        "summary": "Needs help opening a freemium account for daughter"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1468,
+      "tokens_in": 345,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-a08edfa586",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking for help unsubscribing from the corporate newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1138,
+      "tokens_in": 342,
+      "tokens_out": 38
+    },
+    {
+      "id": "bitext-a3a70a621e",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to lodge a consumer claim."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1729,
+      "tokens_in": 344,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-a60c04dae9",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants assistance to leave feedback about a product."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 973,
+      "tokens_in": 342,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-a8b87ca6c4",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is asking how to obtain invoice #37777."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1040,
+      "tokens_in": 345,
+      "tokens_out": 31
+    },
+    {
+      "id": "bitext-a9464bd84c",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "low",
+        "summary": "Customer is asking for help shopping some articles."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1052,
+      "tokens_in": 344,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-ae9c0f3abe",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking for help to check the status of their order."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1058,
+      "tokens_in": 342,
+      "tokens_out": 30
+    },
+    {
+      "id": "bitext-b0022d3a4d",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer wants help to speak to someone."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2134,
+      "tokens_in": 339,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-b0419480c7",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking about the cases in which they can request a refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1189,
+      "tokens_in": 345,
+      "tokens_out": 39
+    },
+    {
+      "id": "bitext-b0a79d1ee2",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer wants assistance seeing the cancellation penalty."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 4550,
+      "tokens_in": 339,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-b2e479b417",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking where to request money reimbursements."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2434,
+      "tokens_in": 342,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-b5880e5146",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "high",
+        "summary": "Customer wants to make a complaint against the business."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1130,
+      "tokens_in": 342,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-b71979c7d8",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking for assistance to leave product feedback."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2329,
+      "tokens_in": 341,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-b7e7283e05",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking how to request a refund for their money."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1958,
+      "tokens_in": 344,
+      "tokens_out": 37
+    },
+    {
+      "id": "bitext-b81e2d46e1",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking for help to receive the newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2912,
+      "tokens_in": 341,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-bccdf5acdd",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is requesting help to cancel order {{Order Number}}."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 967,
+      "tokens_in": 343,
+      "tokens_out": 29
+    },
+    {
+      "id": "bitext-bcd45ee9ca",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer wants to know when to expect their shipment."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1328,
+      "tokens_in": 345,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-c26942b1a5",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants help sending feedback about a product."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1039,
+      "tokens_in": 342,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-c3cd1fe5ed",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is asking for help to view their bill."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1045,
+      "tokens_in": 342,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-c7d6650cae",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking to speak with a human operator."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1059,
+      "tokens_in": 343,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-c88fa6cf43",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs to enter a shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1778,
+      "tokens_in": 340,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-c96d51b9f2",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer forgot to include some products in their order."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1167,
+      "tokens_in": 345,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-ca5f39891c",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "medium",
+        "summary": "Customer is asking for the expected delivery time of their order."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3656,
+      "tokens_in": 343,
+      "tokens_out": 37
+    },
+    {
+      "id": "bitext-cb51d51d69",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": null,
+      "error": {
+        "class": "schema_fail",
+        "message": "✖ Invalid input: expected object, received array"
+      },
+      "raw": "[\n  {\n    \"category\": \"delivery\",\n    \"priority\": \"medium\",\n    \"summary\": \"Customer is asking for the ETA of their purchase using {{Order Number}}.\"\n  }\n]",
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": true,
+      "latency_ms": 886,
+      "tokens_in": 345,
+      "tokens_out": 46
+    },
+    {
+      "id": "bitext-cbbf455ae0",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer is demanding rebates and refund of their money."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1767,
+      "tokens_in": 341,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-cced7fd709",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "medium",
+        "summary": "Customer is encountering errors when attempting to edit their delivery address."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1021,
+      "tokens_in": 342,
+      "tokens_out": 29
+    },
+    {
+      "id": "bitext-cd5e004fb1",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is requesting help to get compensation."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1003,
+      "tokens_in": 340,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-d0acee6e3d",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer needs to know how to notify the company of a payment error."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3459,
+      "tokens_in": 347,
+      "tokens_out": 31
+    },
+    {
+      "id": "bitext-d1020392d2",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "low",
+        "summary": "Customer is asking about standard delivery times for an item."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 855,
+      "tokens_in": 345,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-d1e3b4a0ac",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is requesting bill #37777."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1078,
+      "tokens_in": 341,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-d2dc255aa2",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer wants to edit their user information."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 987,
+      "tokens_in": 344,
+      "tokens_out": 33
+    },
+    {
+      "id": "bitext-d775095183",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Inquiry about accepted payment methods."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1350,
+      "tokens_in": 343,
+      "tokens_out": 32
+    },
+    {
+      "id": "bitext-d8bcb7a9a0",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "high",
+        "summary": "Customer reports a payment issue."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1964,
+      "tokens_in": 342,
+      "tokens_out": 31
+    },
+    {
+      "id": "bitext-da022b2203",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to contact customer support."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1636,
+      "tokens_in": 345,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-dc1bfbf7b3",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "medium",
+        "summary": "Customer is requesting the ETA for order {{Order Number}}."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3295,
+      "tokens_in": 347,
+      "tokens_out": 37
+    },
+    {
+      "id": "bitext-dc26c2f2b2",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking for help to cancel their newsletter subscription."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 850,
+      "tokens_in": 343,
+      "tokens_out": 28
+    },
+    {
+      "id": "bitext-df7e4db1cf",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": null,
+      "error": {
+        "class": "schema_fail",
+        "message": "✖ Unrecognized key: \"medium\"\n✖ Invalid option: expected one of \"low\"|\"medium\"|\"high\"\n  → at priority"
+      },
+      "raw": "{\n  \"category\": \"cancel\",\n  \"medium\": \"medium\",\n  \"summary\": \"Customer wants to cancel purchase for order number {{Order Number}}\"\n}",
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": true,
+      "latency_ms": 1183,
+      "tokens_in": 341,
+      "tokens_out": 37
+    },
+    {
+      "id": "bitext-dfca4e0062",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking about how to sign up for the newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1074,
+      "tokens_in": 343,
+      "tokens_out": 29
+    },
+    {
+      "id": "bitext-e5590f7b4d",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "low",
+        "summary": "Customer is requesting information about opening an account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1113,
+      "tokens_in": 343,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-e55c71d720",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to contact an operator."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 6582,
+      "tokens_in": 343,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-e6cdcd8cbf",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "low",
+        "summary": "Customer wants help purchasing some items."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1162,
+      "tokens_in": 340,
+      "tokens_out": 24
+    },
+    {
+      "id": "bitext-ea62aff5e1",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Customer is asking about the expected delivery time."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1154,
+      "tokens_in": 343,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-ebaeac11a2",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer needs assistance to check the cancellation fee."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1046,
+      "tokens_in": 341,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-ec995abc80",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": null,
+      "error": {
+        "class": "schema_fail",
+        "message": "✖ Invalid input: expected object, received array"
+      },
+      "raw": "[\n  {\n    \"category\": \"contact\",\n    \"priority\": \"low\",\n    \"summary\": \"Customer is asking how to contact a person.\"\n  }\n]",
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": true,
+      "latency_ms": 3545,
+      "tokens_in": 340,
+      "tokens_out": 40
+    },
+    {
+      "id": "bitext-eeb0beafa4",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is unable to make payments and asks how to report payment issues."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3877,
+      "tokens_in": 344,
+      "tokens_out": 39
+    },
+    {
+      "id": "bitext-ef5c4f11a6",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer cannot see the status of their restitution."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 891,
+      "tokens_in": 346,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-efc703c5ac",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking for help checking their refund status."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1124,
+      "tokens_in": 339,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-f047ad569e",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking about customer service operating hours."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1105,
+      "tokens_in": 345,
+      "tokens_out": 26
+    },
+    {
+      "id": "bitext-f22c457e69",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "high",
+        "summary": "Customer needs assistance to report and resolve a signup issue."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1069,
+      "tokens_in": 344,
+      "tokens_out": 28
+    },
+    {
+      "id": "bitext-f26121c2e4",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "medium",
+        "summary": "Customer is having issues trying to edit their delivery address."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1188,
+      "tokens_in": 342,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-f4baaf7b7e",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "low",
+        "summary": "Customer needs help opening a standard account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1257,
+      "tokens_in": 339,
+      "tokens_out": 25
+    },
+    {
+      "id": "bitext-f571b402be",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is asking how to obtain bill #85632."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1703,
+      "tokens_in": 353,
+      "tokens_out": 31
+    },
+    {
+      "id": "bitext-f6f3b3a317",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "low",
+        "summary": "Customer is asking how to download invoice #85632."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1135,
+      "tokens_in": 349,
+      "tokens_out": 39
+    },
+    {
+      "id": "bitext-f730282c92",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking for customer support operating hours."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1756,
+      "tokens_in": 342,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-f7d8114633",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is requesting to speak with a live agent."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1583,
+      "tokens_in": 342,
+      "tokens_out": 35
+    },
+    {
+      "id": "bitext-fb33bef3d4",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants to sign up for the corporate newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2716,
+      "tokens_in": 342,
+      "tokens_out": 27
+    },
+    {
+      "id": "bitext-fcfaa3fd11",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking for assistance on how to request a refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1292,
+      "tokens_in": 341,
+      "tokens_out": 29
+    },
+    {
+      "id": "bitext-fd18dd5c9d",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking how to view the accepted payment modalities."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1097,
+      "tokens_in": 347,
+      "tokens_out": 36
+    },
+    {
+      "id": "bitext-feaa7e5279",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to contact customer support."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2806,
+      "tokens_in": 347,
+      "tokens_out": 34
+    },
+    {
+      "id": "bitext-feb532ab36",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "low",
+        "summary": "Customer needs help finding invoice 85632."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 717,
+      "tokens_in": 349,
+      "tokens_out": 29
+    },
+    {
+      "id": "messy-05",
+      "source": "messy",
+      "expected": {
+        "category": "cancel",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking about cancellation fees and mentions a previous policy of no charges."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1299,
+      "tokens_in": 359,
+      "tokens_out": 40
+    },
+    {
+      "id": "messy-06",
+      "source": "messy",
+      "expected": {
+        "category": "contact",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking for the customer service phone number and complaining no one is answering."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1497,
+      "tokens_in": 355,
+      "tokens_out": 33
+    },
+    {
+      "id": "messy-08",
+      "source": "messy",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": null,
+      "error": {
+        "class": "schema_fail",
+        "message": "✖ Invalid input: expected object, received array"
+      },
+      "raw": "[\n  {\n    \"category\": \"delivery\",\n    \"priority\": \"low\",\n    \"summary\": \"Customer is asking about delivery options and next day availability for Islamabad.\"\n  }\n]",
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": true,
+      "latency_ms": 1078,
+      "tokens_in": 347,
+      "tokens_out": 44
+    },
+    {
+      "id": "messy-09",
+      "source": "messy",
+      "expected": {
+        "category": "delivery",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "medium",
+        "summary": "Customer is asking for delivery time as they need the order by Friday for a wedding."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1034,
+      "tokens_in": 350,
+      "tokens_out": 42
+    },
+    {
+      "id": "messy-10",
+      "source": "messy",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": null,
+      "error": {
+        "class": "schema_fail",
+        "message": "✖ Invalid input: expected object, received array"
+      },
+      "raw": "[\n  {\n    \"category\": \"delivery\",\n    \"priority\": \"low\",\n    \"summary\": \"Customer is asking about standard delivery time to Lahore, Sunday deliveries, and express shipping options.\"\n  }\n]",
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": true,
+      "latency_ms": 1149,
+      "tokens_in": 362,
+      "tokens_out": 49
+    },
+    {
+      "id": "messy-11",
+      "source": "messy",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "high",
+        "summary": "Customer complains about app crashing during checkout and unhelpful support, threatening to leave."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1090,
+      "tokens_in": 360,
+      "tokens_out": 41
+    },
+    {
+      "id": "messy-12",
+      "source": "messy",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": null,
+      "error": {
+        "class": "schema_fail",
+        "message": "✖ Invalid input: expected object, received array"
+      },
+      "raw": "[\n  {\n    \"category\": \"feedback\",\n    \"priority\": \"low\",\n    \"summary\": \"Customer shares positive delivery experience and asks where to leave a review.\"\n  }\n]",
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": true,
+      "latency_ms": 1189,
+      "tokens_in": 364,
+      "tokens_out": 44
+    },
+    {
+      "id": "messy-13",
+      "source": "messy",
+      "expected": {
+        "category": "feedback",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer complaining about a rude phone agent who hung up twice."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1661,
+      "tokens_in": 355,
+      "tokens_out": 37
+    },
+    {
+      "id": "messy-14",
+      "source": "messy",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs an invoice for their last purchase and cannot find it in the app."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1037,
+      "tokens_in": 354,
+      "tokens_out": 33
+    },
+    {
+      "id": "messy-15",
+      "source": "messy",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "low",
+        "summary": "Customer is asking how to download invoices for the past three months for tax purposes."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1628,
+      "tokens_in": 355,
+      "tokens_out": 41
+    },
+    {
+      "id": "messy-16",
+      "source": "messy",
+      "expected": {
+        "category": "invoice",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "high",
+        "summary": "Incorrect company name and overcharge on invoice for order 48213."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1050,
+      "tokens_in": 382,
+      "tokens_out": 42
+    },
+    {
+      "id": "messy-19",
+      "source": "messy",
+      "expected": {
+        "category": "order",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "high",
+        "summary": "Customer is threatening a bank dispute because their order is late and tracking hasn't updated in 9 days."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 2547,
+      "tokens_in": 373,
+      "tokens_out": 47
+    },
+    {
+      "id": "messy-20",
+      "source": "messy",
+      "expected": {
+        "category": "order",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "high",
+        "summary": "Customer demands to know the actual location and arrival date of delayed order PK-77120 after failed support chats."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1632,
+      "tokens_in": 665,
+      "tokens_out": 42
+    },
+    {
+      "id": "messy-22",
+      "source": "messy",
+      "expected": {
+        "category": "payment",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is asking about accepting JazzCash or Easypaisa because their card keeps getting declined."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 3917,
+      "tokens_in": 349,
+      "tokens_out": 43
+    },
+    {
+      "id": "messy-24",
+      "source": "messy",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer threatens legal action if missing refund for returned item is not received by Monday."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 794,
+      "tokens_in": 369,
+      "tokens_out": 33
+    },
+    {
+      "id": "messy-25",
+      "source": "messy",
+      "expected": {
+        "category": "refund",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking about the refund policy for opened products."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1375,
+      "tokens_in": 356,
+      "tokens_out": 36
+    },
+    {
+      "id": "messy-26",
+      "source": "messy",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer has not received a refund of 18,500 rupees after returning defective headphones."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1153,
+      "tokens_in": 617,
+      "tokens_out": 45
+    },
+    {
+      "id": "messy-27",
+      "source": "messy",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer wants to change the shipping address for their unshifted order to House 12, Street 4, G-11 Islamabad."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1068,
+      "tokens_in": 374,
+      "tokens_out": 53
+    },
+    {
+      "id": "messy-28",
+      "source": "messy",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "low",
+        "summary": "Customer is asking how to set up a different shipping address for gifts."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1046,
+      "tokens_in": 353,
+      "tokens_out": 39
+    },
+    {
+      "id": "messy-29",
+      "source": "messy",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer wants to stop receiving daily newsletter emails as the unsubscribe link is not working."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": true,
+      "latency_ms": 1617,
+      "tokens_in": 354,
+      "tokens_out": 41
+    }
+  ]
+}

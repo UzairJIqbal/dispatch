@@ -39,7 +39,7 @@ A working service and eval that make one plain call per ticket, with no retries 
 4. Set the mock to `429` with `Retry-After: 2`. The log shows a 2-second wait before the retry.
 5. Set the mock to `bad_json_once`. The answer is valid and the log shows one repair. Set it to `bad_json`: the response is 502 `schema_fail`.
 6. Set the mock to `hang`. The request returns within the 20 s deadline with a typed error, never hangs.
-7. Put a wrong Cerebras key in `.env` and send a real ticket. It's classified `auth`, not retried, and answered by Mistral.
+7. Put a wrong Gemini key in `.env` and send a real ticket. It's classified `auth`, not retried, and answered by Cohere.
 
 ## Not in this phase
 

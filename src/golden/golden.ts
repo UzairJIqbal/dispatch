@@ -8,7 +8,7 @@ import { GoldenHeaderSchema, GoldenRowSchema, type GoldenHeader, type GoldenRow,
 import { splitFor } from "./split.js";
 
 // Bump this, and add a line to evals/CHANGELOG.md, whenever the set changes.
-export const GOLDEN_VERSION = "v1";
+export const GOLDEN_VERSION = "v2";
 
 export function buildGoldenRows(tickets: readonly Ticket[], labels: Labels): GoldenRow[] {
   const missing = tickets.filter((t) => !(t.id in labels));

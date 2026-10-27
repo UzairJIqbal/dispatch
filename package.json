@@ -10,6 +10,8 @@
     "golden:import": "tsx scripts/golden-import.ts",
     "label": "tsx scripts/label.ts",
     "golden:stats": "tsx scripts/golden-stats.ts",
+    "eval": "tsx scripts/eval.ts",
+    "eval:noise": "tsx scripts/eval-noise.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
@@ -18,6 +20,8 @@
   "packageManager": "pnpm@12.9.1",
   "dependencies": {
     "csv-parse": "^7.0.3",
+    "openai": "^7.43.0",
+    "yaml": "^2.9.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {

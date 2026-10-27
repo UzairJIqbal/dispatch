@@ -27,7 +27,7 @@ The longer version, as a courier company.
 
 - **The golden set is the answer key.** About 270 tickets with the correct category and priority written down by you. Split into **dev** (the practice exam you study) and **test** (the final exam you only grade on).
 - **The prompt file is the instruction card** handed to the driver. It has a version number. Changing the instructions means a new card, `v3 → v4`, never scribbling on the old one.
-- **The gateway is the dispatcher.** It sends the job to van A (Cerebras). If van A doesn't answer in time, it waits a little and tries again. If van A keeps failing, it sends van B (Mistral), and stops calling van A for a while (the circuit breaker). It never retries a job that was wrong in the first place (a 400).
+- **The gateway is the dispatcher.** It sends the job to van A (Gemini). If van A doesn't answer in time, it waits a little and tries again. If van A keeps failing, it sends van B (Cohere), and stops calling van A for a while (the circuit breaker). It never retries a job that was wrong in the first place (a 400).
 - **Zod is the parcel check at the door.** If the JSON is broken, the dispatcher sends it back once with the error written on it. If it's still broken, the customer gets a clear typed error, never a wrong answer.
 - **The trace is the parcel's tracking history.** Every request has one: when it came in, which prompt, which provider, each attempt, how long each took, how many tokens.
 - **The dashboard is the control-room wall.** Requests per second, p95 latency, errors by class, fallback rate, cost per minute, and how much of this week's error budget is left.
@@ -39,8 +39,8 @@ The longer version, as a courier company.
 client ──► Express service ──► release config (Upstash) picks prompt version
               │                      stable v3 · canary v4 at 10%
               ▼
-         triage() ──► prompt file ──► gateway ──► Cerebras  (primary)
-              │                          │ ├──► Mistral   (fallback)
+         triage() ──► prompt file ──► gateway ──► Gemini    (primary)
+              │                          │ ├──► Cohere    (fallback)
               │                          │ └──► mock      (tests, drills, load)
               ▼                          ▼
         Zod check ── repair once ── typed error
@@ -94,7 +94,7 @@ Pressure to break this comes from wanting a good-looking README. Cached response
 
 ## Scope
 
-- **The golden set**: ~240 tickets sampled from the Bitext customer-support dataset plus ~30 messy tickets written by you, each with category and priority labelled by you, split into dev and test by a fixed rule. In Phase 11 it grows to `v2` with the tickets the canary drill exposed and ~15 prompt-injection tickets.
+- **The golden set**: ~240 tickets sampled from the Bitext customer-support dataset plus ~30 messy tickets written by you, each with category and priority labelled by you, split into dev and test by a fixed rule. In Phase 11 it grows to `v3` with the tickets the canary drill exposed and ~15 prompt-injection tickets.
 - **The triage call**: one prompt file, one model call, one Zod-checked JSON answer.
 - **The eval command**: per-field accuracy, schema-valid rate, p50/p95/p99, tokens and cost, written to `results/`.
 - **The service**: Express 5, one endpoint, health checks, API keys, rate limits, Docker.
@@ -124,10 +124,10 @@ Pressure to break this comes from wanting a good-looking README. Cached response
 |---|---|---|
 | Language | TypeScript strict, Node 22 | What you already ship in. |
 | Service | Express 5 | On your resume; boring and well known. |
-| Model client | `openai` npm package | Cerebras, Mistral and the mock all speak the OpenAI-compatible API, so one client with a different `baseURL` per provider. |
+| Model client | `openai` npm package | Gemini, Cohere and the mock all speak the OpenAI-compatible API, so one client with a different `baseURL` per provider. |
 | Gateway | our own code | Retries, fallback and the circuit breaker are the skills being shown. |
 | Validation | Zod | Every boundary: requests, model output, config, Redis. |
-| Providers | Cerebras (primary), Mistral (fallback), mock | Free tiers that are **not** the Groq and Cloudflare accounts VerifAI needs. Two real providers make failover real. |
+| Providers | Google Gemini (primary), Cohere (fallback, trial key), mock | Free with no card that work from Pakistan, that are **not** the Groq and Cloudflare accounts VerifAI needs. Two real providers make failover real. |
 | Release config + rate limits | Upstash Redis | Free, you used it in DevPulse, and the release config can change without a rebuild. |
 | Traces | OpenTelemetry → Langfuse Cloud | The industry standard for traces, into a viewer you know from VerifAI. |
 | Metrics | `prom-client` → Prometheus + Grafana | The standard pair. Locally in docker compose, Grafana Cloud free when deployed. |
@@ -139,7 +139,7 @@ Pressure to break this comes from wanting a good-looking README. Cached response
 | CI/CD | GitHub Actions | Free for public repos. |
 | Hosting | Render free | Runs a Docker image for free. Fly.io no longer has a free plan. |
 
-Free-tier limits change. Before each phase that adds a service, check its current free plan and write the limit that matters in the README.
+Free-tier limits change. Before each phase that adds a service, check its current free plan and write the limit that matters in the README. The provider limits also live in the model config, which paces every call to stay under them.
 
 ## How it works
 
@@ -193,7 +193,7 @@ Pure functions, per ticket:
 
 ### The eval command
 
-`pnpm eval --split dev|test [--version v3] [--provider mock|cerebras|mistral] [--no-cache]` runs every ticket, a few at a time, and prints and saves one table:
+`pnpm eval --split dev|test [--version v3] [--provider mock|gemini|cohere] [--no-cache]` runs every ticket, a few at a time, and prints and saves one table:
 
 `both 84.0% · category 91.1% · priority 87.5% · dangerous misses 1 · schema-valid 97.8% · success 100% · p50 0.71 s · p95 1.9 s · p99 3.0 s · in 412 / out 38 tokens · ~$0.000061 per request (list price, 2026-10 table) · n = 203 dev tickets`
 
@@ -225,7 +225,7 @@ Every model call, from the service, the eval and the load test, goes through one
 - **Retries only on retryable errors**: 429, 5xx, timeouts and connection errors. Never on 400, 401, 404 or a content refusal: they will fail again and only waste quota.
 - **Exponential backoff with full jitter**: wait a random time between 0 and `min(cap, base × 2^attempt)` (base 500 ms, cap 4 s), so many clients retrying don't all hit the provider at the same moment. If the provider sends `Retry-After`, wait that long instead, unless it's past the deadline.
 - **At most 2 retries per provider**, then fall back.
-- **Fallback**: Cerebras → Mistral. The fallback model is different, so its accuracy is measured too (`pnpm eval --provider mistral`) and shown in the README. A fallback answer is marked `fallback: true`.
+- **Fallback**: Gemini → Cohere. The fallback model is different, so its accuracy is measured too (`pnpm eval --provider cohere`) and shown in the README. A fallback answer is marked `fallback: true`.
 - **Circuit breaker, per provider**: closed (normal) → after 5 failures inside 30 s it opens, and calls skip that provider straight to the fallback for 30 s → half-open lets one trial request through → success closes it, failure opens it again. A dead provider isn't hammered, and requests don't wait through its timeouts.
 - **Repair retry**: if the answer fails Zod, send it back to the same provider once with the Zod error. Still broken → `schema_fail`. Never return an answer that failed validation.
 - **Caps**: input over 4,000 characters is refused before any call; `max_tokens` comes from the prompt file.
@@ -320,7 +320,7 @@ Alerts email you from Grafana Cloud. Every alert has a runbook entry.
 
 | Service | What eats it | How we stay inside |
 |---|---|---|
-| Cerebras, Mistral | evals, CI gate, probe, drills | Cache everything in dev; the mock for all reliability and load work; the probe sends ~48 real calls a day. |
+| Gemini, Cohere | evals, CI gate, probe, drills | Cache everything in dev; the mock for all reliability and load work; the probe sends ~48 real calls a day. Calls are paced to each free per-minute limit (Gemini about 10 a minute and 500 a day, the tightest budget, on its own Google Cloud project; Cohere 20 a minute and 1,000 a month, so its runs are planned too). Uncached Gemini runs are planned per day: noise + baseline is 222 calls, a dev run 198. |
 | Langfuse Cloud | traces | 10% sampling in load tests. |
 | Grafana Cloud | metric series, retention | Low-cardinality labels only. |
 | Upstash | commands | Release config read every 30 s; one command per rate-limit check. |

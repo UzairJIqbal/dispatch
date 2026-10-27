@@ -1,0 +1,68 @@
+# Every provider, model name and price lives here, never in code.
+# A prompt file names an alias (`fast`); this file says which provider and
+# model that alias means today.
+#
+# Both real providers are free with no card and work from Pakistan. Dropped on
+# 2026-10-26: Cerebras (its free tier became a card-only trial) and NVIDIA NIM
+# (its phone check doesn't accept +92 numbers). Dropped on 2026-10-27: Mistral
+# (its free plan no longer activates API keys; every call got a 429 with a
+# limit of 0). Groq and Cloudflare are never
+# used: their free limits belong to VerifAI.
+
+providers:
+  gemini:
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    key_env: GEMINI_API_KEY
+    key_url: https://aistudio.google.com/apikey
+    # Free tier for Flash-Lite, checked 2026-10-26: about 10 requests/min and
+    # 500 requests/day. Google no longer publishes these; the real numbers for
+    # your project are at aistudio.google.com/rate-limit. Free-tier prompts
+    # may be used for training (the golden set is public data, so that's fine).
+    # The quota is per Google Cloud project: Dispatch has a project of its own.
+    rpm: 10
+  cohere:
+    # Cohere's OpenAI-compatible endpoint, not its native API, so the one
+    # client works unchanged.
+    base_url: https://api.cohere.ai/compatibility/v1
+    key_env: COHERE_API_KEY
+    key_url: https://dashboard.cohere.com/api-keys
+    # Trial key, checked 2026-10-27 from the response headers: 20 chat calls
+    # a minute and 1,000 calls a month, no card. Trial keys are not for
+    # production or commercial use; this is a portfolio project, and the
+    # fallback only answers when Gemini is down. Kept under 20 on purpose.
+    rpm: 15
+  mock:
+    # Runs in-process: no network, no key, no limit.
+    base_url: http://mock.invalid/v1
+
+models:
+  fast:
+    provider: gemini
+    # A GA model with a version in its name, never a "-latest" alias that
+    # could change under the baseline without anyone noticing.
+    model: gemini-3.5-flash-lite
+    # Gemini 3 thinks by default; low keeps it fast and inside max_tokens.
+    params:
+      reasoning_effort: low
+  fallback:
+    provider: cohere
+    # Dated name (March 2025 release). Not a reasoning model, which is what a
+    # label needs. Chosen over command-r7b, which in a test call put a
+    # double charge at "Medium" and broke the priority casing.
+    model: command-a-03-2025
+  mock:
+    provider: mock
+    model: mock-triage-1
+
+# List prices, USD per million tokens. The free tiers cost $0; these are what
+# the same traffic would cost on a paid plan.
+prices:
+  date: 2026-10-27
+  source: >-
+    gemini-3.5-flash-lite: ai.google.dev/pricing (as reported by
+    anotherwrapper.com, 2026-08-25). command-a-03-2025:
+    $2.50 / $10.00 (spheron.network, 2026; cohere.com/pricing no longer lists it).
+  models:
+    gemini-3.5-flash-lite: { input: 0.30, output: 2.50 }
+    command-a-03-2025: { input: 2.50, output: 10.00 }
+    mock-triage-1: { input: 0, output: 0 }

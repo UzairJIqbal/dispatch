@@ -3,13 +3,13 @@
     "priority": "low"
   },
   "bitext-0335d3c2b6": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-03c6a229ce": {
     "priority": "high"
   },
   "bitext-05ba49fb53": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-06084cb5a2": {
     "priority": "medium"
@@ -24,26 +24,26 @@
     "priority": "medium"
   },
   "bitext-06d9cd996a": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-07724226a6": {
-    "priority": "low",
-    "note": "Hello For Testing"
+    "priority": "low"
   },
   "bitext-08587fe9f2": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-0f853fe297": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-108e95fc19": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-10e5927f40": {
-    "priority": "low"
+    "priority": "high",
+    "note": "Asks whether a refund has come through; may be a missing refund. Unsure between medium and high."
   },
   "bitext-1472128377": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-167845ea78": {
     "priority": "medium"
@@ -55,31 +55,32 @@
     "priority": "medium"
   },
   "bitext-1cad5df969": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-1de5b8d3b9": {
-    "priority": "medium"
+    "priority": "high",
+    "note": "Formal complaint or claim; reads as a step toward going legal, but no explicit threat. Unsure between medium and high."
   },
   "bitext-1ebff30df7": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-2194a66e74": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-21a62bf9d9": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-21f0319607": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-238a2b7df3": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-23a6407f3a": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-23aee0bd4d": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-24383a8db2": {
     "priority": "low"
@@ -91,10 +92,10 @@
     "priority": "low"
   },
   "bitext-24ce4860c3": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-25a0e74cf5": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-27218ff1a6": {
     "priority": "medium"
@@ -103,91 +104,97 @@
     "priority": "medium"
   },
   "bitext-28da896bd5": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-298939a055": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-2a9c6cd13a": {
-    "priority": "medium"
+    "priority": "high",
+    "note": "Asks whether a refund has come through; may be a missing refund. Unsure between medium and high."
   },
   "bitext-2b9365e5c4": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-2c3d811446": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-2f5ee04bcd": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-318776ec09": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-319db8fa0b": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-32ef9d7fef": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-336fa8c5da": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Lost PIN may mean they're locked out. Unsure between medium and high."
   },
   "bitext-36d292f122": {
-    "priority": "low"
+    "priority": "high"
   },
   "bitext-3a5c049f06": {
     "priority": "low"
   },
   "bitext-3af299829e": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-3cc23ba7b1": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-3dbf08fe82": {
     "priority": "low"
   },
   "bitext-3fba0aecdb": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-4038407068": {
     "priority": "low"
   },
   "bitext-403cac0ef9": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-415fb84cca": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-41d574d86b": {
     "priority": "medium"
   },
   "bitext-41daf1fc64": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-42bfd6e300": {
-    "priority": "medium"
+    "priority": "high",
+    "note": "A password reset usually means they can't get in. Unsure between medium and high."
   },
   "bitext-444895f4b0": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-45fb6693fd": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Formal complaint or claim; reads as a step toward going legal, but no explicit threat. Unsure between medium and high."
   },
   "bitext-470f4df16f": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Formal complaint or claim; reads as a step toward going legal, but no explicit threat. Unsure between medium and high."
   },
   "bitext-4715229046": {
     "priority": "high"
   },
   "bitext-4770b8127e": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Formal complaint or claim; reads as a step toward going legal, but no explicit threat. Unsure between medium and high."
   },
   "bitext-47aeef5f25": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-47b71d3343": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-4819f58099": {
     "priority": "low"
@@ -196,13 +203,13 @@
     "priority": "medium"
   },
   "bitext-4b445c485d": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-4b65d1c8f7": {
     "priority": "low"
   },
   "bitext-4b8bc9efc8": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-4d0bceb0fe": {
     "priority": "low"
@@ -211,103 +218,105 @@
     "priority": "low"
   },
   "bitext-4e86c12c57": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-50c9d70f9a": {
-    "priority": "low"
+    "priority": "high"
   },
   "bitext-51897a848d": {
     "priority": "medium"
   },
   "bitext-52d1683037": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-539e21e56b": {
     "priority": "medium"
   },
   "bitext-55d9480827": {
-    "priority": "medium"
+    "priority": "high",
+    "note": "Frustrated and asks for a human; may be close to leaving. Unsure between medium and high."
   },
   "bitext-56212531ec": {
-    "priority": "medium"
+    "priority": "high"
   },
   "bitext-57658989ac": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-57a6b63362": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-58405215b8": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-5845e5493c": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-58e09b39e1": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-591c5d6e73": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-5948d95bb5": {
-    "priority": "low"
+    "priority": "high",
+    "note": "Formal complaint or claim; reads as a step toward going legal, but no explicit threat. Unsure between medium and high."
   },
   "bitext-596f9aaf90": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-5a51d90565": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-5b07dbb7de": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-5dcd6a741a": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-5e1a02d119": {
     "priority": "medium"
   },
   "bitext-5e6371caef": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-5eae44f303": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-5f6a04ce40": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-60622eb8cd": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-6153de2bf4": {
     "priority": "low"
   },
   "bitext-632f3c96a9": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-6337822dce": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-640e6f2d55": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-644143113c": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-6675cc12d1": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-66c9327beb": {
     "priority": "low"
   },
   "bitext-69761de0be": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-6a10ad7848": {
     "priority": "low"
   },
   "bitext-6a3e416dec": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-6b13149ee1": {
     "priority": "medium"
@@ -316,13 +325,14 @@
     "priority": "medium"
   },
   "bitext-6bc1ba4ba7": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-6e8142a12b": {
     "priority": "medium"
   },
   "bitext-6fd5993e5d": {
-    "priority": "medium"
+    "priority": "high",
+    "note": "Formal complaint or claim; reads as a step toward going legal, but no explicit threat. Unsure between medium and high."
   },
   "bitext-70da4c5967": {
     "priority": "medium"
@@ -334,40 +344,43 @@
     "priority": "medium"
   },
   "bitext-73e0812369": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-744e36f5af": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-749b7487ff": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Asks whether a refund has come through; may be a missing refund. Unsure between medium and high."
   },
   "bitext-7a39876530": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-7b616e1f40": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-7c61444f5e": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Formal complaint or claim; reads as a step toward going legal, but no explicit threat. Unsure between medium and high."
   },
   "bitext-7c7ecb2dd5": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-7ec79ef081": {
     "priority": "high"
   },
   "bitext-7f02cf3b56": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-81735ee0d2": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Frustrated and asks for a human; may be close to leaving. Unsure between medium and high."
   },
   "bitext-83d1661d94": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-841524fb51": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-8415f16253": {
     "priority": "low"
@@ -376,16 +389,16 @@
     "priority": "low"
   },
   "bitext-8618996355": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-86965c5826": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-8696b1f757": {
     "priority": "low"
   },
   "bitext-86c349fe1d": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-86ff36d3a1": {
     "priority": "low"
@@ -394,76 +407,78 @@
     "priority": "medium"
   },
   "bitext-893a609e40": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-8a967335b0": {
     "priority": "medium"
   },
   "bitext-8b1762558c": {
-    "priority": "medium"
+    "priority": "high"
   },
   "bitext-8b3d802a5c": {
     "priority": "medium"
   },
   "bitext-8b99e0cd25": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-8be54ff56c": {
     "priority": "medium"
   },
   "bitext-8c3d09a59d": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-8c6efac599": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-8d18e6cd33": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-8d4cdeba2a": {
     "priority": "high"
   },
   "bitext-8e38afc312": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-8ef75837c0": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-8fd20278a9": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-8ffa82b9ae": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-90218bd716": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-9121a07a08": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-917814e017": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-935d875e41": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-9591b8a39f": {
     "priority": "low"
   },
   "bitext-95c2e5c358": {
-    "priority": "low"
+    "priority": "high",
+    "note": "Asks whether a refund has come through; may be a missing refund. Unsure between medium and high."
   },
   "bitext-95dfba8a33": {
     "priority": "low"
   },
   "bitext-96ede1b14d": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-9af6567923": {
-    "priority": "low"
+    "priority": "high",
+    "note": "Formal complaint or claim; reads as a step toward going legal, but no explicit threat. Unsure between medium and high."
   },
   "bitext-9c66e15e70": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-9d4559d998": {
     "priority": "low"
@@ -481,61 +496,65 @@
     "priority": "medium"
   },
   "bitext-a3a70a621e": {
-    "priority": "medium"
+    "priority": "high",
+    "note": "Formal complaint or claim; reads as a step toward going legal, but no explicit threat. Unsure between medium and high."
   },
   "bitext-a4367f267e": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-a60c04dae9": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-a8b87ca6c4": {
     "priority": "medium"
   },
   "bitext-a900294e45": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-a9464bd84c": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-a9adf6d70a": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-a9fad2cb80": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-ad71a3cc0d": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-ae9c0f3abe": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-b0022d3a4d": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-b0419480c7": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-b0a79d1ee2": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-b1f2c66109": {
-    "priority": "low"
+    "priority": "high",
+    "note": "Asks whether a refund has come through; may be a missing refund. Unsure between medium and high."
   },
   "bitext-b2e479b417": {
     "priority": "medium"
   },
   "bitext-b5880e5146": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Formal complaint or claim; reads as a step toward going legal, but no explicit threat. Unsure between medium and high."
   },
   "bitext-b71979c7d8": {
     "priority": "low"
   },
   "bitext-b7d430cce5": {
-    "priority": "medium"
+    "priority": "high",
+    "note": "Asks whether a refund has come through; may be a missing refund. Unsure between medium and high."
   },
   "bitext-b7e7283e05": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-b81e2d46e1": {
     "priority": "low"
@@ -544,37 +563,38 @@
     "priority": "medium"
   },
   "bitext-b93debb5f6": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-bccdf5acdd": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-bcd45ee9ca": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-bcff59ba1b": {
     "priority": "low"
   },
   "bitext-bd1ca13013": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-c26942b1a5": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-c3cd1fe5ed": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-c7d6650cae": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Frustrated and asks for a human; may be close to leaving. Unsure between medium and high."
   },
   "bitext-c81efc19d9": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-c88fa6cf43": {
     "priority": "medium"
   },
   "bitext-c96d51b9f2": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-ca5f39891c": {
     "priority": "low"
@@ -586,46 +606,46 @@
     "priority": "medium"
   },
   "bitext-ccbc758e94": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-cced7fd709": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-cd5e004fb1": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-d0acee6e3d": {
-    "priority": "low"
+    "priority": "high"
   },
   "bitext-d1020392d2": {
     "priority": "low"
   },
   "bitext-d1b3a07201": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-d1e3b4a0ac": {
     "priority": "medium"
   },
   "bitext-d220847351": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-d2dc255aa2": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-d5a14331de": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-d775095183": {
     "priority": "low"
   },
   "bitext-d89a12d3ec": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-d8bcb7a9a0": {
     "priority": "high"
   },
   "bitext-da022b2203": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-da8c66bb08": {
     "priority": "low"
@@ -634,16 +654,16 @@
     "priority": "medium"
   },
   "bitext-dc1bfbf7b3": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-dc26c2f2b2": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-dd7e6a537d": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-df7e4db1cf": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-dfca4e0062": {
     "priority": "low"
@@ -655,19 +675,19 @@
     "priority": "low"
   },
   "bitext-e55c71d720": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-e6cdcd8cbf": {
     "priority": "medium"
   },
   "bitext-ea62aff5e1": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-ebaeac11a2": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-ec995abc80": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-ee30219043": {
     "priority": "high"
@@ -676,13 +696,15 @@
     "priority": "high"
   },
   "bitext-ef5c4f11a6": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Asks whether a refund has come through; may be a missing refund. Unsure between medium and high."
   },
   "bitext-efc703c5ac": {
-    "priority": "high"
+    "priority": "high",
+    "note": "Asks whether a refund has come through; may be a missing refund. Unsure between medium and high."
   },
   "bitext-f047ad569e": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-f22c457e69": {
     "priority": "medium"
@@ -694,55 +716,57 @@
     "priority": "medium"
   },
   "bitext-f571b402be": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-f6f3b3a317": {
-    "priority": "low"
+    "priority": "medium"
   },
   "bitext-f730282c92": {
     "priority": "low"
   },
   "bitext-f7d8114633": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-fb33bef3d4": {
-    "priority": "medium"
+    "priority": "low"
   },
   "bitext-fcfaa3fd11": {
     "priority": "medium"
   },
   "bitext-fd18dd5c9d": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-feaa7e5279": {
-    "priority": "high"
+    "priority": "low"
   },
   "bitext-feb532ab36": {
-    "priority": "high"
+    "priority": "medium"
   },
   "bitext-ff02501d84": {
     "priority": "low"
   },
   "bitext-fff43b1988": {
-    "priority": "low"
+    "priority": "medium"
   },
   "messy-01": {
-    "priority": "low"
+    "priority": "high"
   },
   "messy-02": {
-    "priority": "medium"
+    "priority": "high"
   },
   "messy-03": {
     "priority": "medium"
   },
   "messy-04": {
-    "priority": "medium"
+    "priority": "high"
   },
   "messy-05": {
-    "priority": "high"
+    "priority": "medium",
+    "note": "Asks the fee, but was promised none, so a dispute may follow. Unsure between low and medium."
   },
   "messy-06": {
-    "priority": "high"
+    "priority": "medium",
+    "note": "Can't reach anyone since yesterday; no threat yet. Unsure between low and medium."
   },
   "messy-07": {
     "priority": "high"
@@ -751,28 +775,30 @@
     "priority": "low"
   },
   "messy-09": {
-    "priority": "low"
+    "priority": "medium",
+    "note": "Asks delivery time, with a hard deadline (a wedding). Unsure between low and medium."
   },
   "messy-10": {
     "priority": "low"
   },
   "messy-11": {
-    "priority": "low"
+    "priority": "high"
   },
   "messy-12": {
     "priority": "low"
   },
   "messy-13": {
-    "priority": "low"
+    "priority": "medium",
+    "note": "Complaint about an agent with no threat to leave or go public, and nothing lost, so medium."
   },
   "messy-14": {
-    "priority": "low"
+    "priority": "medium"
   },
   "messy-15": {
-    "priority": "low"
+    "priority": "medium"
   },
   "messy-16": {
-    "priority": "medium"
+    "priority": "high"
   },
   "messy-17": {
     "priority": "medium"
@@ -781,39 +807,40 @@
     "priority": "medium"
   },
   "messy-19": {
-    "priority": "medium"
+    "priority": "high"
   },
   "messy-20": {
-    "priority": "medium"
+    "priority": "high"
   },
   "messy-21": {
-    "priority": "medium"
+    "priority": "high"
   },
   "messy-22": {
-    "priority": "high"
+    "priority": "medium"
   },
   "messy-23": {
-    "priority": "high"
+    "priority": "medium"
   },
   "messy-24": {
     "priority": "high"
   },
   "messy-25": {
-    "priority": "high"
+    "priority": "low"
   },
   "messy-26": {
     "priority": "high"
   },
   "messy-27": {
-    "priority": "high"
+    "priority": "medium"
   },
   "messy-28": {
-    "priority": "low"
+    "priority": "medium",
+    "note": "Setting up a gift address; something to do, not just information. Unsure between low and medium."
   },
   "messy-29": {
-    "priority": "low"
+    "priority": "medium"
   },
   "messy-30": {
-    "priority": "medium"
+    "priority": "low"
   }
 }

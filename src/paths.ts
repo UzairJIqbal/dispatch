@@ -11,6 +11,13 @@ export const paths = {
   tickets: `${root}evals/tickets.jsonl`,
   labels: `${root}evals/labels.json`,
   golden: `${root}evals/golden.jsonl`,
+  models: `${root}config/models.yaml`,
+  prompts: `${root}prompts/triage`,
+  results: `${root}results`,
+  baseline: `${root}results/baseline.json`,
+  noise: `${root}results/noise.json`,
+  responseCache: `${root}.cache/responses.sqlite`,
+  env: `${root}.env`,
 };
 
 /** Path relative to the repo root, for messages. */

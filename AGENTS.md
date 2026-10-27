@@ -23,8 +23,11 @@ when deployed. pino for logs. `node:sqlite` for the response cache. Vitest for
 tests, tsx for scripts, k6 for load tests. Docker. GitHub Actions. Render
 (free) for staging and production. pnpm.
 
-Providers: Cerebras (primary) and Mistral (fallback), both free tiers, plus a
-mock provider that runs in-process. **Never Groq or Cloudflare**: those free
+Providers: Google Gemini (primary) and Cohere (fallback, trial key), both free
+with no card that work from Pakistan, plus a mock provider that runs
+in-process. No provider that needs a card or paid credits, or a phone check
+Pakistan can't pass: Cerebras (card trial), NVIDIA NIM (no +92) and Mistral
+(free plan stopped activating API keys) were dropped. **Never Groq or Cloudflare**: those free
 limits belong to VerifAI.
 
 OpenTelemetry, Langfuse, Express 5 and the providers' model names change
