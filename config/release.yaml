@@ -1,0 +1,4 @@
+# Which prompt version the service serves. The service reads this file at
+# startup. Phase 9 moves the live copy into Upstash Redis (so it can change
+# without a rebuild); this file stays the default for local runs.
+stable: v2

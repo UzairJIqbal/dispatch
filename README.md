@@ -34,3 +34,25 @@ Free-tier limits (checked 2026-10-26), set in `config/models.yaml` and paced aut
 Gemini's free tier may train on prompts. The golden set is public and synthetic data, so that is acceptable here; a real deployment would use a paid tier.
 
 Cost is shown as a list-price estimate with the price table's date; on the free tiers it is $0.
+
+## The service
+
+```sh
+pnpm client-key acme       # prints a key (give it to the client) and the line for DISPATCH_CLIENT_KEYS
+pnpm dev                   # local, on the mock provider, port 3000
+GIT_SHA=$(git rev-parse --short HEAD) docker compose up --build   # the same, in Docker (DISPATCH_HOST_PORT=3100 if 3000 is taken)
+
+curl -s localhost:3000/v1/triage \
+  -H "Authorization: Bearer $KEY" -H 'Content-Type: application/json' \
+  -d '{"text": "I was charged twice for my order"}'
+```
+
+The answer is the triage JSON plus `meta: { prompt_version, model, provider, git_sha, request_id, latency_ms }`. Errors are `{ "error": { "class", "message" } }`: `bad_request` 400, `unauthorized` 401, `too_large` 413 (over 4,000 characters), `rate_limit` 429 with `Retry-After`, `schema_fail` 502, `provider_error` 503. `GET /healthz` says the process is up; `GET /readyz` checks config, Redis and provider keys, and names the one that fails.
+
+Both `pnpm dev` and docker compose use the mock unless `DISPATCH_PROVIDER=gemini` is set. Which prompt version is live comes from `config/release.yaml`. Every variable is in `.env.example`.
+
+| Service | Free limit that matters (checked 2026-10-28) | What it means here |
+|---|---|---|
+| Upstash Redis | 500,000 commands/month, 256 MB, no card | the 60/min sliding window costs ~4 commands per request, so ~120,000 requests a month |
+
+If Redis can't be reached, the rate limit lets requests through (logged as `ratelimit.unavailable`) and `/readyz` turns 503: a Redis outage shouldn't take triage down with it.

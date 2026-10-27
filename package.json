@@ -12,6 +12,8 @@
     "golden:stats": "tsx scripts/golden-stats.ts",
     "eval": "tsx scripts/eval.ts",
     "eval:noise": "tsx scripts/eval-noise.ts",
+    "dev": "DISPATCH_PROVIDER=${DISPATCH_PROVIDER:-mock} tsx watch src/server/main.ts",
+    "client-key": "tsx scripts/client-key.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
@@ -19,13 +21,18 @@
   },
   "packageManager": "pnpm@12.9.1",
   "dependencies": {
+    "@upstash/ratelimit": "^2.2.0",
+    "@upstash/redis": "^1.40.0",
     "csv-parse": "^7.0.3",
+    "express": "^5.3.0",
     "openai": "^7.43.0",
+    "pino": "^10.4.0",
     "yaml": "^2.9.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/express": "^5.0.6",
     "@types/node": "^22.20.5",
     "eslint": "^10.13.0",
     "tsx": "^4.23.15",

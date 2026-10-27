@@ -13,13 +13,14 @@ export function loadEnv(): void {
 
 let sha: string | undefined;
 
-/** The commit that produced a result. GIT_SHA wins (set in Docker later); "-dirty" marks uncommitted changes. */
+/** The commit that produced a result. GIT_SHA wins (baked into the Docker image); "-dirty" marks uncommitted changes. */
 export function gitSha(): string {
   if (sha !== undefined) return sha;
   const fromEnv = process.env.GIT_SHA;
   if (fromEnv) return (sha = fromEnv);
   try {
-    const head = execFileSync("git", ["rev-parse", "--short=12", "HEAD"], { cwd: paths.root, encoding: "utf8" }).trim();
+    // Plain --short, the same form the Docker build bakes in, so the two match.
+    const head = execFileSync("git", ["rev-parse", "--short", "HEAD"], { cwd: paths.root, encoding: "utf8" }).trim();
     const dirty = execFileSync("git", ["status", "--porcelain"], { cwd: paths.root, encoding: "utf8" }).trim() !== "";
     sha = dirty ? `${head}-dirty` : head;
   } catch {

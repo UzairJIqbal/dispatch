@@ -1,6 +1,20 @@
+import { existsSync } from "node:fs";
+import { dirname, join, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("..", import.meta.url));
+// The nearest folder with a package.json: the repo when run with tsx from
+// src/, and /app in the Docker image, where this file runs from dist/src/.
+function findRoot(): string {
+  let dir = dirname(fileURLToPath(import.meta.url));
+  while (!existsSync(join(dir, "package.json"))) {
+    const up = dirname(dir);
+    if (up === dir) throw new Error("Can't find the project root (no package.json above src/paths).");
+    dir = up;
+  }
+  return dir + sep;
+}
+
+const root = findRoot();
 
 export const paths = {
   root,
@@ -12,6 +26,7 @@ export const paths = {
   labels: `${root}evals/labels.json`,
   golden: `${root}evals/golden.jsonl`,
   models: `${root}config/models.yaml`,
+  release: `${root}config/release.yaml`,
   prompts: `${root}prompts/triage`,
   results: `${root}results`,
   baseline: `${root}results/baseline.json`,

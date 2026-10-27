@@ -1,0 +1,16 @@
+# Only what the image needs goes into the build context. Secrets never do.
+.env*
+.git
+node_modules
+dist
+.cache
+results
+evals
+reports
+research_notes
+docs
+test
+.agents
+.claude
+*.md
+.DS_Store
