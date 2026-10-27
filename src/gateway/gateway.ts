@@ -171,7 +171,13 @@ export class Gateway {
 
     // One call to one provider: from the cache, or a real attempt under the
     // attempt timeout and what's left of the deadline.
-    const send = async (provider: Provider, model: ResolvedModel, messages: ChatMessage[], repair?: CacheKeyParts["repair"]): Promise<ChatResponse> => {
+    const send = async (
+      provider: Provider,
+      model: ResolvedModel,
+      end: () => number,
+      messages: ChatMessage[],
+      repair?: CacheKeyParts["repair"],
+    ): Promise<ChatResponse> => {
       calls++;
       const key = req.cache && cacheKey({ ...req.cache.parts, provider: model.provider, model: model.model, params: model.params, ...(repair ? { repair } : {}) });
       const hit = key && !req.cache?.refresh ? req.cache?.store.get(key) : undefined;
@@ -187,25 +193,23 @@ export class Gateway {
       paced += waited;
       deadline += waited;
 
-      const left = deadline - Date.now();
-      if (left <= 0) throw new ProviderError("timeout", `no time left before the ${String(g.deadline_ms / 1000)} s deadline`, model.provider);
       const controller = new AbortController();
       const timer = setTimeout(() => {
         controller.abort(new Error("attempt timed out"));
-      }, Math.min(g.attempt_timeout_ms, left));
+      }, Math.max(0, Math.min(g.attempt_timeout_ms, end() - Date.now())));
+      let res: ChatResponse;
       try {
-        const res = await provider.complete(
-          { model: model.model, messages, temperature: req.temperature, maxTokens: req.maxTokens, params: model.params },
-          controller.signal,
-        );
-        // Stored as soon as it arrives, so an eval stopped by a rate limit picks up here.
-        if (key) req.cache?.store.set(key, res);
-        return res;
+        res = await provider.complete({ model: model.model, messages, temperature: req.temperature, maxTokens: req.maxTokens, params: model.params }, controller.signal);
       } catch (err) {
+        // Only the provider call is classified: a fault of ours (the cache, a
+        // prompt file) must never read as the provider failing.
         throw classify(err, model.provider, controller.signal);
       } finally {
         clearTimeout(timer);
       }
+      // Stored as soon as it arrives, so an eval stopped by a rate limit picks up here.
+      if (key) req.cache?.store.set(key, res);
+      return res;
     };
 
     const meta = (model: ResolvedModel, index: number, repaired: boolean): GatewayMeta => {
@@ -223,9 +227,16 @@ export class Gateway {
       };
     };
 
+    // A hung primary must not eat the whole deadline: it gets the deadline
+    // minus one attempt's worth, which is kept for the fallback.
+    const reserve = Math.min(g.attempt_timeout_ms, g.deadline_ms / 2);
+    // Repair once per request, even if the repair call itself fails and is retried.
+    let repairTried = false;
+
     for (const [index, model] of chain.entries()) {
       const isLast = index === chain.length - 1;
       const next: Decision = isLast ? "give_up" : "fallback";
+      const end = () => (isLast ? deadline : deadline - reserve);
       const provider = this.provider(model.provider);
       const circuit = this.circuit(model.provider);
       const line = { provider: model.provider, model: model.model };
@@ -236,6 +247,11 @@ export class Gateway {
           log.warn({ event: "gateway.skip", ...line, attempt, error_class: "circuit_open", wait_ms: null, decision: next }, `${model.provider} skipped: circuit open`);
           break;
         }
+        if (end() - Date.now() <= 0) {
+          // Out of this provider's time. Not a failure of the provider: nothing was sent.
+          lastError ??= new ProviderError("timeout", `no time left before the ${String(g.deadline_ms / 1000)} s deadline`, model.provider);
+          break;
+        }
         const attemptStart = Date.now();
         const pacedBefore = paced;
         const elapsed = () => Date.now() - attemptStart - (paced - pacedBefore);
@@ -244,7 +260,7 @@ export class Gateway {
             { role: "system", content: req.system },
             { role: "user", content: req.user },
           ];
-          const first = await send(provider, model, messages);
+          const first = await send(provider, model, end, messages);
           circuit.success();
           tokensIn += first.tokensIn;
           tokensOut += first.tokensOut;
@@ -254,13 +270,18 @@ export class Gateway {
             return { ok: true, value: checked.value, ...meta(model, index, false) };
           }
 
+          if (repairTried) {
+            log.warn({ event: "gateway.attempt", ...line, attempt, error_class: "schema_fail", wait_ms: null, decision: "give_up", latency_ms: elapsed() }, `${model.provider} answer invalid, already repaired once`);
+            return { ok: false, message: checked.message, raw: first.content, ...meta(model, index, true) };
+          }
           // The repair retry: the same provider, once, with its own answer and
           // the validation error. It isn't one of the retries: the provider is fine.
+          repairTried = true;
           log.warn({ event: "gateway.attempt", ...line, attempt, error_class: "schema_fail", wait_ms: 0, decision: "repair", latency_ms: elapsed() }, `${model.provider} answer failed validation: repairing`);
           const repair = loadRepairPrompt();
           const repairStart = Date.now();
           const repairPaced = paced;
-          const fixed = await send(provider, model, [...messages, { role: "assistant", content: first.content }, { role: "user", content: repair.message.replaceAll("{{error}}", checked.message) }], {
+          const fixed = await send(provider, model, end, [...messages, { role: "assistant", content: first.content }, { role: "user", content: repair.message.replaceAll("{{error}}", checked.message) }], {
             sha256: repair.sha256,
             raw: first.content,
             error: checked.message,
@@ -278,18 +299,22 @@ export class Gateway {
           log.warn({ ...repairLine, error_class: "schema_fail", decision: "give_up" }, `${model.provider} answer still invalid after repair`);
           return { ok: false, message: rechecked.message, raw: fixed.content, ...meta(model, index, true) };
         } catch (caught) {
-          const err = classify(caught, model.provider);
+          if (!(caught instanceof ProviderError)) throw caught;
+          const err = caught;
           lastError = err;
           if (COUNTS_AGAINST_CIRCUIT.has(err.errorClass)) circuit.failure();
+          // It answered: that ends a half-open trial well, and isn't a failure.
           else circuit.success();
           const fail = { event: "gateway.attempt", ...line, attempt, error_class: err.errorClass, latency_ms: elapsed() };
 
-          const outOfTime = Date.now() >= deadline;
-          if (!RETRYABLE.has(err.errorClass) || attempt > g.max_retries || outOfTime) {
-            // Out of time means out of time for the fallback too.
-            const decision: Decision = outOfTime ? "give_up" : next;
-            log.warn({ ...fail, wait_ms: null, decision }, `${model.provider} failed (${err.errorClass}): ${decision}`);
-            if (outOfTime) throw err;
+          // A 400 is about the request, so another provider would refuse it
+          // too: called exactly once, no retry and no fallback.
+          if (err.errorClass === "bad_request") {
+            log.warn({ ...fail, wait_ms: null, decision: "give_up" }, `${model.provider} failed (bad_request): give_up`);
+            throw err;
+          }
+          if (!RETRYABLE.has(err.errorClass) || attempt > g.max_retries || Date.now() >= end()) {
+            log.warn({ ...fail, wait_ms: null, decision: next }, `${model.provider} failed (${err.errorClass}): ${next}`);
             break;
           }
 
@@ -297,7 +322,7 @@ export class Gateway {
           // at the same instant. Retry-After, when sent, wins.
           const wait =
             err.retryAfterS !== undefined ? Math.round(err.retryAfterS * 1000) : Math.round(this.random() * Math.min(g.backoff_cap_ms, g.backoff_base_ms * 2 ** (attempt - 1)));
-          if (Date.now() + wait >= deadline) {
+          if (Date.now() + wait >= end()) {
             log.warn({ ...fail, wait_ms: wait, decision: next, reason: "wait would pass the deadline" }, `${model.provider} failed (${err.errorClass}): ${next}`);
             break;
           }

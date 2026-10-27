@@ -41,10 +41,16 @@ export class Circuit {
     return true;
   }
 
+  /**
+   * A success ends a half-open trial well. While closed it doesn't wipe the
+   * window: a provider failing every other call still opens after 5 failures.
+   */
   success(): void {
     this.trialInFlight = false;
-    this.failures = [];
-    if (this.state !== "closed") this.move("closed");
+    if (this.state !== "closed") {
+      this.failures = [];
+      this.move("closed");
+    }
   }
 
   failure(): void {

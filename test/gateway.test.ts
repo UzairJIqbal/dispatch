@@ -74,13 +74,22 @@ describe("success and the error classes", () => {
     expect(attempts().map((l) => l.decision)).toEqual(["success"]);
   });
 
-  it("a 400 is called exactly once: never retried", async () => {
-    const { gateway, request, attempts } = setup({ mode: "400" }, { mode: "400" });
+  it("a 400 is called exactly once: no retry, no fallback", async () => {
+    const { gateway, request, attempts } = setup({ mode: "400" });
     const o = await run(gateway, request());
     expect(o.error?.errorClass).toBe("bad_request");
-    expect(attempts("mock")).toHaveLength(1);
-    expect(attempts("mock_fallback")).toHaveLength(1);
-    expect(attempts().map((l) => l.decision)).toEqual(["fallback", "give_up"]);
+    expect(attempts()).toMatchObject([{ provider: "mock", attempt: 1, error_class: "bad_request", decision: "give_up" }]);
+  });
+
+  it("a fault of ours is not blamed on the provider", async () => {
+    const { gateway, request, attempts } = setup();
+    const settled = gateway.call(request({ validate: () => { throw new Error("bug in our code"); } })).catch((e: unknown) => e);
+    await vi.runAllTimersAsync();
+    const err = await settled;
+    expect(err).not.toBeInstanceOf(ProviderError);
+    expect(err).toMatchObject({ message: "bug in our code" });
+    expect(attempts()).toHaveLength(0);
+    expect(gateway.circuit("mock").current()).toBe("closed");
   });
 
   it("a wrong key is auth: not retried, and the fallback answers", async () => {
@@ -158,24 +167,30 @@ describe("backoff, Retry-After and the deadline", () => {
     expect(o.ms).toBeLessThan(1000);
   });
 
-  it("a hung call is cancelled at the attempt timeout, and the request ends at the 20 s deadline", async () => {
+  it("a hung primary is cancelled in time for the fallback to answer", async () => {
     const { gateway, request, attempts } = setup({ mode: "hang" });
+    const o = await run(gateway, request());
+    expect(attempts("mock")).toMatchObject([{ error_class: "timeout", decision: "fallback" }]);
+    expect(o.result).toMatchObject({ ok: true, provider: "mock_fallback", fallback: true });
+    expect(o.ms).toBeLessThanOrEqual(10_000);
+  });
+
+  it("everything hung: the request ends at the 20 s deadline with timeout", async () => {
+    const { gateway, request, attempts } = setup({ mode: "hang" }, { mode: "hang" });
     const o = await run(gateway, request());
     expect(o.error?.errorClass).toBe("timeout");
     expect(o.ms).toBeLessThanOrEqual(20_000);
-    expect(attempts("mock").map((l) => [l.error_class, l.decision])).toEqual([
-      ["timeout", "retry"],
-      ["timeout", "give_up"],
+    expect(attempts().map((l) => [l.provider, l.error_class, l.decision])).toEqual([
+      ["mock", "timeout", "fallback"],
+      ["mock_fallback", "timeout", "give_up"],
     ]);
-    // Out of time means no time for the fallback either.
-    expect(attempts("mock_fallback")).toHaveLength(0);
   });
 
   it("an answer slower than the attempt timeout is cut off as a timeout", async () => {
     const { gateway, request, attempts } = setup({ delayMs: 12_000 });
     const o = await run(gateway, request());
-    expect(o.error?.errorClass).toBe("timeout");
-    expect(attempts("mock")[0]).toMatchObject({ error_class: "timeout", decision: "retry" });
+    expect(attempts("mock")).toMatchObject([{ error_class: "timeout", decision: "fallback" }]);
+    expect(o.result).toMatchObject({ ok: true, provider: "mock_fallback" });
     expect(o.ms).toBeLessThanOrEqual(20_000);
   });
 
@@ -218,6 +233,17 @@ describe("repair", () => {
     expect(attempts("mock_fallback")).toHaveLength(0);
   });
 
+  it("repairs once per request, even when the repair call fails and is retried", async () => {
+    const { gateway, request, attempts } = setup({ mode: ["bad_json", "500", "bad_json"] });
+    const o = await run(gateway, request());
+    expect(attempts("mock").map((l) => [l.attempt, l.error_class, l.decision])).toEqual([
+      [1, "schema_fail", "repair"],
+      [1, "provider_5xx", "retry"],
+      [2, "schema_fail", "give_up"],
+    ]);
+    expect(o.result).toMatchObject({ ok: false, repaired: true });
+  });
+
   it("the repair is cached under its own key: a rerun is served entirely from the cache", async () => {
     const cache = new ResponseCache(":memory:");
     const parts = { promptVersion: "v1", promptSha256: "x", temperature: 0, maxTokens: 100, text: "I want a refund" };
@@ -257,12 +283,15 @@ describe("the circuit breaker", () => {
     expect(c.current()).toBe("closed");
   });
 
-  it("a success resets the count", () => {
+  it("successes in between don't wipe the count: 5 failures within 30 s open it", () => {
     const { c } = circuit();
-    for (let i = 0; i < 4; i++) c.failure();
-    c.success();
-    c.failure();
+    for (let i = 0; i < 4; i++) {
+      c.failure();
+      c.success();
+    }
     expect(c.current()).toBe("closed");
+    c.failure();
+    expect(c.current()).toBe("open");
   });
 
   it("open -> half_open after 30 s, which lets exactly one trial through", () => {

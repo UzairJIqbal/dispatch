@@ -12,8 +12,10 @@ import { parseServiceConfig } from "./config.js";
 import { upstashLimiter } from "./ratelimit.js";
 
 // How long in-flight requests get to finish after SIGTERM before we exit anyway.
-// Below docker compose's stop_grace_period, so we exit before being killed.
-const DRAIN_MS = 15_000;
+// Longer than the gateway's 20 s deadline, so a request in the middle of a
+// fallback still finishes; below docker compose's stop_grace_period and
+// Render's 30 s, so we exit before being killed.
+const DRAIN_MS = 25_000;
 const REDIS_PING_TIMEOUT_MS = 2_000;
 
 function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {

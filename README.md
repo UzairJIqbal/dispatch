@@ -59,7 +59,7 @@ If Redis can't be reached, the rate limit lets requests through (logged as `rate
 
 ## The gateway
 
-Every model call goes through one gateway, configured in `config/models.yaml`. Each attempt is cut off after 10 s and the whole request after 20 s. `rate_limit`, `timeout`, `provider_5xx` and `connection` are retried up to 2 times with full-jitter backoff (a random wait between 0 and min(4 s, 500 ms × 2^retry)), or for exactly the `Retry-After` the provider sends. `bad_request` and `auth` are never retried. Then the `fallback` alias answers (Gemini → Cohere). A provider with 5 failures in 30 s gets its circuit opened: it is skipped for 30 s, then one trial request decides. An answer that fails the schema gets one repair call; still broken is `schema_fail`. Each attempt logs one `gateway.attempt` line with `provider`, `attempt`, `error_class`, `wait_ms` and `decision`.
+Every model call goes through one gateway, configured in `config/models.yaml`. Each attempt is cut off after 10 s and the whole request after 20 s. `rate_limit`, `timeout`, `provider_5xx` and `connection` are retried up to 2 times with full-jitter backoff (a random wait between 0 and min(4 s, 500 ms × 2^retry)), or for exactly the `Retry-After` the provider sends. `auth` is never retried; `bad_request` is never retried nor sent to the fallback (another provider would refuse it too). Then the `fallback` alias answers (Gemini → Cohere); the primary stops 10 s before the deadline so a hung primary still leaves the fallback a full attempt. A provider with 5 failed attempts in 30 s gets its circuit opened: it is skipped for 30 s, then one trial request decides. An answer that fails the schema gets one repair call; still broken is `schema_fail`. Each attempt logs one `gateway.attempt` line with `provider`, `attempt`, `error_class`, `wait_ms` and `decision`.
 
 Drills run on the mock, zero real calls. `MOCK_MODE` breaks the primary mock; `mock_fallback` answers unless `MOCK_FALLBACK_MODE` is set:
 
@@ -67,7 +67,8 @@ Drills run on the mock, zero real calls. `MOCK_MODE` breaks the primary mock; `m
 MOCK_MODE=500 pnpm dev                          # 3 primary attempts, then the fallback; 5 failures open the circuit
 MOCK_MODE=429 MOCK_RETRY_AFTER=2 pnpm dev       # the log shows wait_ms 2000
 MOCK_MODE=bad_json_once pnpm dev                # one repair, then a valid answer (bad_json: 502 schema_fail)
-MOCK_MODE=hang pnpm dev                         # 504 timeout within 20 s
+MOCK_MODE=hang pnpm dev                         # primary cut off at 10 s, the fallback answers
+MOCK_MODE=hang MOCK_FALLBACK_MODE=hang pnpm dev # 504 timeout within 20 s
 ```
 
 Modes: `ok`, `429`, `500`, `hang`, `bad_json`, `bad_json_once`, `slow` (real latencies from the baseline), `400`, `401`, `connection`.
