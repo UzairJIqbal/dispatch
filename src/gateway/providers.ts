@@ -82,7 +82,10 @@ export function classify(err: unknown, provider: ProviderName, signal?: AbortSig
     const headers: unknown = err.headers;
     if (typeof rawStatus !== "number") return new ProviderError("connection", `${provider} connection failed: ${err.message}`, provider);
     const retryAfterS = headers instanceof Headers ? parseRetryAfter(headers.get("retry-after")) : undefined;
-    return new ProviderError(classifyStatus(rawStatus), `${provider} HTTP ${String(rawStatus)}: ${err.message}`, provider, rawStatus, retryAfterS);
+    // Gemini says a wrong key with a 400, not a 401: still auth, so the fallback answers.
+    const body = `${err.message} ${JSON.stringify(err.error ?? null)}`;
+    const errorClass = rawStatus === 400 && /api[ _-]?key/i.test(body) ? "auth" : classifyStatus(rawStatus);
+    return new ProviderError(errorClass, `${provider} HTTP ${String(rawStatus)}: ${err.message}`, provider, rawStatus, retryAfterS);
   }
   return new ProviderError("provider_5xx", `${provider} call failed: ${err instanceof Error ? err.message : String(err)}`, provider);
 }

@@ -71,4 +71,4 @@ MOCK_MODE=hang pnpm dev                         # primary cut off at 10 s, the f
 MOCK_MODE=hang MOCK_FALLBACK_MODE=hang pnpm dev # 504 timeout within 20 s
 ```
 
-Modes: `ok`, `429`, `500`, `hang`, `bad_json`, `bad_json_once`, `slow` (real latencies from the baseline), `400`, `401`, `connection`.
+Modes: `ok`, `429`, `500`, `hang`, `bad_json`, `bad_json_once`, `slow` (real latencies from the baseline), `400`, `401`, `400_key` (Gemini's wrong-key answer), `connection`.

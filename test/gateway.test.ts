@@ -99,6 +99,13 @@ describe("success and the error classes", () => {
     expect(o.result).toMatchObject({ ok: true, provider: "mock_fallback", fallback: true, retries: 0 });
   });
 
+  it("Gemini's 400 for a wrong key is auth too, so the fallback answers", async () => {
+    const { gateway, request, attempts } = setup({ mode: "400_key" });
+    const o = await run(gateway, request());
+    expect(attempts("mock")).toMatchObject([{ error_class: "auth", decision: "fallback" }]);
+    expect(o.result).toMatchObject({ ok: true, provider: "mock_fallback", fallback: true });
+  });
+
   it("a 500 is provider_5xx: 3 attempts with backoff, then the fallback", async () => {
     const { gateway, request, attempts } = setup({ mode: "500" });
     const o = await run(gateway, request());

@@ -10,7 +10,7 @@ import { paths } from "../paths.js";
 
 // The spec's modes, plus 400, 401 and connection so every error class can be
 // tested (and drilled) on the mock: a 400 must never be retried, a 401 is auth.
-export const MOCK_MODES = ["ok", "429", "500", "hang", "bad_json", "bad_json_once", "slow", "400", "401", "connection"] as const;
+export const MOCK_MODES = ["ok", "429", "500", "hang", "bad_json", "bad_json_once", "slow", "400", "401", "400_key", "connection"] as const;
 export const MockModeSchema = z.enum(MOCK_MODES);
 export type MockMode = z.infer<typeof MockModeSchema>;
 
@@ -160,6 +160,8 @@ export function mockFetch(options: MockOptions = {}) {
     if (mode === "500") return failure(500, "internal error (MOCK_MODE=500)");
     if (mode === "400") return failure(400, "bad request (MOCK_MODE=400)");
     if (mode === "401") return failure(401, "invalid API key (MOCK_MODE=401)");
+    // Gemini's OpenAI endpoint answers a wrong key with a 400, in exactly this shape.
+    if (mode === "400_key") return Response.json([{ error: { code: 400, message: "Please pass a valid API key", status: "INVALID_ARGUMENT" } }], { status: 400 });
     // What fetch does when the host can't be reached: the SDK reports it as a connection error.
     if (mode === "connection") throw new TypeError("fetch failed (MOCK_MODE=connection)");
     if (mode === "429") {
