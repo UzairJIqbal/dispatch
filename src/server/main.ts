@@ -85,7 +85,7 @@ function start(): void {
   let shuttingDown = false;
   const app = createApp({
     clients: config.clients,
-    limiter: upstashLimiter(redis, log),
+    limiter: upstashLimiter(redis, log, config.redis.prefix),
     promptVersion: release.stable,
     triage: (text, { log: requestLog }) => triage(text, release.stable, { gateway, log: requestLog, ...(config.provider ? { provider: config.provider } : {}) }),
     readiness: {

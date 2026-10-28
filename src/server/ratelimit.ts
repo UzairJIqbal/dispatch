@@ -18,11 +18,11 @@ export function retryAfterSeconds(resetMs: number, nowMs: number): number {
   return Math.max(1, Math.ceil((resetMs - nowMs) / 1000));
 }
 
-export function upstashLimiter(redis: Redis, log: Logger): Limiter {
+export function upstashLimiter(redis: Redis, log: Logger, keyPrefix: string): Limiter {
   const ratelimit = new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(LIMIT, WINDOW),
-    prefix: "dispatch:ratelimit",
+    prefix: `${keyPrefix}:ratelimit`,
     // A slow Redis shouldn't add seconds to every request: after 1.5 s the
     // library lets the request through.
     timeout: 1500,

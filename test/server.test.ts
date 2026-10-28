@@ -288,6 +288,11 @@ describe("service config", () => {
   it("names a bad provider", () => {
     expect(() => parseServiceConfig({ ...good, DISPATCH_PROVIDER: "groq" })).toThrow(/DISPATCH_PROVIDER is invalid/);
   });
+  it("prefixes Redis keys with dispatch unless told otherwise", () => {
+    expect(parseServiceConfig(good).redis.prefix).toBe("dispatch");
+    expect(parseServiceConfig({ ...good, REDIS_KEY_PREFIX: "dispatch-staging" }).redis.prefix).toBe("dispatch-staging");
+    expect(() => parseServiceConfig({ ...good, REDIS_KEY_PREFIX: "Dispatch:x" })).toThrow(/REDIS_KEY_PREFIX is invalid/);
+  });
 });
 
 describe("release config", () => {

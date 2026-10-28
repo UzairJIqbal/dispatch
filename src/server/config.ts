@@ -19,13 +19,15 @@ const EnvSchema = z.object({
   DISPATCH_PROVIDER: optional(ProviderNameSchema),
   /** Basic auth on /metrics. Unset: open, which is right only on a private network (docker compose). */
   METRICS_PASSWORD: optional(z.string().min(16, "use at least 16 characters, e.g. from `openssl rand -hex 16`")),
+  /** Start of every Redis key. Lets staging share production's free database (one per free account) without touching its keys. */
+  REDIS_KEY_PREFIX: optional(z.string().regex(/^[a-z0-9][a-z0-9-]{0,31}$/, "lowercase a-z, 0-9 and -, e.g. dispatch-staging")),
 });
 
 export type ServiceConfig = {
   port: number;
   logLevel: "debug" | "info" | "warn" | "error";
   clients: ClientKeys;
-  redis: { url: string; token: string };
+  redis: { url: string; token: string; prefix: string };
   provider: z.infer<typeof ProviderNameSchema> | undefined;
   metricsPassword: string | undefined;
 };
@@ -58,7 +60,7 @@ export function parseServiceConfig(env: NodeJS.ProcessEnv): ServiceConfig {
     port: e.PORT ?? 3000,
     logLevel: e.LOG_LEVEL ?? "info",
     clients,
-    redis: { url: e.UPSTASH_REDIS_REST_URL, token: e.UPSTASH_REDIS_REST_TOKEN },
+    redis: { url: e.UPSTASH_REDIS_REST_URL, token: e.UPSTASH_REDIS_REST_TOKEN, prefix: e.REDIS_KEY_PREFIX ?? "dispatch" },
     provider: e.DISPATCH_PROVIDER,
     metricsPassword: e.METRICS_PASSWORD,
   };
