@@ -1,0 +1,65 @@
+# The synthetic probe: production's only steady traffic. /readyz every 10
+# minutes, one real triage request (one Gemini call) every 30. A failed probe
+# fails the run, and GitHub emails whoever last changed this schedule.
+#
+# Repository secret: PROBE_KEY (the raw key from `pnpm client-key probe`).
+# Repository variable: PROD_URL.
+name: probe
+
+on:
+  schedule:
+    # Off the hour on purpose: GitHub delays runs most at :00. The two
+    # schedules never land on the same minute, so each run is one kind.
+    - cron: "4,14,24,34,44,54 * * * *"
+    - cron: "9,39 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: probe-${{ github.event.schedule || 'manual' }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  readyz:
+    if: github.event.schedule == '4,14,24,34,44,54 * * * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: GET /readyz
+        env:
+          URL: ${{ vars.PROD_URL }}
+        run: |
+          [ -n "$URL" ] || { echo "::error::Variable PROD_URL is not set (GitHub → Settings → Secrets and variables → Actions)."; exit 1; }
+          curl -fsS --max-time 90 --retry 2 --retry-delay 10 --retry-all-errors "$URL/readyz"
+
+  triage:
+    if: github.event.schedule == '9,39 * * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check settings
+        env:
+          URL: ${{ vars.PROD_URL }}
+          KEY: ${{ secrets.PROBE_KEY }}
+        run: |
+          missing=""
+          [ -n "$URL" ] || missing="$missing variable PROD_URL;"
+          [ -n "$KEY" ] || missing="$missing secret PROBE_KEY (the raw key from \`pnpm client-key probe\`);"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing in GitHub → Settings → Secrets and variables → Actions:$missing"
+            exit 1
+          fi
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: One real ticket
+        env:
+          URL: ${{ vars.PROD_URL }}
+          SMOKE_KEY: ${{ secrets.PROBE_KEY }}
+        run: pnpm smoke --url "$URL" --count 1 --wait 180

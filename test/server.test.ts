@@ -252,7 +252,7 @@ describe("health", () => {
     try {
       const ready = await fetch(`${s.url}/readyz`);
       expect(ready.status).toBe(200);
-      expect(await ready.json()).toMatchObject({ status: "ready", checks: { config: "ok", redis: "ok" } });
+      expect(await ready.json()).toMatchObject({ status: "ready", git_sha: gitSha(), checks: { config: "ok", redis: "ok" } });
     } finally {
       s.server.close();
     }

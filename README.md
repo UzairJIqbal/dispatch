@@ -92,3 +92,31 @@ What leaves the process for Langfuse: labels (category, priority), token counts,
 `docker compose up` also starts Prometheus (`:9090`, scraping every 15 s) and Grafana (`:3001`, user `admin`, `GRAFANA_ADMIN_PASSWORD` from `.env`), with the data source, the dashboard (`ops/grafana/dispatch.json`) and two alerts provisioned from files. The three SLOs, their baselines and the alerts are in [docs/SLOS.md](docs/SLOS.md); `test/slos.test.ts` checks the dashboard and alerts use the same numbers.
 
 `pnpm traffic [--rate 1] [--duration 300]` sends dev tickets to the service at a steady rate so every panel has data. It refuses to run against a real provider unless given `--real`. The drill commands are at the top of `compose.yaml`.
+
+## Deploy
+
+One image is built once per push to main and runs everywhere. Staging gets it automatically. Production gets the same image, by digest, only when promoted by hand. Every workflow reads its keys from GitHub secrets: nothing secret is in a workflow file or in the image.
+
+| Workflow | When | What |
+|---|---|---|
+| `deploy` | every push to main | Builds and pushes `ghcr.io/<owner>/dispatch:<git sha>`, deploys that digest to `dispatch-staging` on Render, waits for `/readyz` on that commit, then sends 3 real dev tickets (`pnpm smoke`). |
+| `promote` | by hand: Actions → promote → Run workflow | Takes a tag (empty = whatever staging serves), finds its digest, deploys exactly that to `dispatch-prod`, waits for `/readyz` on that commit. No rebuild. |
+| `probe` | every 10 / 30 min | `/readyz` on production every 10 minutes, one real ticket with the `probe` client key every 30. A failed probe fails the run, and GitHub emails it. |
+
+`pnpm smoke --url <service> [--sha <commit>] [--count 3]` runs the same check by hand (client key in `SMOKE_KEY`). It logs ticket ids and labels, never ticket text, because Actions logs on a public repo are public.
+
+`pnpm grafana:push` puts the committed dashboard and both alert rules into Grafana Cloud (`GRAFANA_URL`, `GRAFANA_TOKEN`, `ALERT_EMAIL` in `.env`). It only swaps the local data source for the stack's own and adds an email contact point; `test/grafana.test.ts` checks that nothing else changes. Grafana Cloud scrapes production `/metrics` once a minute with basic auth (user `metrics`) through its Metrics Endpoint integration, scrape job `dispatch`.
+
+Production traffic is synthetic: the probe, the smoke tests and requests sent by hand. The dashboard shows how the service behaves, not real customer load.
+
+### Free limits (checked 2026-10-28)
+
+| Service | Free limit | What it means here |
+|---|---|---|
+| Render | 750 instance hours per workspace per month. Sleeps after 15 min with no requests. Every free service in the workspace is suspended when the hours run out. One person can own up to 5 Hobby workspaces. | Production (about 744 h a month) fills one workspace on its own, so staging lives in a second free workspace. Staging sleeps, and its first request after a nap takes about a minute. |
+| Grafana Cloud | 10k active metric series, 14 days retention, 3 active users. The Metrics Endpoint integration scrapes HTTPS URLs only, with auth required, every minute by default. | Our labels are bounded (`test/metrics.test.ts`), far under 10k. The scrape every minute also keeps production awake. |
+| GitHub Actions | Free on a public repo. Schedules run at most every 5 minutes, can start late when GitHub is busy (worst at the top of the hour), and are switched off after 60 days with no repo activity. A failed scheduled run emails whoever last edited its cron line. | A late or skipped probe shows as a gap, not an error. |
+| GitHub Container Registry | Free for public images | The `dispatch` package is public, so Render pulls it with no credentials. |
+| Gemini (free tier) | A daily request quota per model, shared by everything using the key | The probe spends about 48 calls a day and each staging deploy 3, from the same quota as `pnpm eval`. |
+
+Sources: [Render free instances](https://render.com/docs/free), [Render workspaces](https://render.com/docs/team-members), [Render deploy hooks](https://render.com/docs/deploy-hooks), [Grafana Cloud pricing](https://grafana.com/pricing/), [Metrics Endpoint integration](https://grafana.com/docs/grafana-cloud/monitor-infrastructure/integrations/integration-reference/integration-metrics-endpoint/), [GitHub schedule event](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows).

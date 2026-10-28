@@ -191,8 +191,11 @@ export function createApp(deps: AppDeps): express.Express {
         }
       }),
     );
-    if (failing.length === 0) res.json({ status: "ready", checks });
-    else res.status(503).json({ status: "not_ready", failing: failing.sort(), checks });
+    // git_sha: a deploy waits until /readyz is ready *and* names the new
+    // commit, because Render keeps the old instance answering until the new
+    // one is healthy.
+    if (failing.length === 0) res.json({ status: "ready", git_sha: gitSha(), checks });
+    else res.status(503).json({ status: "not_ready", git_sha: gitSha(), failing: failing.sort(), checks });
   });
 
   // Prometheus scrapes this. Locally (docker compose) it's open on the

@@ -1,0 +1,111 @@
+# Every push to main: build the image once, push it to GitHub Container
+# Registry tagged with the git sha, deploy exactly that image (by digest) to
+# staging, then smoke-test staging with 3 real tickets on that commit.
+# Production is never touched here: see promote.yml.
+#
+# Repository secrets: RENDER_STAGING_DEPLOY_HOOK, STAGING_SMOKE_KEY.
+# Repository variable: STAGING_URL.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+
+# One deploy at a time; a newer push waits rather than racing the older one.
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      sha: ${{ steps.meta.outputs.sha }}
+      image: ${{ steps.meta.outputs.image }}
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: meta
+        name: Name the image
+        run: |
+          # The same short form the service reports as meta.git_sha.
+          echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          # Registry paths must be lowercase; the GitHub user name isn't.
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          # GIT_SHA is the only build argument, and it's not a secret.
+          build-args: GIT_SHA=${{ steps.meta.outputs.sha }}
+          tags: ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.sha }}
+          labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Summary
+        run: |
+          {
+            echo "### Image"
+            echo "\`${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.sha }}\`"
+            echo
+            echo "Digest: \`${{ steps.build.outputs.digest }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  staging:
+    needs: image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check settings
+        env:
+          HOOK: ${{ secrets.RENDER_STAGING_DEPLOY_HOOK }}
+          KEY: ${{ secrets.STAGING_SMOKE_KEY }}
+          URL: ${{ vars.STAGING_URL }}
+        run: |
+          missing=""
+          [ -n "$HOOK" ] || missing="$missing secret RENDER_STAGING_DEPLOY_HOOK (Render → dispatch-staging → Settings → Deploy Hook);"
+          [ -n "$KEY" ] || missing="$missing secret STAGING_SMOKE_KEY (the raw key from \`pnpm client-key smoke\`);"
+          [ -n "$URL" ] || missing="$missing variable STAGING_URL (e.g. https://dispatch-staging.onrender.com);"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing in GitHub → Settings → Secrets and variables → Actions:$missing"
+            exit 1
+          fi
+      - name: Deploy the image to staging
+        env:
+          HOOK: ${{ secrets.RENDER_STAGING_DEPLOY_HOOK }}
+          IMAGE: ${{ needs.image.outputs.image }}@${{ needs.image.outputs.digest }}
+        # By digest, not tag: what staging runs is exactly what was just built.
+        # Render accepts it as long as the repository matches the service's image URL.
+        run: curl -fsS --get --data-urlencode "imgURL=$IMAGE" -X POST "$HOOK" > /dev/null
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Smoke test (3 real tickets)
+        env:
+          SMOKE_KEY: ${{ secrets.STAGING_SMOKE_KEY }}
+          URL: ${{ vars.STAGING_URL }}
+          SHA: ${{ needs.image.outputs.sha }}
+        run: pnpm smoke --url "$URL" --sha "$SHA" --count 3
+      - name: Summary
+        run: |
+          {
+            echo "### Staging"
+            echo "${{ vars.STAGING_URL }} serves \`${{ needs.image.outputs.sha }}\`, digest \`${{ needs.image.outputs.digest }}\`."
+            echo "Promote it: Actions → promote → Run workflow."
+          } >> "$GITHUB_STEP_SUMMARY"

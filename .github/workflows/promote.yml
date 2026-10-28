@@ -1,0 +1,103 @@
+# Promote by hand: Actions → promote → Run workflow. Deploys to production
+# exactly the image already built and tested on staging (by digest). Nothing
+# is rebuilt. Leave the tag empty to take whatever staging serves now.
+#
+# Repository secret: RENDER_PROD_DEPLOY_HOOK.
+# Repository variables: STAGING_URL, PROD_URL.
+name: promote
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag (a git sha). Empty = the one on staging."
+        required: false
+        default: ""
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check settings
+        env:
+          HOOK: ${{ secrets.RENDER_PROD_DEPLOY_HOOK }}
+          STAGING_URL: ${{ vars.STAGING_URL }}
+          PROD_URL: ${{ vars.PROD_URL }}
+        run: |
+          missing=""
+          [ -n "$HOOK" ] || missing="$missing secret RENDER_PROD_DEPLOY_HOOK (Render → dispatch-prod → Settings → Deploy Hook);"
+          [ -n "$STAGING_URL" ] || missing="$missing variable STAGING_URL;"
+          [ -n "$PROD_URL" ] || missing="$missing variable PROD_URL (e.g. https://dispatch-prod.onrender.com);"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing in GitHub → Settings → Secrets and variables → Actions:$missing"
+            exit 1
+          fi
+      - id: tag
+        name: Pick the tag
+        env:
+          INPUT: ${{ inputs.tag }}
+          STAGING_URL: ${{ vars.STAGING_URL }}
+        run: |
+          tag="$INPUT"
+          if [ -z "$tag" ]; then
+            # Staging may be asleep: the first request wakes it (about a minute).
+            tag=$(curl -fsS --max-time 120 --retry 3 --retry-delay 10 --retry-all-errors "$STAGING_URL/readyz" | jq -r .git_sha)
+            echo "Staging serves $tag"
+          fi
+          if ! [[ "$tag" =~ ^[0-9a-f]{7,40}$ ]]; then
+            echo "::error::'$tag' is not a git sha. Pass the tag of an image built by the deploy workflow."
+            exit 1
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/setup-buildx-action@v4
+      - id: digest
+        name: Find the image's digest
+        env:
+          REF: ${{ steps.tag.outputs.image }}:${{ steps.tag.outputs.tag }}
+        run: |
+          digest=$(docker buildx imagetools inspect "$REF" --format '{{json .Manifest}}' | jq -r .digest) || {
+            echo "::error::No image $REF. Only commits the deploy workflow built can be promoted."
+            exit 1
+          }
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+          echo "$REF is $digest"
+      - name: Deploy the image to production
+        env:
+          HOOK: ${{ secrets.RENDER_PROD_DEPLOY_HOOK }}
+          IMAGE: ${{ steps.tag.outputs.image }}@${{ steps.digest.outputs.digest }}
+        run: curl -fsS --get --data-urlencode "imgURL=$IMAGE" -X POST "$HOOK" > /dev/null
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # No tickets here: the probe sends production's real requests.
+      - name: Wait for production on that commit
+        env:
+          URL: ${{ vars.PROD_URL }}
+          SHA: ${{ steps.tag.outputs.tag }}
+        run: pnpm smoke --url "$URL" --sha "$SHA" --count 0
+      - name: Summary
+        env:
+          URL: ${{ vars.PROD_URL }}
+        run: |
+          {
+            echo "### Production"
+            echo "$URL serves \`${{ steps.tag.outputs.tag }}\`, digest \`${{ steps.digest.outputs.digest }}\` (the same image staging tested, not rebuilt)."
+          } >> "$GITHUB_STEP_SUMMARY"
