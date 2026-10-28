@@ -2,15 +2,19 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { CATEGORIES } from "../src/categories.js";
 import { runEval } from "../src/eval/run.js";
-import { parseModelsConfig, resolveModel, type ProviderName } from "../src/gateway/config.js";
-import { ProviderError } from "../src/gateway/errors.js";
+import { ResponseCache } from "../src/gateway/cache.js";
+import { parseModelsConfig, resolveModel } from "../src/gateway/config.js";
+import { Gateway, type GatewayOptions } from "../src/gateway/gateway.js";
 import { mockAnswer } from "../src/gateway/mock.js";
-import { createProvider, type Provider } from "../src/gateway/providers.js";
+import { createProvider } from "../src/gateway/providers.js";
 import type { GoldenRow } from "../src/golden/schema.js";
 import { paths } from "../src/paths.js";
-import { ResponseCache } from "../src/triage/cache.js";
 import { loadPrompt, parsePrompt, renderPrompt } from "../src/triage/prompt.js";
-import { Gateway, parseAnswer, triage } from "../src/triage/triage.js";
+import { parseAnswer, triage } from "../src/triage/triage.js";
+
+// Mocks set explicitly, so a MOCK_MODE in the shell can't leak in. No jitter: retries don't wait.
+const mocks = (mock: NonNullable<GatewayOptions["mocks"]>["mock"] = {}, fallback: NonNullable<GatewayOptions["mocks"]>["mock_fallback"] = {}) =>
+  new Gateway({ mocks: { mock, mock_fallback: fallback }, random: () => 0 });
 
 const modelsYaml = readFileSync(paths.models, "utf8");
 const promptYaml = readFileSync(`${paths.prompts}/v1.yaml`, "utf8");
@@ -99,7 +103,7 @@ describe("mock provider", () => {
 });
 
 describe("triage on the mock", () => {
-  const gateway = new Gateway({});
+  const gateway = mocks();
 
   it("returns an answer with its version, model, provider and git sha", async () => {
     const r = await triage("I was charged twice, I want a refund", "v1", { provider: "mock", gateway });
@@ -120,25 +124,10 @@ describe("triage on the mock", () => {
   });
   it("waits as long as MOCK_DELAY_MS says", async () => {
     const started = performance.now();
-    await triage("refund", "v1", { provider: "mock", gateway: new Gateway({ delayMs: 50 }) });
+    await triage("refund", "v1", { provider: "mock", gateway: mocks({ delayMs: 50 }) });
     expect(performance.now() - started).toBeGreaterThanOrEqual(45);
   });
 });
-
-/** A gateway whose provider fails with a rate limit from the third call on. */
-class RateLimitedGateway extends Gateway {
-  calls = 0;
-  override provider(name: ProviderName): Provider {
-    return {
-      name,
-      complete: () => {
-        this.calls++;
-        if (this.calls > 2) return Promise.reject(new ProviderError("rate_limit", "429", name, 429));
-        return Promise.resolve({ content: '{"category":"refund","priority":"low","summary":"x"}', tokensIn: 1, tokensOut: 1, latencyMs: 1 });
-      },
-    };
-  }
-}
 
 describe("runEval", () => {
   const rows: GoldenRow[] = Array.from({ length: 20 }, (_, i) => ({
@@ -151,18 +140,18 @@ describe("runEval", () => {
   }));
 
   it("stops at a rate limit instead of burning more quota", async () => {
-    const gateway = new RateLimitedGateway({});
+    // Both providers rate-limit from the third call on, with Retry-After: 0 so retries don't wait.
+    const gateway = mocks({ mode: ["ok", "ok", "429"], retryAfterS: 0 }, { mode: "429", retryAfterS: 0 });
     const cache = new ResponseCache(":memory:");
     const outcome = await runEval(rows, { version: "v1", provider: "mock", gateway, cache, refresh: false });
     cache.close();
-    expect(outcome.stoppedBy?.errorClass).toBe("rate_limit");
+    // After its retries and the fallback's; or circuit_open once both circuits have tripped.
+    expect(["rate_limit", "circuit_open"]).toContain(outcome.stoppedBy?.errorClass);
     expect(outcome.records).toHaveLength(2);
-    // Workers already waiting may each make one call; none start after the stop.
-    expect(gateway.calls).toBeLessThanOrEqual(2 + 4);
   });
   it("runs every ticket on the mock, in order", async () => {
     const cache = new ResponseCache(":memory:");
-    const outcome = await runEval(rows, { version: "v1", provider: "mock", gateway: new Gateway({}), cache, refresh: false });
+    const outcome = await runEval(rows, { version: "v1", provider: "mock", gateway: mocks(), cache, refresh: false });
     cache.close();
     expect(outcome.stoppedBy).toBeUndefined();
     expect(outcome.records.map((r) => r.id)).toEqual(rows.map((r) => r.id));

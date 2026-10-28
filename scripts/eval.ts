@@ -49,7 +49,15 @@ run(async () => {
   console.log(`\nWrote ${rel(out)}.`);
 
   // A failed call is graded wrong, so a baseline with failures mixes the
-  // model's quality with the provider's bad minute. Retries come in Phase 4.
+  // model's quality with the provider's bad minute. An answer from the
+  // fallback is another model's: it doesn't belong in this model's baseline.
+  const fallbacks = done.metrics.gateway?.fallbacks ?? 0;
+  if (args.writeBaseline && fallbacks > 0) {
+    throw new Error(
+      `${String(fallbacks)} of ${String(done.metrics.n)} tickets were answered by the fallback, so ${rel(paths.baseline)} was not written: a baseline is one model's number.\n` +
+        `The run itself is saved above. Try again when ${done.run.provider} is answering.`,
+    );
+  }
   if (args.writeBaseline && done.metrics.calls.failed > 0) {
     throw new Error(
       `${String(done.metrics.calls.failed)} of ${String(done.metrics.n)} calls failed (${Object.entries(done.metrics.errors)

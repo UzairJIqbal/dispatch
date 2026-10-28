@@ -47,7 +47,7 @@ curl -s localhost:3000/v1/triage \
   -d '{"text": "I was charged twice for my order"}'
 ```
 
-The answer is the triage JSON plus `meta: { prompt_version, model, provider, git_sha, request_id, latency_ms }`. Errors are `{ "error": { "class", "message" } }`: `bad_request` 400, `unauthorized` 401, `too_large` 413 (over 4,000 characters), `rate_limit` 429 with `Retry-After`, `schema_fail` 502, `provider_error` 503. `GET /healthz` says the process is up; `GET /readyz` checks config, Redis and provider keys, and names the one that fails.
+The answer is the triage JSON plus `meta: { prompt_version, model, provider, fallback, git_sha, request_id, latency_ms }`; `fallback: true` means the primary failed and the fallback provider answered. Errors are `{ "error": { "class", "message" } }`. About the client's request: `bad_request` 400, `unauthorized` 401, `too_large` 413 (over 4,000 characters), `rate_limit` 429 with `Retry-After`. From the gateway (never the client's fault): `rate_limit`, `provider_5xx`, `connection`, `auth` and `circuit_open` 503, `timeout` 504, `schema_fail` and `bad_request` 502. `GET /healthz` says the process is up; `GET /readyz` checks config, Redis, provider keys and the circuits, and names the one that fails.
 
 Both `pnpm dev` and docker compose use the mock unless `DISPATCH_PROVIDER=gemini` is set. Which prompt version is live comes from `config/release.yaml`. Every variable is in `.env.example`.
 
@@ -56,3 +56,19 @@ Both `pnpm dev` and docker compose use the mock unless `DISPATCH_PROVIDER=gemini
 | Upstash Redis | 500,000 commands/month, 256 MB, no card | the 60/min sliding window costs ~4 commands per request, so ~120,000 requests a month |
 
 If Redis can't be reached, the rate limit lets requests through (logged as `ratelimit.unavailable`) and `/readyz` turns 503: a Redis outage shouldn't take triage down with it.
+
+## The gateway
+
+Every model call goes through one gateway, configured in `config/models.yaml`. Each attempt is cut off after 10 s and the whole request after 20 s. `rate_limit`, `timeout`, `provider_5xx` and `connection` are retried up to 2 times with full-jitter backoff (a random wait between 0 and min(4 s, 500 ms × 2^retry)), or for exactly the `Retry-After` the provider sends. `auth` and `bad_request` are never retried: they go straight to the fallback, which gets its one try (a retired model or a parameter one provider refuses is what it's for). Then the `fallback` alias answers (Gemini → Cohere); the primary stops 10 s before the deadline so a hung primary still leaves the fallback a full attempt (unless the fallback's circuit is open, then the primary gets all 20 s). A provider with 5 failed attempts in 30 s gets its circuit opened: it is skipped for 30 s, then one trial request decides; an attempt cut short by our own deadline, or a cache hit, doesn't count either way. An answer that fails the schema gets one repair call per provider (a failed repair call is retried as a repair); still broken is `schema_fail`. Each attempt logs one `gateway.attempt` line with `provider`, `attempt`, `error_class`, `wait_ms` and `decision`.
+
+Drills run on the mock, zero real calls. `MOCK_MODE` breaks the primary mock; `mock_fallback` answers unless `MOCK_FALLBACK_MODE` is set:
+
+```sh
+MOCK_MODE=500 pnpm dev                          # 3 primary attempts, then the fallback; 5 failures open the circuit
+MOCK_MODE=429 MOCK_RETRY_AFTER=2 pnpm dev       # the log shows wait_ms 2000
+MOCK_MODE=bad_json_once pnpm dev                # one repair, then a valid answer (bad_json: 502 schema_fail)
+MOCK_MODE=hang pnpm dev                         # primary cut off at 10 s, the fallback answers
+MOCK_MODE=hang MOCK_FALLBACK_MODE=hang pnpm dev # 504 timeout within 20 s
+```
+
+Modes: `ok`, `429`, `500`, `hang`, `bad_json`, `bad_json_once`, `slow` (real latencies from the baseline), `400`, `401`, `400_key` (Gemini's wrong-key answer), `connection`.

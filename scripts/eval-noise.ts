@@ -5,7 +5,7 @@ import { executeRun } from "../src/eval/command.js";
 import { compareRuns } from "../src/eval/noise.js";
 import { writeJson, type Noise } from "../src/eval/results.js";
 import { paths, rel } from "../src/paths.js";
-import { Gateway } from "../src/triage/triage.js";
+import { Gateway } from "../src/gateway/gateway.js";
 import { run } from "./run.js";
 
 // The test split twice, uncached, same everything. Only the flip count is

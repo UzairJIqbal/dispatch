@@ -1,11 +1,11 @@
+import type { Logger } from "pino";
 import { z } from "zod";
 import { gitSha } from "../env.js";
-import { loadModelsConfig, resolveModel, type ProviderName } from "../gateway/config.js";
+import type { ResponseCache } from "../gateway/cache.js";
+import type { ProviderName } from "../gateway/config.js";
 import { ProviderError } from "../gateway/errors.js";
-import { mockOptionsFromEnv, type MockOptions } from "../gateway/mock.js";
-import { createProvider, type ChatResponse, type Provider } from "../gateway/providers.js";
+import { Gateway } from "../gateway/gateway.js";
 import { MAX_TICKET_CHARS } from "../golden/schema.js";
-import { cacheKey, type ResponseCache } from "./cache.js";
 import { loadPrompt, renderPrompt } from "./prompt.js";
 import { TriageAnswerSchema, type TriageAnswer } from "./schema.js";
 
@@ -14,6 +14,11 @@ export type TriageMeta = {
   provider: ProviderName;
   model: string;
   git_sha: string;
+  /** Answered by the fallback provider. */
+  fallback: boolean;
+  retries: number;
+  /** The first answer failed validation and was repaired (or failed again). */
+  repaired: boolean;
   tokens_in: number;
   tokens_out: number;
   latency_ms: number;
@@ -26,28 +31,16 @@ export type TriageResult =
   | ({ ok: false; error: { class: "schema_fail"; message: string }; raw: string } & TriageMeta);
 
 export type TriageOptions = {
-  /** Overrides the prompt's model alias with that provider's model. */
+  /** Starts on that provider's model instead of the prompt's alias. */
   provider?: ProviderName;
   /** Eval-only response cache. */
   cache?: ResponseCache;
   /** With a cache: skip reading it but still store the fresh answer. */
   refresh?: boolean;
   gateway?: Gateway;
+  /** The request's logger, for the gateway's attempt lines. None: silent. */
+  log?: Logger;
 };
-
-/** Holds one provider of each kind, so their free-tier pacing is shared by every call in the process. */
-export class Gateway {
-  private readonly providers = new Map<ProviderName, Provider>();
-  constructor(private readonly mock: MockOptions = mockOptionsFromEnv()) {}
-  provider(name: ProviderName): Provider {
-    let p = this.providers.get(name);
-    if (!p) {
-      p = createProvider(name, this.mock);
-      this.providers.set(name, p);
-    }
-    return p;
-  }
-}
 
 let defaultGateway: Gateway | undefined;
 
@@ -67,61 +60,60 @@ export function parseAnswer(raw: string): { ok: true; answer: TriageAnswer } | {
 
 /**
  * The one triage call. The service, the eval and the load test all come
- * through here. A broken answer comes back as `schema_fail`; a failed call
- * (rate limit, timeout, 5xx, 4xx) throws a typed ProviderError.
+ * through here, and it goes through the gateway. An answer still broken after
+ * its repair comes back as `schema_fail`; a request no provider answered
+ * throws a typed ProviderError.
  */
 export async function triage(text: string, version: string, opts: TriageOptions = {}): Promise<TriageResult> {
-  const { prompt, resolved, system, user, key } = prepareCall(text, version, opts.provider);
+  const prompt = loadPrompt(version);
   if (text.length > MAX_TICKET_CHARS) {
-    throw new ProviderError("bad_request", `ticket is ${String(text.length)} characters; the limit is ${String(MAX_TICKET_CHARS)}`, resolved.provider);
+    throw new ProviderError("bad_request", `ticket is ${String(text.length)} characters; the limit is ${String(MAX_TICKET_CHARS)}`, "gateway");
   }
   const gateway = opts.gateway ?? (defaultGateway ??= new Gateway());
-  const provider = gateway.provider(resolved.provider);
+  const { system, user } = renderPrompt(prompt, text);
 
-  let res: ChatResponse | undefined = opts.refresh ? undefined : opts.cache?.get(key);
-  const cached = res !== undefined;
-  if (!res) {
-    res = await provider.complete({
-      model: resolved.model,
-      system,
-      user,
-      temperature: prompt.temperature,
-      maxTokens: prompt.max_tokens,
-      params: resolved.params,
-    });
-    // Stored as soon as it arrives, so a run stopped by a rate limit picks up here.
-    opts.cache?.set(key, res);
-  }
+  const r = await gateway.call({
+    alias: prompt.model,
+    ...(opts.provider ? { provider: opts.provider } : {}),
+    system,
+    user,
+    temperature: prompt.temperature,
+    maxTokens: prompt.max_tokens,
+    validate: (raw) => {
+      const p = parseAnswer(raw);
+      return p.ok ? { ok: true, value: p.answer } : p;
+    },
+    ...(opts.cache
+      ? {
+          cache: {
+            store: opts.cache,
+            refresh: opts.refresh ?? false,
+            parts: { promptVersion: prompt.version, promptSha256: prompt.sha256, temperature: prompt.temperature, maxTokens: prompt.max_tokens, text },
+          },
+        }
+      : {}),
+    ...(opts.log ? { log: opts.log } : {}),
+  });
 
   const meta: TriageMeta = {
     prompt_version: prompt.version,
-    provider: resolved.provider,
-    model: resolved.model,
+    provider: r.provider,
+    model: r.model,
     git_sha: gitSha(),
-    tokens_in: res.tokensIn,
-    tokens_out: res.tokensOut,
-    latency_ms: res.latencyMs,
-    cached,
+    fallback: r.fallback,
+    retries: r.retries,
+    repaired: r.repaired,
+    tokens_in: r.tokensIn,
+    tokens_out: r.tokensOut,
+    latency_ms: r.latencyMs,
+    cached: r.cached,
   };
-  const parsed = parseAnswer(res.content);
-  if (parsed.ok) return { ok: true, answer: parsed.answer, ...meta };
-  return { ok: false, error: { class: "schema_fail", message: parsed.message }, raw: res.content, ...meta };
+  if (r.ok) return { ok: true, answer: r.value, ...meta };
+  return { ok: false, error: { class: "schema_fail", message: r.message }, raw: r.raw, ...meta };
 }
 
-/** Everything about a call that is decided before it's made: the prompt, the model, and the cache key. */
-export function prepareCall(text: string, version: string, provider?: ProviderName) {
+/** The cache key of a ticket's first try on the primary: how the eval plan counts what's already cached. */
+export function firstTryKeyParts(text: string, version: string) {
   const prompt = loadPrompt(version);
-  const resolved = resolveModel(loadModelsConfig(), prompt.model, provider);
-  const { system, user } = renderPrompt(prompt, text);
-  const key = cacheKey({
-    provider: resolved.provider,
-    model: resolved.model,
-    promptVersion: prompt.version,
-    promptSha256: prompt.sha256,
-    temperature: prompt.temperature,
-    maxTokens: prompt.max_tokens,
-    params: resolved.params,
-    text,
-  });
-  return { prompt, resolved, system, user, key };
+  return { prompt, parts: { promptVersion: prompt.version, promptSha256: prompt.sha256, temperature: prompt.temperature, maxTokens: prompt.max_tokens, text } };
 }

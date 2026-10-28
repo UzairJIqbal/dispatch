@@ -1,8 +1,9 @@
-import type { ProviderName, ResolvedModel } from "../gateway/config.js";
+import { cacheKey, type ResponseCache } from "../gateway/cache.js";
+import { loadModelsConfig, resolveChain, type ProviderName, type ResolvedModel } from "../gateway/config.js";
 import { ProviderError } from "../gateway/errors.js";
+import type { Gateway } from "../gateway/gateway.js";
 import type { GoldenRow } from "../golden/schema.js";
-import type { ResponseCache } from "../triage/cache.js";
-import { prepareCall, triage, type Gateway } from "../triage/triage.js";
+import { firstTryKeyParts, triage } from "../triage/triage.js";
 import { gradeTicket } from "./graders.js";
 import type { TicketRecord } from "./results.js";
 
@@ -20,19 +21,31 @@ export type EvalOptions = {
   onProgress?: (done: number, total: number) => void;
 };
 
-export type EvalPlan = { resolved: ResolvedModel; total: number; cached: number; calls: number };
+export type EvalPlan = {
+  resolved: ResolvedModel;
+  /** The providers the run may use: the primary, then its fallback. */
+  chain: ResolvedModel[];
+  total: number;
+  cached: number;
+  /** Real calls if every first try works. Retries, repairs and fallbacks add to it. */
+  calls: number;
+};
 
 /** What a run will cost before it starts: how many real calls it makes. */
 export function planEval(rows: readonly GoldenRow[], opts: Pick<EvalOptions, "version" | "provider" | "cache" | "refresh">): EvalPlan {
+  if (rows.length === 0) throw new Error("No tickets to run.");
   let cached = 0;
-  let resolved: ResolvedModel | undefined;
+  let chain: ResolvedModel[] = [];
   for (const row of rows) {
-    const call = prepareCall(row.text, opts.version, opts.provider);
-    resolved = call.resolved;
-    if (!opts.refresh && opts.cache.get(call.key)) cached++;
+    const { prompt, parts } = firstTryKeyParts(row.text, opts.version);
+    chain = resolveChain(loadModelsConfig(), prompt.model, opts.provider);
+    const primary = chain[0];
+    if (!primary) throw new Error("No model to run.");
+    if (!opts.refresh && opts.cache.get(cacheKey({ ...parts, provider: primary.provider, model: primary.model, params: primary.params }))) cached++;
   }
-  if (!resolved) throw new Error("No tickets to run.");
-  return { resolved, total: rows.length, cached, calls: rows.length - cached };
+  const [resolved] = chain;
+  if (!resolved) throw new Error("No model to run.");
+  return { resolved, chain, total: rows.length, cached, calls: rows.length - cached };
 }
 
 export type EvalOutcome = {
@@ -41,17 +54,18 @@ export type EvalOutcome = {
   stoppedBy?: ProviderError;
 };
 
-// A 429 means the free tier is used up for now; a bad key or an unknown model
-// (401, 403, 404) will fail on every ticket. Either way, going on only burns
+// These reach the eval only after the gateway has retried and fallen back.
+// A 429 means the free tier is used up for now; a bad key (auth) or an unknown
+// model (404) will fail on every ticket. Either way, going on only burns
 // quota. Any other 4xx can be about one ticket: Cohere answers some with a 422
 // "No valid response generated". That is recorded as a failed ticket and the
 // run goes on, unless it keeps happening, which means it is the request, not
 // the ticket.
-const FAILS_EVERY_TICKET = new Set([401, 403, 404]);
+const FAILS_EVERY_TICKET = new Set([404]);
 export const MAX_BAD_REQUESTS_IN_A_ROW = 3;
 
 export function stopsTheRun(err: ProviderError, badRequestsInARow: number): boolean {
-  if (err.errorClass === "rate_limit") return true;
+  if (err.errorClass === "rate_limit" || err.errorClass === "auth" || err.errorClass === "circuit_open") return true;
   if (err.errorClass !== "bad_request") return false;
   return (err.status !== undefined && FAILS_EVERY_TICKET.has(err.status)) || badRequestsInARow >= MAX_BAD_REQUESTS_IN_A_ROW;
 }
@@ -74,6 +88,10 @@ async function runOne(row: GoldenRow, opts: EvalOptions): Promise<{ record: Tick
       ...(r.ok ? {} : { raw: r.raw }),
       grade: gradeTicket(expected, row.text, answer),
       cached: r.cached,
+      provider: r.provider,
+      fallback: r.fallback,
+      retries: r.retries,
+      repaired: r.repaired,
       latency_ms: r.latency_ms,
       tokens_in: r.tokens_in,
       tokens_out: r.tokens_out,

@@ -16,7 +16,11 @@ export function percentile(values: readonly number[], p: number): number {
 
 const count = (records: readonly TicketRecord[], pred: (r: TicketRecord) => boolean) => records.filter(pred).length;
 
-export function computeMetrics(records: readonly TicketRecord[], price: Price, priceDate: string): Metrics {
+/**
+ * `price` is the primary model's; `prices` holds the others by provider, so
+ * a fallback answer is priced at the fallback's list price.
+ */
+export function computeMetrics(records: readonly TicketRecord[], price: Price, priceDate: string, prices: Readonly<Partial<Record<string, Price>>> = {}): Metrics {
   const n = records.length;
   const answered = records.filter((r) => r.answer !== null);
   const called = records.filter((r) => r.latency_ms !== null);
@@ -36,7 +40,10 @@ export function computeMetrics(records: readonly TicketRecord[], price: Price, p
 
   const inTotal = called.reduce((s, r) => s + r.tokens_in, 0);
   const outTotal = called.reduce((s, r) => s + r.tokens_out, 0);
-  const costTotal = (inTotal * price.input + outTotal * price.output) / 1_000_000;
+  const costTotal = called.reduce((s, r) => {
+    const p = (r.provider ? prices[r.provider] : undefined) ?? price;
+    return s + (r.tokens_in * p.input + r.tokens_out * p.output) / 1_000_000;
+  }, 0);
 
   return {
     n,
@@ -44,7 +51,7 @@ export function computeMetrics(records: readonly TicketRecord[], price: Price, p
     category: rate(count(records, (r) => r.grade.category), n),
     priority: rate(count(records, (r) => r.grade.priority), n),
     dangerous_misses: count(records, (r) => r.grade.dangerous_miss),
-    schema_valid: rate(answered.length, n),
+    schema_valid: rate(count(answered, (r) => r.repaired !== true), n),
     success: rate(answered.length, n),
     summary_ok: rate(count(answered, (r) => r.grade.summary?.ok === true), answered.length),
     by_source: bySource,
@@ -66,6 +73,11 @@ export function computeMetrics(records: readonly TicketRecord[], price: Price, p
       out_total: outTotal,
     },
     cost_usd: { per_request: called.length ? costTotal / called.length : 0, total: costTotal, price_date: priceDate },
+    gateway: {
+      retries: records.reduce((s, r) => s + (r.retries ?? 0), 0),
+      fallbacks: count(records, (r) => r.fallback === true),
+      repairs: count(records, (r) => r.repaired === true),
+    },
   };
 }
 
@@ -93,6 +105,13 @@ function latencyText(m: Metrics): string {
   if (!m.latency_s) return "no uncached calls";
   const l = m.latency_s;
   return `${secs(l.p50)} / ${secs(l.p95)} / ${secs(l.p99)} (n=${String(l.n)} uncached)`;
+}
+
+function gatewayText(m: Metrics, b: Metrics | undefined): string {
+  const g = m.gateway;
+  if (!g) return "Gateway: not recorded (results from before Phase 4)";
+  const then = b ? (b.gateway ? ` · baseline: ${String(b.gateway.retries)} retries, ${String(b.gateway.fallbacks)} fallbacks, ${String(b.gateway.repairs)} repairs (n=${String(b.n)})` : " · baseline: not recorded") : "";
+  return `Gateway (n=${String(m.n)}): ${String(g.retries)} retries · ${String(g.fallbacks)} answered by the fallback · ${String(g.repairs)} repaired${then}`;
 }
 
 export function formatReport(
@@ -132,6 +151,7 @@ export function formatReport(
     `Cost is a list-price estimate (${m.cost_usd.price_date} price table); on the free tier this run cost $0. Whole run at list price: ~${usd(m.cost_usd.total)}.`,
     `Slices are shown, never gated: too small to gate on.`,
     errors.length ? `Errors: ${errors.join(" · ")}` : "Errors: none",
+    gatewayText(m, b),
   ];
   if (noise) {
     lines.push(

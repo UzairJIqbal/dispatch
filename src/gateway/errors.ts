@@ -1,7 +1,12 @@
-// Every failure has one of these classes, and every metric, log and trace uses
-// the same names. `circuit_open` arrives with the gateway in Phase 4.
-export const ERROR_CLASSES = ["rate_limit", "timeout", "provider_5xx", "schema_fail", "bad_request", "circuit_open"] as const;
+// Every failure has one of these classes, and every log, response and (later)
+// metric and trace uses the same names.
+export const ERROR_CLASSES = ["rate_limit", "timeout", "provider_5xx", "connection", "bad_request", "auth", "schema_fail", "circuit_open"] as const;
 export type ErrorClass = (typeof ERROR_CLASSES)[number];
+
+// Worth another try on the same provider: the next attempt can succeed. A
+// bad_request or auth error fails the same way every time, so retrying only
+// burns quota.
+export const RETRYABLE: ReadonlySet<ErrorClass> = new Set(["rate_limit", "timeout", "provider_5xx", "connection"]);
 
 /** A provider call that failed. The message never contains a key or ticket text. */
 export class ProviderError extends Error {

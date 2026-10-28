@@ -4,12 +4,12 @@ import { loadModelsConfig, type ProviderName } from "../gateway/config.js";
 import { gitSha } from "../env.js";
 import { loadGolden } from "../golden/golden.js";
 import type { GoldenRow, Split } from "../golden/schema.js";
-import { ResponseCache } from "../triage/cache.js";
+import { ResponseCache } from "../gateway/cache.js";
+import { Gateway } from "../gateway/gateway.js";
 import { loadPrompt } from "../triage/prompt.js";
 import { computeMetrics } from "./report.js";
 import type { Metrics, RunInfo, TicketRecord } from "./results.js";
 import { planEval, runEval, type EvalPlan } from "./run.js";
-import { Gateway } from "../triage/triage.js";
 
 export type RunRequest = {
   split: Split;
@@ -34,9 +34,12 @@ export function describePlan(plan: EvalPlan, refresh: boolean, label = ""): stri
   // Matches the pacer: calls are spaced 10% wider than the published limit.
   const minutes = rpm ? Math.ceil((plan.calls * 1.1) / rpm) : 0;
   const time = plan.calls === 0 ? "" : rpm ? ` Paced to ${String(rpm)} calls/min (${resolved.provider} free tier): about ${String(minutes)} min.` : "";
+  // Said up front: if the primary fails, the fallback spends its own quota.
+  const fallback = plan.chain[1];
+  const fb = fallback && plan.calls > 0 ? ` If ${resolved.provider} fails, ${fallback.provider} ${fallback.model} answers instead, on its own quota.` : "";
   return (
     `${label}${String(plan.total)} tickets on ${resolved.provider} ${resolved.model}: ` +
-    `${String(plan.calls)} real model calls, ${String(plan.cached)} from cache${refresh ? " (--no-cache: cache not read)" : ""}.${time}`
+    `${String(plan.calls)} real model calls, ${String(plan.cached)} from cache${refresh ? " (--no-cache: cache not read)" : ""}.${time}${fb}`
   );
 }
 
@@ -63,8 +66,8 @@ export async function executeRun(req: RunRequest): Promise<CompletedRun> {
     const plan = planEval(rows, { version: req.version, ...(req.provider ? { provider: req.provider } : {}), cache, refresh: req.refresh });
     const gateway = req.gateway ?? new Gateway();
     // Fails on a missing key now, before the plan reads as if the run started.
-    // A fully cached run needs no key.
-    if (plan.calls > 0) gateway.provider(plan.resolved.provider);
+    // A fully cached run needs no key. The fallback's key is needed too.
+    if (plan.calls > 0) for (const m of plan.chain) gateway.provider(m.provider);
     console.log(describePlan(plan, req.refresh, req.label ? `${req.label}: ` : ""));
 
     const startedAt = new Date();
@@ -94,7 +97,7 @@ export async function executeRun(req: RunRequest): Promise<CompletedRun> {
       git_sha: gitSha(),
       cache: req.refresh ? "skipped" : "used",
     };
-    return { run, metrics: computeMetrics(outcome.records, resolved.price, resolved.priceDate), records: outcome.records };
+    return { run, metrics: computeMetrics(outcome.records, resolved.price, resolved.priceDate, Object.fromEntries(plan.chain.map((m) => [m.provider, m.price]))), records: outcome.records };
   } finally {
     cache.close();
   }

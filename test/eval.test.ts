@@ -126,11 +126,13 @@ describe("compareRuns", () => {
 });
 
 describe("stopsTheRun", () => {
-  const err = (errorClass: "rate_limit" | "bad_request" | "provider_5xx", status?: number) => new ProviderError(errorClass, "x", "cohere", status);
+  const err = (errorClass: "rate_limit" | "bad_request" | "provider_5xx" | "auth" | "circuit_open", status?: number) => new ProviderError(errorClass, "x", "cohere", status);
 
   it("stops on a rate limit and on errors every ticket would hit", () => {
     expect(stopsTheRun(err("rate_limit", 429), 0)).toBe(true);
-    for (const status of [401, 403, 404]) expect(stopsTheRun(err("bad_request", status), 1)).toBe(true);
+    for (const status of [401, 403]) expect(stopsTheRun(err("auth", status), 0)).toBe(true);
+    expect(stopsTheRun(err("bad_request", 404), 1)).toBe(true);
+    expect(stopsTheRun(err("circuit_open"), 0)).toBe(true);
   });
   it("goes on after a 4xx about one ticket, but not forever", () => {
     expect(stopsTheRun(err("bad_request", 422), 1)).toBe(false);

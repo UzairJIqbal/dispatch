@@ -2,17 +2,20 @@ import type { Server } from "node:http";
 import { Redis } from "@upstash/redis";
 import { pino } from "pino";
 import { gitSha, loadEnv } from "../env.js";
-import { loadModelsConfig, resolveModel } from "../gateway/config.js";
+import { loadModelsConfig, resolveChain } from "../gateway/config.js";
+import { Gateway } from "../gateway/gateway.js";
 import { loadReleaseConfig } from "../release/config.js";
 import { loadPrompt } from "../triage/prompt.js";
-import { Gateway, triage } from "../triage/triage.js";
+import { triage } from "../triage/triage.js";
 import { createApp } from "./app.js";
 import { parseServiceConfig } from "./config.js";
 import { upstashLimiter } from "./ratelimit.js";
 
 // How long in-flight requests get to finish after SIGTERM before we exit anyway.
-// Below docker compose's stop_grace_period, so we exit before being killed.
-const DRAIN_MS = 15_000;
+// Longer than the gateway's 20 s deadline, so a request in the middle of a
+// fallback still finishes; below docker compose's stop_grace_period and
+// Render's 30 s, so we exit before being killed.
+const DRAIN_MS = 25_000;
 const REDIS_PING_TIMEOUT_MS = 2_000;
 
 function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
@@ -33,10 +36,7 @@ function start(): void {
   const release = loadReleaseConfig();
   const prompt = loadPrompt(release.stable);
   const models = loadModelsConfig();
-  const resolved = resolveModel(models, prompt.model, config.provider);
-  const gateway = new Gateway();
-  // Makes the provider now, which fails here, naming the variable, if its key is missing.
-  gateway.provider(resolved.provider);
+  const chain = resolveChain(models, prompt.model, config.provider);
 
   const log = pino({
     level: config.logLevel,
@@ -46,6 +46,11 @@ function start(): void {
     // Belt and braces: nothing should ever log these, but if it does they're blanked.
     redact: { paths: ["text", "*.text", "authorization", "*.authorization", "headers", "*.headers"], censor: "[redacted]" },
   });
+
+  const gateway = new Gateway({ config: models, log });
+  // Makes every provider in the chain now, which fails here, naming the
+  // variable, if the primary's or the fallback's key is missing.
+  gateway.prepare(prompt.model, config.provider);
 
   const redis = new Redis({
     url: config.redis.url,
@@ -60,7 +65,7 @@ function start(): void {
     clients: config.clients,
     limiter: upstashLimiter(redis, log),
     promptVersion: release.stable,
-    triage: (text) => triage(text, release.stable, { gateway, ...(config.provider ? { provider: config.provider } : {}) }),
+    triage: (text, { log: requestLog }) => triage(text, release.stable, { gateway, log: requestLog, ...(config.provider ? { provider: config.provider } : {}) }),
     readiness: {
       config: () => Promise.resolve(),
       redis: async () => {
@@ -70,10 +75,11 @@ function start(): void {
           throw new Error(`Redis is not reachable: ${err instanceof Error ? err.message : String(err)}`, { cause: err });
         }
       },
+      // Not ready when a key is missing or every provider's circuit is open:
+      // a load balancer should send traffic elsewhere until one recovers.
       providers: () => {
-        const keyEnv = resolved.provider === "mock" ? undefined : models.providers[resolved.provider].key_env;
-        if (keyEnv && !process.env[keyEnv]) return Promise.reject(new Error(`${keyEnv} is not set`));
-        return Promise.resolve();
+        const problem = gateway.notReady(prompt.model, config.provider);
+        return problem ? Promise.reject(new Error(problem)) : Promise.resolve();
       },
     },
     log,
@@ -82,7 +88,7 @@ function start(): void {
 
   const server: Server = app.listen(config.port, () => {
     log.info(
-      { event: "startup", port: config.port, prompt_version: prompt.version, provider: resolved.provider, model: resolved.model, clients: config.clients.size },
+      { event: "startup", port: config.port, prompt_version: prompt.version, chain: chain.map((m) => `${m.provider}/${m.model}`), clients: config.clients.size },
       `dispatch listening on :${String(config.port)}`,
     );
     if (gitSha() === "unknown") log.warn({ event: "startup.no_git_sha" }, "git_sha is unknown: build the image with GIT_SHA=$(git rev-parse --short HEAD)");

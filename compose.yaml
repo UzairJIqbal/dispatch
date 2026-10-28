@@ -15,5 +15,5 @@ services:
     ports:
       # Host side is changeable when 3000 is taken by something else on this machine.
       - "${DISPATCH_HOST_PORT:-3000}:3000"
-    # Longer than the service's own 15 s drain, so it exits by itself first.
-    stop_grace_period: 20s
+    # Longer than the service's own 25 s drain, so it exits by itself first.
+    stop_grace_period: 30s
