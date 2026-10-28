@@ -5,6 +5,8 @@ import { gitSha, loadEnv } from "../env.js";
 import { loadModelsConfig, resolveChain } from "../gateway/config.js";
 import { Gateway } from "../gateway/gateway.js";
 import { loadReleaseConfig } from "../release/config.js";
+import { parseTracingConfig } from "../tracing/config.js";
+import { setupTracing, traceMixin, type Tracing } from "../tracing/tracing.js";
 import { loadPrompt } from "../triage/prompt.js";
 import { triage } from "../triage/triage.js";
 import { createApp } from "./app.js";
@@ -17,6 +19,8 @@ import { upstashLimiter } from "./ratelimit.js";
 // Render's 30 s, so we exit before being killed.
 const DRAIN_MS = 25_000;
 const REDIS_PING_TIMEOUT_MS = 2_000;
+// Pending spans get this long on exit. Inside Render's 30 s even after a full drain.
+const TRACE_FLUSH_MS = 3_000;
 
 function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -44,7 +48,18 @@ function start(): void {
     timestamp: pino.stdTimeFunctions.isoTime,
     formatters: { level: (label) => ({ level: label }) },
     // Belt and braces: nothing should ever log these, but if it does they're blanked.
+    // The trace id on every line written inside a request, so a log line leads to its trace.
+    mixin: traceMixin,
     redact: { paths: ["text", "*.text", "authorization", "*.authorization", "headers", "*.headers"], censor: "[redacted]" },
+  });
+
+  const tracing: Tracing = setupTracing({
+    config: parseTracingConfig(process.env, (m) => {
+      log.warn({ event: "tracing.config" }, m);
+    }),
+    warn: (m) => {
+      log.warn({ event: "tracing.export" }, m);
+    },
   });
 
   const gateway = new Gateway({ config: models, log });
@@ -96,6 +111,15 @@ function start(): void {
 
   // Graceful shutdown: stop accepting connections, let in-flight requests
   // finish, then exit. A second signal, or the drain timeout, exits at once.
+  // Exits once pending spans are sent, or after TRACE_FLUSH_MS if Langfuse is slow.
+  const exit = (code: number) => {
+    withTimeout(tracing.shutdown(), TRACE_FLUSH_MS, "Langfuse")
+      .catch((err: unknown) => {
+        log.warn({ event: "shutdown.trace_flush" }, `pending spans not sent: ${err instanceof Error ? err.message : String(err)}`);
+      })
+      .finally(() => process.exit(code));
+  };
+
   const shutdown = (signal: string) => {
     if (shuttingDown) {
       log.warn({ event: "shutdown.forced", signal }, "second signal: exiting now");
@@ -105,13 +129,13 @@ function start(): void {
     log.info({ event: "shutdown.start", signal }, "shutting down: finishing in-flight requests");
     server.close(() => {
       log.info({ event: "shutdown.done" }, "all requests finished");
-      process.exit(0);
+      exit(0);
     });
     // Idle keep-alive connections would otherwise hold close() open.
     server.closeIdleConnections();
     setTimeout(() => {
       log.warn({ event: "shutdown.timeout", drain_ms: DRAIN_MS }, "requests still in flight after the drain timeout: exiting");
-      process.exit(1);
+      exit(1);
     }, DRAIN_MS).unref();
   };
   process.on("SIGTERM", shutdown);

@@ -16,6 +16,8 @@ const ProviderSchema = z.strictObject({
   key_url: z.url().optional(),
   /** The provider's free-tier requests per minute; calls are spaced to stay under it. */
   rpm: z.number().int().positive().optional(),
+  /** gen_ai.provider.name in traces, from the GenAI conventions' list. Unset: the provider's name here. */
+  otel_name: z.string().min(1).optional(),
 });
 export type ProviderConfig = z.infer<typeof ProviderSchema>;
 

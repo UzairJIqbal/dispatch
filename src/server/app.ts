@@ -1,10 +1,12 @@
 import { randomUUID } from "node:crypto";
+import { context, SpanKind, SpanStatusCode, type Context, type Span } from "@opentelemetry/api";
 import express, { type NextFunction, type Request, type Response } from "express";
 import type { Logger } from "pino";
 import { z } from "zod";
 import { gitSha } from "../env.js";
 import { ProviderError, type ErrorClass } from "../gateway/errors.js";
 import { MAX_TICKET_CHARS } from "../golden/schema.js";
+import { captureIO, failSpan, labelsOut, startRoot, traceId, tracer } from "../tracing/tracing.js";
 import type { TriageResult } from "../triage/triage.js";
 import { clientForKey, type ClientKeys } from "./clients.js";
 import { HttpError, type HttpErrorClass } from "./errors.js";
@@ -42,6 +44,10 @@ type RequestContext = {
   model?: string;
   provider?: string;
   fallback?: boolean;
+  /** The request's root span, on /v1 only: health checks aren't traced. */
+  span?: Span;
+  /** The context to run the triage in: the root span and what its children carry. */
+  traceCtx?: Context;
 };
 
 // What a client reads for each gateway failure. Never the provider's own
@@ -72,6 +78,24 @@ function sendError(res: Response, err: HttpError): void {
 // Body-parser errors carry a `type`. Only these two are the client's fault in a way we name.
 const BodyParserErrorSchema = z.object({ type: z.enum(["entity.too.large", "entity.parse.failed"]) });
 
+/** What the root span says once the response is done: the same fields as the request's log line. */
+function endRoot(span: Span, c: RequestContext, status: number, aborted: boolean): void {
+  span.setAttributes({
+    "http.response.status_code": status,
+    ...(c.client ? { "app.client": c.client, "langfuse.user.id": c.client } : {}),
+    ...(c.promptVersion ? { "app.prompt_version": c.promptVersion } : {}),
+    ...(c.model ? { "app.model": c.model } : {}),
+    ...(c.provider ? { "app.provider": c.provider } : {}),
+    "app.fallback": c.fallback ?? false,
+    ...(aborted ? { "app.aborted": true } : {}),
+  });
+  if (c.errorClass) span.setAttribute("app.error_class", c.errorClass);
+  // A 5xx is ours; a 4xx is the client's request and not a failure of the service.
+  if (status >= 500) failSpan(span, c.errorClass ?? "internal");
+  else if (!c.errorClass) span.setStatus({ code: SpanStatusCode.OK });
+  span.end();
+}
+
 export function createApp(deps: AppDeps): express.Express {
   const { log } = deps;
   const app = express();
@@ -83,13 +107,26 @@ export function createApp(deps: AppDeps): express.Express {
     const c: RequestContext = { requestId: randomUUID(), started: performance.now() };
     contexts.set(req, c);
     res.setHeader("X-Request-Id", c.requestId);
+    if (req.path === "/v1" || req.path.startsWith("/v1/")) {
+      // Started before auth, so a 401 or a 429 has a trace too.
+      const root = startRoot(
+        "triage.request",
+        { kind: SpanKind.SERVER, attributes: { "http.request.method": req.method, "http.route": req.path, "app.request_id": c.requestId } },
+        { "langfuse.release": gitSha(), "langfuse.version": deps.promptVersion, "app.prompt_version": deps.promptVersion, "app.release": "stable", "app.git_sha": gitSha() },
+      );
+      c.span = root.span;
+      c.traceCtx = root.ctx;
+    }
     // While draining on SIGTERM, tell keep-alive clients not to send more on this connection.
     if (deps.isShuttingDown()) res.setHeader("Connection", "close");
     res.on("close", () => {
+      const tid = traceId(c.span);
+      if (c.span) endRoot(c.span, c, res.statusCode, !res.writableFinished);
       log.info(
         {
           event: "request",
           request_id: c.requestId,
+          ...(tid ? { trace_id: tid } : {}),
           method: req.method,
           path: req.path,
           client: c.client ?? null,
@@ -145,7 +182,17 @@ export function createApp(deps: AppDeps): express.Express {
     if (!client) throw unauthorized("Unknown client key.");
     c.client = client;
 
-    const limit = await deps.limiter.check(client);
+    // Its own span: the check is a Redis round trip, often the slowest step
+    // after the model, and a trace should account for all of a request's time.
+    const limit = await tracer().startActiveSpan("ratelimit.check", {}, c.traceCtx ?? context.active(), async (span) => {
+      try {
+        const r = await deps.limiter.check(client);
+        span.setAttribute("app.rate_limited", !r.allowed);
+        return r;
+      } finally {
+        span.end();
+      }
+    });
     if (!limit.allowed) {
       throw new HttpError("rate_limit", `Over the limit for this client. Try again in ${String(limit.retryAfterS)} s.`, { "Retry-After": String(limit.retryAfterS) });
     }
@@ -171,7 +218,9 @@ export function createApp(deps: AppDeps): express.Express {
     c.promptVersion = deps.promptVersion;
     let result: TriageResult;
     try {
-      result = await deps.triage(text, { log: log.child({ request_id: c.requestId }) });
+      // The span is put back by hand: the body parser's callback loses the async context.
+      const run = () => deps.triage(text, { log: log.child({ request_id: c.requestId }) });
+      result = c.traceCtx ? await context.with(c.traceCtx, run) : await run();
     } catch (err) {
       if (err instanceof ProviderError) {
         c.provider = err.provider;
@@ -183,6 +232,8 @@ export function createApp(deps: AppDeps): express.Express {
     c.model = result.model;
     c.provider = result.provider;
     c.fallback = result.fallback;
+    if (c.span && result.ok) labelsOut(c.span, result.answer);
+    if (c.span) captureIO(c.span, { input: text, ...(result.ok ? { output: JSON.stringify(result.answer) } : {}) });
     if (!result.ok) {
       // The raw answer stays out of the response and the log: it can echo the ticket.
       throw new HttpError({ gateway: "schema_fail" }, GATEWAY_MESSAGES.schema_fail);
@@ -196,6 +247,7 @@ export function createApp(deps: AppDeps): express.Express {
         fallback: result.fallback,
         git_sha: gitSha(),
         request_id: c.requestId,
+        ...(traceId(c.span) ? { trace_id: traceId(c.span) } : {}),
         latency_ms: Math.round(performance.now() - c.started),
       },
     });
@@ -219,7 +271,7 @@ export function createApp(deps: AppDeps): express.Express {
       else if (bodyErr.success) httpErr = new HttpError("bad_request", "Body is not valid JSON.");
       else {
         // Unexpected: log what it was (never the request body), answer plainly.
-        log.error({ event: "error.unexpected", request_id: c?.requestId, err: err instanceof Error ? { name: err.name, message: err.message, stack: err.stack } : String(err) }, "unexpected error");
+        log.error({ event: "error.unexpected", request_id: c?.requestId, trace_id: traceId(c?.span), err: err instanceof Error ? { name: err.name, message: err.message, stack: err.stack } : String(err) }, "unexpected error");
         httpErr = new HttpError("internal", "Something went wrong on our side.");
       }
     }

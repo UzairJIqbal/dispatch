@@ -20,6 +20,9 @@ providers:
     # may be used for training (the golden set is public data, so that's fine).
     # The quota is per Google Cloud project: Dispatch has a project of its own.
     rpm: 10
+    # gen_ai.provider.name in traces: the GenAI conventions' name for the
+    # Gemini API at generativelanguage.googleapis.com.
+    otel_name: gcp.gemini
   cohere:
     # Cohere's OpenAI-compatible endpoint, not its native API, so the one
     # client works unchanged.
@@ -31,6 +34,7 @@ providers:
     # production or commercial use; this is a portfolio project, and the
     # fallback only answers when Gemini is down. Kept under 20 on purpose.
     rpm: 15
+    otel_name: cohere
   mock:
     # Runs in-process: no network, no key, no limit. MOCK_MODE breaks it on
     # purpose for drills.

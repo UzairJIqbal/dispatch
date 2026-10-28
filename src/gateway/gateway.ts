@@ -5,10 +5,12 @@
 // answer that fails validation.
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
+import { SpanKind, trace } from "@opentelemetry/api";
 import { pino, type Logger } from "pino";
 import { parse } from "yaml";
 import { z } from "zod";
 import { paths, rel } from "../paths.js";
+import { captureIO, decision, failSpan, tracer } from "../tracing/tracing.js";
 import { cacheKey, type CacheKeyParts, type ResponseCache } from "./cache.js";
 import { Circuit } from "./circuit.js";
 import { isMock, loadModelsConfig, resolveChain, type ModelsConfig, type ProviderName, type ResolvedModel } from "./config.js";
@@ -177,56 +179,96 @@ export class Gateway {
 
     // One call to one provider: from the cache, or a real attempt under the
     // attempt timeout and what's left of the deadline. The circuit hears only
-    // about real attempts: a cache hit never closes (or opens) it.
+    // about real attempts: a cache hit never closes (or opens) it. Each call
+    // is one gen_ai.chat span, checked answer included, so a schema_fail
+    // shows on the attempt that produced it.
     const send = async (
       provider: Provider,
       circuit: Circuit,
       model: ResolvedModel,
       end: () => number,
       messages: ChatMessage[],
+      at: { attempt: number; fallback: boolean },
       repair?: CacheKeyParts["repair"],
-    ): Promise<ChatResponse> => {
+    ): Promise<{ res: ChatResponse; checked: Validation<T> }> => {
       calls++;
       const key = req.cache && cacheKey({ ...req.cache.parts, provider: model.provider, model: model.model, params: model.params, ...(repair ? { repair } : {}) });
       const hit = key && !req.cache?.refresh ? req.cache?.store.get(key) : undefined;
-      if (hit) {
-        circuit.release();
-        cachedCalls++;
-        cachedLatency += hit.latencyMs;
-        tokensIn += hit.tokensIn;
-        tokensOut += hit.tokensOut;
-        return hit;
+
+      if (!hit) {
+        const waitStart = Date.now();
+        await provider.pace();
+        const waited = Date.now() - waitStart;
+        paced += waited;
+        deadline += waited;
+        // Drawn after the fact: a slow request is often just our own queue for a free-tier slot.
+        if (waited > 0) {
+          tracer()
+            .startSpan("gateway.pace_wait", { startTime: waitStart, attributes: { "app.provider": model.provider, "app.wait_ms": waited } })
+            .end(waitStart + waited);
+        }
       }
 
-      const waitStart = Date.now();
-      await provider.pace();
-      const waited = Date.now() - waitStart;
-      paced += waited;
-      deadline += waited;
-
-      const budget = Math.max(0, end() - Date.now());
-      const controller = new AbortController();
-      const timer = setTimeout(() => {
-        controller.abort(new Error("attempt timed out"));
-      }, Math.min(g.attempt_timeout_ms, budget));
-      let res: ChatResponse;
+      const span = tracer().startSpan("gen_ai.chat", {
+        kind: SpanKind.CLIENT,
+        attributes: {
+          "langfuse.observation.type": "generation",
+          "gen_ai.operation.name": "chat",
+          "gen_ai.provider.name": this.config.providers[model.provider].otel_name ?? model.provider,
+          "gen_ai.request.model": model.model,
+          "gen_ai.request.temperature": req.temperature,
+          "gen_ai.request.max_tokens": req.maxTokens,
+          "server.address": new URL(this.config.providers[model.provider].base_url).hostname,
+          "app.provider": model.provider,
+          "app.attempt": at.attempt,
+          "app.fallback": at.fallback,
+          "app.repair": repair !== undefined,
+          "app.cache_hit": hit !== undefined,
+        },
+      });
       try {
-        res = await provider.complete({ model: model.model, messages, temperature: req.temperature, maxTokens: req.maxTokens, params: model.params }, controller.signal);
-      } catch (err) {
-        // Only the provider call is classified: a fault of ours (the cache, a
-        // prompt file) must never read as the provider failing.
-        const classified = classify(err, model.provider, controller.signal);
-        if (classified.errorClass === "timeout" && budget < g.attempt_timeout_ms / 2) cutByUs.add(classified);
-        throw classified;
+        let res: ChatResponse;
+        if (hit) {
+          circuit.release();
+          cachedCalls++;
+          cachedLatency += hit.latencyMs;
+          res = hit;
+        } else {
+          const budget = Math.max(0, end() - Date.now());
+          const controller = new AbortController();
+          const timer = setTimeout(() => {
+            controller.abort(new Error("attempt timed out"));
+          }, Math.min(g.attempt_timeout_ms, budget));
+          try {
+            res = await provider.complete({ model: model.model, messages, temperature: req.temperature, maxTokens: req.maxTokens, params: model.params }, controller.signal);
+          } catch (err) {
+            // Only the provider call is classified: a fault of ours (the cache, a
+            // prompt file) must never read as the provider failing.
+            const classified = classify(err, model.provider, controller.signal);
+            if (classified.errorClass === "timeout" && budget < g.attempt_timeout_ms / 2) cutByUs.add(classified);
+            failSpan(span, classified.errorClass);
+            throw classified;
+          } finally {
+            clearTimeout(timer);
+          }
+          circuit.success();
+          // Stored as soon as it arrives, so an eval stopped by a rate limit picks up here.
+          if (key) req.cache?.store.set(key, res);
+        }
+        tokensIn += res.tokensIn;
+        tokensOut += res.tokensOut;
+        span.setAttributes({
+          "gen_ai.usage.input_tokens": res.tokensIn,
+          "gen_ai.usage.output_tokens": res.tokensOut,
+          ...(res.finishReason ? { "gen_ai.response.finish_reasons": [res.finishReason] } : {}),
+        });
+        captureIO(span, { input: messages.at(-1)?.content ?? "", output: res.content });
+        const checked = req.validate(res.content);
+        if (!checked.ok) failSpan(span, "schema_fail");
+        return { res, checked };
       } finally {
-        clearTimeout(timer);
+        span.end();
       }
-      circuit.success();
-      tokensIn += res.tokensIn;
-      tokensOut += res.tokensOut;
-      // Stored as soon as it arrives, so an eval stopped by a rate limit picks up here.
-      if (key) req.cache?.store.set(key, res);
-      return res;
     };
 
     const meta = (model: ResolvedModel, index: number, repaired: boolean): GatewayMeta => {
@@ -265,16 +307,24 @@ export class Gateway {
       // Once per provider: a fallback's broken answer gets its own repair.
       let toRepair: { raw: string; error: string } | undefined;
 
+      if (index > 0) {
+        const from = chain[index - 1]?.provider ?? "gateway";
+        decision("gateway.fallback", { "app.from": from, "app.to": model.provider, "app.error_class": lastError?.errorClass ?? "circuit_open" });
+      }
+
       for (let attempt = 1; attempt <= g.max_retries + 1; attempt++) {
+        const at = { attempt, fallback: index > 0 };
         if (end() - Date.now() <= 0) {
           // Out of this provider's time. Not a failure of the provider: nothing was sent.
           log.warn({ event: "gateway.skip", ...line, attempt, error_class: "timeout", wait_ms: null, decision: next, reason: "no time left" }, `${model.provider} skipped: no time left`);
+          decision("gateway.skip", { "app.provider": model.provider, "app.attempt": attempt, "app.error_class": "timeout", "app.reason": "no time left" });
           lastError ??= new ProviderError("timeout", `no time left before the ${String(g.deadline_ms / 1000)} s deadline`, model.provider);
           break;
         }
         if (!circuit.allow()) {
           // Open circuit: skipped at once, no timeout to wait out.
           log.warn({ event: "gateway.skip", ...line, attempt, error_class: "circuit_open", wait_ms: null, decision: next }, `${model.provider} skipped: circuit open`);
+          decision("gateway.skip", { "app.provider": model.provider, "app.attempt": attempt, "app.error_class": "circuit_open", "app.reason": "circuit open" });
           break;
         }
         const attemptStart = Date.now();
@@ -282,8 +332,7 @@ export class Gateway {
         const elapsed = () => Date.now() - attemptStart - (paced - pacedBefore);
         try {
           if (!toRepair) {
-            const first = await send(provider, circuit, model, end, messages);
-            const checked = req.validate(first.content);
+            const { res: first, checked } = await send(provider, circuit, model, end, messages, at);
             if (checked.ok) {
               log.info({ event: "gateway.attempt", ...line, attempt, error_class: null, wait_ms: null, decision: "success", latency_ms: elapsed() }, `${model.provider} answered`);
               return { ok: true, value: checked.value, ...meta(model, index, false) };
@@ -292,20 +341,21 @@ export class Gateway {
             // the validation error. It isn't one of the retries: the provider is fine.
             toRepair = { raw: first.content, error: checked.message };
             log.warn({ event: "gateway.attempt", ...line, attempt, error_class: "schema_fail", wait_ms: 0, decision: "repair", latency_ms: elapsed() }, `${model.provider} answer failed validation: repairing`);
+            decision("gateway.repair", { "app.provider": model.provider, "app.attempt": attempt, "app.error_class": "schema_fail" });
           }
 
           const repair = loadRepairPrompt();
           const repairStart = Date.now();
           const repairPaced = paced;
-          const fixed = await send(
+          const { res: fixed, checked: rechecked } = await send(
             provider,
             circuit,
             model,
             end,
             [...messages, { role: "assistant", content: toRepair.raw }, { role: "user", content: repair.message.replaceAll("{{error}}", toRepair.error) }],
+            at,
             { sha256: repair.sha256, raw: toRepair.raw, error: toRepair.error },
           );
-          const rechecked = req.validate(fixed.content);
           const repairLine = { event: "gateway.attempt", ...line, attempt, repair: true, wait_ms: null, latency_ms: Date.now() - repairStart - (paced - repairPaced) };
           if (rechecked.ok) {
             log.info({ ...repairLine, error_class: null, decision: "success" }, `${model.provider} answered after repair`);
@@ -325,9 +375,13 @@ export class Gateway {
           const cut = cutByUs.has(err);
           // A cut of ours tells us nothing either way. A 400 means it answered:
           // that ends a half-open trial well.
+          const wasOpen = circuit.current() === "open";
           if (cut) circuit.release();
           else if (COUNTS_AGAINST_CIRCUIT.has(err.errorClass)) circuit.failure();
           else circuit.success();
+          if (!wasOpen && circuit.current() === "open") {
+            decision("gateway.circuit_open", { "app.provider": model.provider, "app.attempt": attempt, "app.error_class": err.errorClass });
+          }
           const fail = { event: "gateway.attempt", ...line, attempt, error_class: err.errorClass, latency_ms: elapsed(), ...(cut ? { reason: "cut by the deadline" } : {}) };
 
           // Not retried: a 400 or a bad key fails the same way every time. The
@@ -352,7 +406,13 @@ export class Gateway {
             break;
           }
           log.warn({ ...fail, wait_ms: wait, decision: "retry" }, `${model.provider} failed (${err.errorClass}): retry in ${String(wait)} ms`);
+          // An event on the request (OpenTelemetry's way) and a span the length
+          // of the wait (what Langfuse draws), so the gap between attempts is explained.
+          const waitAttrs = { "app.provider": model.provider, "app.attempt": attempt, "app.error_class": err.errorClass, "app.wait_ms": wait, "app.retry_after": err.retryAfterS !== undefined };
+          trace.getActiveSpan()?.addEvent("gateway.retry_wait", waitAttrs);
+          const waitSpan = tracer().startSpan("gateway.retry_wait", { attributes: waitAttrs });
           await sleep(wait);
+          waitSpan.end();
           retries++;
         }
       }

@@ -41,6 +41,8 @@ export const TicketRecordSchema = z.strictObject({
   latency_ms: Count.nullable(),
   tokens_in: Count,
   tokens_out: Count,
+  /** From Phase 5 on: the ticket's trace in Langfuse, absent when tracing was off or sampled out. */
+  trace_id: z.string().optional(),
 });
 export type TicketRecord = z.infer<typeof TicketRecordSchema>;
 

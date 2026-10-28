@@ -12,6 +12,8 @@ services:
       # The mock unless you say otherwise, so a local run spends no real calls.
       # DISPATCH_PROVIDER=gemini docker compose up  →  the real model.
       DISPATCH_PROVIDER: ${DISPATCH_PROVIDER:-mock}
+      # Ticket text never goes into traces from a container, whatever .env says.
+      TRACE_CAPTURE_CONTENT: "false"
     ports:
       # Host side is changeable when 3000 is taken by something else on this machine.
       - "${DISPATCH_HOST_PORT:-3000}:3000"

@@ -25,6 +25,8 @@ export type ChatResponse = {
   tokensOut: number;
   /** Time of the call itself, not of waiting for a free-tier slot. */
   latencyMs: number;
+  /** Why the model stopped (`stop`, `length`). Not kept in the eval cache. */
+  finishReason?: string;
 };
 
 export interface Provider {
@@ -155,6 +157,7 @@ export function createProvider(name: ProviderName, mock: MockOptions = {}, confi
           tokensIn: res.usage?.prompt_tokens ?? 0,
           tokensOut: res.usage?.completion_tokens ?? 0,
           latencyMs: Math.round(performance.now() - started),
+          ...(res.choices[0]?.finish_reason ? { finishReason: res.choices[0].finish_reason } : {}),
         };
       } catch (err) {
         throw classify(err, name, signal);

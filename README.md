@@ -47,7 +47,7 @@ curl -s localhost:3000/v1/triage \
   -d '{"text": "I was charged twice for my order"}'
 ```
 
-The answer is the triage JSON plus `meta: { prompt_version, model, provider, fallback, git_sha, request_id, latency_ms }`; `fallback: true` means the primary failed and the fallback provider answered. Errors are `{ "error": { "class", "message" } }`. About the client's request: `bad_request` 400, `unauthorized` 401, `too_large` 413 (over 4,000 characters), `rate_limit` 429 with `Retry-After`. From the gateway (never the client's fault): `rate_limit`, `provider_5xx`, `connection`, `auth` and `circuit_open` 503, `timeout` 504, `schema_fail` and `bad_request` 502. `GET /healthz` says the process is up; `GET /readyz` checks config, Redis, provider keys and the circuits, and names the one that fails.
+The answer is the triage JSON plus `meta: { prompt_version, model, provider, fallback, git_sha, request_id, trace_id, latency_ms }`; `fallback: true` means the primary failed and the fallback provider answered. Errors are `{ "error": { "class", "message" } }`. About the client's request: `bad_request` 400, `unauthorized` 401, `too_large` 413 (over 4,000 characters), `rate_limit` 429 with `Retry-After`. From the gateway (never the client's fault): `rate_limit`, `provider_5xx`, `connection`, `auth` and `circuit_open` 503, `timeout` 504, `schema_fail` and `bad_request` 502. `GET /healthz` says the process is up; `GET /readyz` checks config, Redis, provider keys and the circuits, and names the one that fails.
 
 Both `pnpm dev` and docker compose use the mock unless `DISPATCH_PROVIDER=gemini` is set. Which prompt version is live comes from `config/release.yaml`. Every variable is in `.env.example`.
 
@@ -72,3 +72,15 @@ MOCK_MODE=hang MOCK_FALLBACK_MODE=hang pnpm dev # 504 timeout within 20 s
 ```
 
 Modes: `ok`, `429`, `500`, `hang`, `bad_json`, `bad_json_once`, `slow` (real latencies from the baseline), `400`, `401`, `400_key` (Gemini's wrong-key answer), `connection`.
+
+## Tracing
+
+Every `/v1` request is one trace in Langfuse (sent over OpenTelemetry): a root span `triage.request`, and under it a `ratelimit.check` span (the Redis round trip) and one `gen_ai.chat` span per model attempt with the provider, model, tokens, finish reason, attempt number, fallback, repair, cache hit and error class. The gateway's decisions are span events (`gateway.retry_wait`, `gateway.circuit_open`, `gateway.fallback`, `gateway.repair`); Langfuse doesn't draw span events, so each is also a short child span. Every log line inside a request and the answer's `meta.trace_id` carry the trace id, so a log line leads to its trace. `pnpm eval` traces each ticket, and a run is one Langfuse session named after the run id, with each ticket's `trace_id` in the results file.
+
+`TRACE_SAMPLE_RATE` sets the share of requests traced (1 normally, 0.1 for load tests); a request's spans are kept or dropped together. If Langfuse is down or a key is wrong, the service logs one `tracing.export` warning and goes on serving. On shutdown, pending spans are flushed (up to 3 s).
+
+Attribute names follow the [OpenTelemetry GenAI semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai) at commit `51a0f58` (2026-10-27). They are still marked **Development** and change often, so the version is pinned here and in `src/tracing/tracing.ts`. One deviation: the attempt span is named `gen_ai.chat`, not the convention's `chat {model}`, so every attempt has the same name to search by; the model is in `gen_ai.request.model`.
+
+### Data handling
+
+What leaves the process for Langfuse: labels (category, priority), token counts, timings, error classes, provider and model names, prompt version, git SHA, the client's name and request and trace ids. What never leaves: ticket text, summaries and API keys. So a trace has no input in Langfuse, and its output is just the labels. The one exception is `TRACE_CAPTURE_CONTENT=true`, for local debugging: it adds the ticket and the answer to spans with emails and phone numbers replaced by `[email]` and `[phone]`. It is off by default, forced off in docker compose, and ignored whenever `NODE_ENV=production` (the image sets it).

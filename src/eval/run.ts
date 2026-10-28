@@ -1,7 +1,10 @@
+import { context } from "@opentelemetry/api";
 import { cacheKey, type ResponseCache } from "../gateway/cache.js";
 import { loadModelsConfig, resolveChain, type ProviderName, type ResolvedModel } from "../gateway/config.js";
 import { ProviderError } from "../gateway/errors.js";
 import type { Gateway } from "../gateway/gateway.js";
+import { gitSha } from "../env.js";
+import { failSpan, labelsOut, startRoot, traceId } from "../tracing/tracing.js";
 import type { GoldenRow } from "../golden/schema.js";
 import { firstTryKeyParts, triage } from "../triage/triage.js";
 import { gradeTicket } from "./graders.js";
@@ -18,6 +21,8 @@ export type EvalOptions = {
   /** --no-cache: don't read the cache (fresh answers are still stored). */
   refresh: boolean;
   gateway?: Gateway;
+  /** The run's id: every ticket's trace goes under this Langfuse session. */
+  sessionId?: string;
   onProgress?: (done: number, total: number) => void;
 };
 
@@ -70,7 +75,40 @@ export function stopsTheRun(err: ProviderError, badRequestsInARow: number): bool
   return (err.status !== undefined && FAILS_EVERY_TICKET.has(err.status)) || badRequestsInARow >= MAX_BAD_REQUESTS_IN_A_ROW;
 }
 
+// One trace per ticket, all of a run's under one session, so a dev mistake
+// in the results file leads to its trace by trace_id.
 async function runOne(row: GoldenRow, opts: EvalOptions): Promise<{ record: TicketRecord; err?: ProviderError }> {
+  const { span, ctx } = startRoot(
+    "eval.ticket",
+    // The golden labels go along, so a wrong answer reads against the right one in Langfuse.
+    { attributes: { "app.ticket_id": row.id, "app.source": row.source, "app.expected_category": row.category, "app.expected_priority": row.priority } },
+    {
+      ...(opts.sessionId ? { "langfuse.session.id": opts.sessionId, "session.id": opts.sessionId } : {}),
+      "langfuse.release": gitSha(),
+      "langfuse.version": opts.version,
+      "app.prompt_version": opts.version,
+      "app.git_sha": gitSha(),
+    },
+  );
+  const tid = traceId(span);
+  try {
+    const { record, err } = await context.with(ctx, () => gradeOne(row, opts));
+    span.setAttributes({
+      "app.category_ok": record.grade.category,
+      "app.priority_ok": record.grade.priority,
+      ...(record.provider ? { "app.provider": record.provider } : {}),
+      "app.fallback": record.fallback ?? false,
+      ...(record.error ? { "app.error_class": record.error.class } : {}),
+    });
+    if (record.answer) labelsOut(span, record.answer);
+    if (record.error) failSpan(span, record.error.class);
+    return { record: tid ? { ...record, trace_id: tid } : record, ...(err ? { err } : {}) };
+  } finally {
+    span.end();
+  }
+}
+
+async function gradeOne(row: GoldenRow, opts: EvalOptions): Promise<{ record: TicketRecord; err?: ProviderError }> {
   const expected = { category: row.category, priority: row.priority };
   const base = { id: row.id, source: row.source, expected };
   try {

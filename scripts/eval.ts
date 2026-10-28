@@ -1,10 +1,13 @@
 import { mkdir } from "node:fs/promises";
 import { parseEvalArgs } from "../src/eval/args.js";
-import { executeRun, loadSplit } from "../src/eval/command.js";
+import { executeRun, loadSplit, type CompletedRun } from "../src/eval/command.js";
 import { formatReport } from "../src/eval/report.js";
 import { findComparison, readNoise, runFileName, writeJson, type Noise, type ResultsFile } from "../src/eval/results.js";
 import { loadModelsConfig, resolveModel } from "../src/gateway/config.js";
 import { paths, rel } from "../src/paths.js";
+import { loadEnv } from "../src/env.js";
+import { parseTracingConfig } from "../src/tracing/config.js";
+import { setupTracing } from "../src/tracing/tracing.js";
 import { loadPrompt } from "../src/triage/prompt.js";
 import { run } from "./run.js";
 
@@ -37,7 +40,17 @@ run(async () => {
     }
   }
 
-  const done = await executeRun({ split: args.split, version: args.version, ...(args.provider ? { provider: args.provider } : {}), refresh: args.noCache });
+  // Each run is one Langfuse session, named by the run id.
+  loadEnv();
+  const tracingConfig = parseTracingConfig(process.env, console.warn);
+  const tracing = setupTracing({ config: tracingConfig, warn: console.warn });
+  let done: CompletedRun;
+  try {
+    done = await executeRun({ split: args.split, version: args.version, ...(args.provider ? { provider: args.provider } : {}), refresh: args.noCache });
+  } finally {
+    // Sent even when the run stopped part way: those traces are the ones worth opening.
+    await tracing.shutdown();
+  }
   const file: ResultsFile = { run: done.run, metrics: done.metrics, tickets: done.records };
 
   console.log("");
@@ -47,6 +60,7 @@ run(async () => {
   const out = runFileName(done.run);
   await writeJson(out, file);
   console.log(`\nWrote ${rel(out)}.`);
+  if (tracingConfig.langfuse) console.log(`Traces: Langfuse → Sessions → ${done.run.id} (each ticket's trace_id is in the file).`);
 
   // A failed call is graded wrong, so a baseline with failures mixes the
   // model's quality with the provider's bad minute. An answer from the

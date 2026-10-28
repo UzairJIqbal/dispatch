@@ -71,7 +71,10 @@ export async function executeRun(req: RunRequest): Promise<CompletedRun> {
     console.log(describePlan(plan, req.refresh, req.label ? `${req.label}: ` : ""));
 
     const startedAt = new Date();
+    // Also the Langfuse session the run's traces go under.
+    const id = `${startedAt.toISOString()}-${prompt.version}-${req.split}`;
     const outcome = await runEval(rows, {
+      sessionId: id,
       version: req.version,
       ...(req.provider ? { provider: req.provider } : {}),
       gateway,
@@ -86,7 +89,7 @@ export async function executeRun(req: RunRequest): Promise<CompletedRun> {
 
     const { resolved } = plan;
     const run: RunInfo = {
-      id: `${startedAt.toISOString()}-${prompt.version}-${req.split}`,
+      id,
       started_at: startedAt.toISOString(),
       finished_at: new Date().toISOString(),
       split: req.split,
