@@ -1,5 +1,15 @@
 # `GIT_SHA=$(git rev-parse --short HEAD) docker compose up --build`
 # Without GIT_SHA the image says git_sha "unknown" (and logs a warning).
+#
+# Service on :3000, Grafana on :3001 (user admin, GRAFANA_ADMIN_PASSWORD from
+# .env), Prometheus on :9090. Only the service is needed to serve: Prometheus
+# and Grafana are for watching it, here only.
+#
+# Drills on the mock (each recreates only the service; traffic keeps going):
+#   MOCK_MODE=500 docker compose up -d dispatch                          primary down
+#   MOCK_MODE=500 MOCK_FALLBACK_MODE=500 docker compose up -d dispatch   everything down
+#   MOCK_MODE=slow MOCK_DELAY_MS=3000 docker compose up -d dispatch      slow (about 6 s a call)
+#   docker compose up -d dispatch                                        back to normal
 services:
   dispatch:
     build:
@@ -14,8 +24,50 @@ services:
       DISPATCH_PROVIDER: ${DISPATCH_PROVIDER:-mock}
       # Ticket text never goes into traces from a container, whatever .env says.
       TRACE_CAPTURE_CONTENT: "false"
+      # From the command line, so a drill is one command (see the top).
+      MOCK_MODE: ${MOCK_MODE:-ok}
+      MOCK_FALLBACK_MODE: ${MOCK_FALLBACK_MODE:-ok}
+      MOCK_DELAY_MS: ${MOCK_DELAY_MS:-}
+      # Prometheus reaches /metrics over the compose network only, so no
+      # password here. Deployed, METRICS_PASSWORD is set.
+      METRICS_PASSWORD: ""
     ports:
       # Host side is changeable when 3000 is taken by something else on this machine.
       - "${DISPATCH_HOST_PORT:-3000}:3000"
     # Longer than the service's own 25 s drain, so it exits by itself first.
     stop_grace_period: 30s
+
+  prometheus:
+    image: prom/prometheus:v3.15.1
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      # The availability SLO looks back 7 days; a day more for the edges.
+      - --storage.tsdb.retention.time=8d
+    volumes:
+      - ./ops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:13.2.5
+    depends_on:
+      - prometheus
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD in .env (any long random string, e.g. from `openssl rand -hex 16`)}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      # Opens on the Dispatch dashboard, not Grafana's welcome page.
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /etc/dispatch/dashboards/dispatch.json
+    volumes:
+      - ./ops/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./ops/grafana/dispatch.json:/etc/dispatch/dashboards/dispatch.json:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3001:3000"
+
+volumes:
+  prometheus-data:
+  grafana-data:

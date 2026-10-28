@@ -14,6 +14,7 @@
     "eval:noise": "tsx scripts/eval-noise.ts",
     "dev": "DISPATCH_PROVIDER=${DISPATCH_PROVIDER:-mock} tsx watch src/server/main.ts",
     "client-key": "tsx scripts/client-key.ts",
+    "traffic": "tsx scripts/traffic.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
@@ -32,6 +33,7 @@
     "express": "^5.3.0",
     "openai": "^7.43.0",
     "pino": "^10.4.0",
+    "prom-client": "15.1.3",
     "yaml": "^2.9.1",
     "zod": "^4.6.7"
   },

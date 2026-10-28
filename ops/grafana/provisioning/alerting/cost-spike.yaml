@@ -1,0 +1,58 @@
+# Cost spike: cost per minute (over the last 5 min) above 3x its 24 h
+# average, for 10 minutes. Catches a fallback storm (Cohere costs ~4x
+# Gemini), a prompt that got longer, or a traffic jump. Costs are list-price
+# estimates (the free tiers cost $0); the threshold is in docs/SLOS.md.
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: dispatch-cost
+    folder: Dispatch
+    interval: 1m
+    rules:
+      - uid: dispatch-cost-spike
+        title: "Cost spike (cost per minute above 3x the 24 h average)"
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            relativeTimeRange: { from: 300, to: 0 }
+            model:
+              refId: A
+              instant: true
+              range: false
+              expr: sum(rate(dispatch_cost_usd_total[5m])) * 60
+          - refId: B
+            datasourceUid: prometheus
+            relativeTimeRange: { from: 86400, to: 0 }
+            model:
+              refId: B
+              instant: true
+              range: false
+              expr: sum(rate(dispatch_cost_usd_total[24h])) * 60
+          # Hours of history Prometheus has, up to 24. A fresh stack has minutes,
+          # and its "24 h average" is then those minutes spread over a day:
+          # far too low, so the first real traffic would look like a spike.
+          - refId: D
+            datasourceUid: prometheus
+            relativeTimeRange: { from: 86400, to: 0 }
+            model:
+              refId: D
+              instant: true
+              range: false
+              expr: (time() - min_over_time(timestamp(up{job="dispatch"})[24h:5m])) / 3600
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              refId: C
+              type: math
+              # $B > 0: with no cost yet, any first cent is not a spike.
+              # $D >= 23: only once there is (nearly) a day to average over.
+              expression: "$A > 3 * $B && $B > 0 && $D >= 23"
+        noDataState: OK
+        execErrState: Error
+        for: 10m
+        labels:
+          severity: ticket
+        annotations:
+          summary: "Dispatch costs ${{ if $values.A.Value }}{{ humanize $values.A.Value }}{{ else }}?{{ end }}/min, over 3x its 24 h average of ${{ if $values.B.Value }}{{ humanize $values.B.Value }}{{ else }}?{{ end }}/min (list price)."
+          description: "Check the fallback rate and tokens panels: a fallback storm or longer answers are the usual causes."

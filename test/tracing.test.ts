@@ -7,6 +7,7 @@ import { runEval } from "../src/eval/run.js";
 import { ResponseCache } from "../src/gateway/cache.js";
 import { Gateway, type GatewayOptions } from "../src/gateway/gateway.js";
 import type { GoldenRow } from "../src/golden/schema.js";
+import { Metrics } from "../src/metrics/metrics.js";
 import { createApp } from "../src/server/app.js";
 import { hashKey, newClientKey, parseClientKeys } from "../src/server/clients.js";
 import { parseTracingConfig, type TracingConfig } from "../src/tracing/config.js";
@@ -55,6 +56,7 @@ async function serve(mocks: GatewayOptions["mocks"] = {}): Promise<{ url: string
     readiness: {},
     log,
     isShuttingDown: () => false,
+    metrics: new Metrics(),
   });
   server = await new Promise<Server>((resolve) => {
     const s = app.listen(0, () => {

@@ -1,9 +1,11 @@
 import type { Server } from "node:http";
 import { Redis } from "@upstash/redis";
 import { pino } from "pino";
+import { collectDefaultMetrics } from "prom-client";
 import { gitSha, loadEnv } from "../env.js";
 import { loadModelsConfig, resolveChain } from "../gateway/config.js";
 import { Gateway } from "../gateway/gateway.js";
+import { Metrics } from "../metrics/metrics.js";
 import { loadReleaseConfig } from "../release/config.js";
 import { parseTracingConfig } from "../tracing/config.js";
 import { setupTracing, traceMixin, type Tracing } from "../tracing/tracing.js";
@@ -62,7 +64,12 @@ function start(): void {
     },
   });
 
-  const gateway = new Gateway({ config: models, log });
+  const metrics = new Metrics();
+  // Node's own: memory, CPU, event-loop lag, GC. Only the service has them; tests and the eval don't.
+  collectDefaultMetrics({ register: metrics.registry });
+  metrics.priceTable(models.prices.date);
+
+  const gateway = new Gateway({ config: models, log, metrics });
   // Makes every provider in the chain now, which fails here, naming the
   // variable, if the primary's or the fallback's key is missing.
   gateway.prepare(prompt.model, config.provider);
@@ -99,6 +106,8 @@ function start(): void {
     },
     log,
     isShuttingDown: () => shuttingDown,
+    metrics,
+    metricsPassword: config.metricsPassword,
   });
 
   const server: Server = app.listen(config.port, () => {

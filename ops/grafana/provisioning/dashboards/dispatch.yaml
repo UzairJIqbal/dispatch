@@ -1,0 +1,10 @@
+apiVersion: 1
+providers:
+  - name: dispatch
+    folder: Dispatch
+    type: file
+    # Edits in the UI are allowed but don't stick: the file is the record.
+    # To keep a change, export the dashboard's JSON over ops/grafana/dispatch.json.
+    allowUiUpdates: true
+    options:
+      path: /etc/dispatch/dashboards

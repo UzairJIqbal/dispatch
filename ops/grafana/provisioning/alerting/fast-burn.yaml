@@ -1,0 +1,61 @@
+# Fast error-budget burn. The maths is in docs/SLOS.md: a 99% availability SLO
+# leaves an error budget of 1%. Burn rate = error ratio / 0.01; 1 means the
+# budget lasts exactly the 7-day window. At 14.4x, 2% of a 30-day budget goes
+# in 1 hour (the SRE workbook's page threshold); on our 7-day window that is
+# 8.6% of the budget per hour, gone in under 12 hours.
+#
+# Both windows must burn: the 1 h one says it's serious, the 5 min one says it
+# is still happening (so the alert clears soon after the fix).
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: dispatch-slo
+    folder: Dispatch
+    interval: 1m
+    rules:
+      - uid: dispatch-fast-burn
+        title: "Fast error-budget burn (1 h and 5 min above 14.4x)"
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            relativeTimeRange: { from: 3600, to: 0 }
+            model:
+              refId: A
+              instant: true
+              range: false
+              expr: >-
+                (
+                  sum(rate(dispatch_requests_total{route="/v1/triage",status=~"5.."}[1h]))
+                  /
+                  sum(rate(dispatch_requests_total{route="/v1/triage",status!~"4.."}[1h]))
+                ) / 0.01
+          - refId: B
+            datasourceUid: prometheus
+            relativeTimeRange: { from: 300, to: 0 }
+            model:
+              refId: B
+              instant: true
+              range: false
+              expr: >-
+                (
+                  sum(rate(dispatch_requests_total{route="/v1/triage",status=~"5.."}[5m]))
+                  /
+                  sum(rate(dispatch_requests_total{route="/v1/triage",status!~"4.."}[5m]))
+                ) / 0.01
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              refId: C
+              type: math
+              expression: "$A > 14.4 && $B > 14.4"
+        # No traffic at all is not an outage (0/0 has no answer).
+        noDataState: OK
+        execErrState: Error
+        # Two evaluations a minute apart before it fires, so "pending" is seen first.
+        for: 2m
+        labels:
+          severity: page
+        annotations:
+          summary: "Dispatch is burning its error budget at {{ if $values.A.Value }}{{ humanize $values.A.Value }}{{ else }}?{{ end }}x (1 h) and {{ if $values.B.Value }}{{ humanize $values.B.Value }}{{ else }}?{{ end }}x (5 min)."
+          description: "More than 14.4% of triage requests failed with a 5xx over the last hour and the last 5 minutes. See the errors panels for the class."

@@ -84,3 +84,11 @@ Attribute names follow the [OpenTelemetry GenAI semantic conventions](https://gi
 ### Data handling
 
 What leaves the process for Langfuse: labels (category, priority), token counts, timings, error classes, provider and model names, prompt version, git SHA, the client's name and request and trace ids. What never leaves: ticket text, summaries and API keys. So a trace has no input in Langfuse, and its output is just the labels. The one exception is `TRACE_CAPTURE_CONTENT=true`, for local debugging: it adds the ticket and the answer to spans with emails and phone numbers replaced by `[email]` and `[phone]`. It is off by default, forced off in docker compose, and ignored whenever `NODE_ENV=production` (the image sets it).
+
+## Metrics and SLOs
+
+`GET /metrics` is in Prometheus format: requests by route, status and error class; triage latency by prompt version, provider and release; per-attempt latency; tokens; list-price cost; fallbacks; repairs; schema failures; circuit state (0 closed, 1 half-open, 2 open); and Node's defaults. Labels only take values from small fixed sets, never a ticket, client or id (`test/metrics.test.ts` lists every one). With `METRICS_PASSWORD` set it needs basic auth, user `metrics`.
+
+`docker compose up` also starts Prometheus (`:9090`, scraping every 15 s) and Grafana (`:3001`, user `admin`, `GRAFANA_ADMIN_PASSWORD` from `.env`), with the data source, the dashboard (`ops/grafana/dispatch.json`) and two alerts provisioned from files. The three SLOs, their baselines and the alerts are in [docs/SLOS.md](docs/SLOS.md); `test/slos.test.ts` checks the dashboard and alerts use the same numbers.
+
+`pnpm traffic [--rate 1] [--duration 300]` sends dev tickets to the service at a steady rate so every panel has data. It refuses to run against a real provider unless given `--real`. The drill commands are at the top of `compose.yaml`.

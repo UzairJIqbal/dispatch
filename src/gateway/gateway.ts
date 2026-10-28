@@ -9,6 +9,7 @@ import { SpanKind, trace } from "@opentelemetry/api";
 import { pino, type Logger } from "pino";
 import { parse } from "yaml";
 import { z } from "zod";
+import { Metrics } from "../metrics/metrics.js";
 import { paths, rel } from "../paths.js";
 import { captureIO, decision, failSpan, tracer } from "../tracing/tracing.js";
 import { cacheKey, type CacheKeyParts, type ResponseCache } from "./cache.js";
@@ -67,6 +68,8 @@ export type GatewayOptions = {
   log?: Logger;
   /** Jitter source, so tests can pin the backoff. */
   random?: () => number;
+  /** Where attempts, errors, tokens and circuit states are counted. A private one by default (the eval has no /metrics). */
+  metrics?: Metrics;
 };
 
 const RepairPromptSchema = z.strictObject({
@@ -97,6 +100,7 @@ export class Gateway {
   private readonly mocks: MockSetup;
   private readonly log: Logger;
   private readonly random: () => number;
+  private readonly metrics: Metrics;
 
   constructor(opts: GatewayOptions = {}) {
     this.config = opts.config ?? loadModelsConfig();
@@ -104,6 +108,8 @@ export class Gateway {
     this.mocks = { mock: opts.mocks?.mock ?? fromEnv?.mock ?? {}, mock_fallback: opts.mocks?.mock_fallback ?? fromEnv?.mock_fallback ?? {} };
     this.log = opts.log ?? pino({ level: "silent" });
     this.random = opts.random ?? Math.random;
+    this.metrics = opts.metrics ?? new Metrics();
+    this.metrics.readCircuits(() => [...this.circuits].map(([name, c]) => [name, c.current()] as const));
   }
 
   /** The providers a call may use, in order. */
@@ -113,7 +119,15 @@ export class Gateway {
 
   /** Makes every provider in the chain now, so a missing key fails before the first request. */
   prepare(alias: string, provider?: ProviderName): void {
-    for (const m of this.chain(alias, provider)) this.provider(m.provider);
+    const chain = this.chain(alias, provider);
+    for (const [i, m] of chain.entries()) {
+      this.provider(m.provider);
+      // Made now so /metrics shows every circuit as closed before the first request.
+      this.circuit(m.provider);
+      this.metrics.provider(m.provider);
+      const prev = chain[i - 1];
+      if (prev) this.metrics.fallbackPair(prev.provider, m.provider);
+    }
   }
 
   /** Why the chain can't serve, or undefined if it can. For /readyz. */
@@ -236,6 +250,7 @@ export class Gateway {
         } else {
           const budget = Math.max(0, end() - Date.now());
           const controller = new AbortController();
+          const attemptStart = performance.now();
           const timer = setTimeout(() => {
             controller.abort(new Error("attempt timed out"));
           }, Math.min(g.attempt_timeout_ms, budget));
@@ -247,10 +262,14 @@ export class Gateway {
             const classified = classify(err, model.provider, controller.signal);
             if (classified.errorClass === "timeout" && budget < g.attempt_timeout_ms / 2) cutByUs.add(classified);
             failSpan(span, classified.errorClass);
+            this.metrics.gatewayError(model.provider, classified.errorClass);
             throw classified;
           } finally {
             clearTimeout(timer);
+            this.metrics.attempt(model.provider, (performance.now() - attemptStart) / 1000);
           }
+          // Real calls only: a cache hit cost nothing the second time.
+          this.metrics.usage(model.provider, res.tokensIn, res.tokensOut, model.price);
           circuit.success();
           // Stored as soon as it arrives, so an eval stopped by a rate limit picks up here.
           if (key) req.cache?.store.set(key, res);
@@ -310,6 +329,8 @@ export class Gateway {
       if (index > 0) {
         const from = chain[index - 1]?.provider ?? "gateway";
         decision("gateway.fallback", { "app.from": from, "app.to": model.provider, "app.error_class": lastError?.errorClass ?? "circuit_open" });
+        const prev = chain[index - 1];
+        if (prev) this.metrics.fallback(prev.provider, model.provider);
       }
 
       for (let attempt = 1; attempt <= g.max_retries + 1; attempt++) {
@@ -318,6 +339,7 @@ export class Gateway {
           // Out of this provider's time. Not a failure of the provider: nothing was sent.
           log.warn({ event: "gateway.skip", ...line, attempt, error_class: "timeout", wait_ms: null, decision: next, reason: "no time left" }, `${model.provider} skipped: no time left`);
           decision("gateway.skip", { "app.provider": model.provider, "app.attempt": attempt, "app.error_class": "timeout", "app.reason": "no time left" });
+          this.metrics.gatewayError(model.provider, "timeout");
           lastError ??= new ProviderError("timeout", `no time left before the ${String(g.deadline_ms / 1000)} s deadline`, model.provider);
           break;
         }
@@ -325,6 +347,7 @@ export class Gateway {
           // Open circuit: skipped at once, no timeout to wait out.
           log.warn({ event: "gateway.skip", ...line, attempt, error_class: "circuit_open", wait_ms: null, decision: next }, `${model.provider} skipped: circuit open`);
           decision("gateway.skip", { "app.provider": model.provider, "app.attempt": attempt, "app.error_class": "circuit_open", "app.reason": "circuit open" });
+          this.metrics.gatewayError(model.provider, "circuit_open");
           break;
         }
         const attemptStart = Date.now();
@@ -342,6 +365,7 @@ export class Gateway {
             toRepair = { raw: first.content, error: checked.message };
             log.warn({ event: "gateway.attempt", ...line, attempt, error_class: "schema_fail", wait_ms: 0, decision: "repair", latency_ms: elapsed() }, `${model.provider} answer failed validation: repairing`);
             decision("gateway.repair", { "app.provider": model.provider, "app.attempt": attempt, "app.error_class": "schema_fail" });
+            this.metrics.repair(model.provider);
           }
 
           const repair = loadRepairPrompt();
@@ -363,6 +387,7 @@ export class Gateway {
           }
           // Still broken: a schema_fail. Not a fallback: the provider answered, twice.
           log.warn({ ...repairLine, error_class: "schema_fail", decision: "give_up" }, `${model.provider} answer still invalid after repair`);
+          this.metrics.schemaFailure(model.provider);
           return { ok: false, message: rechecked.message, raw: fixed.content, ...meta(model, index, true) };
         } catch (caught) {
           if (!(caught instanceof ProviderError)) {

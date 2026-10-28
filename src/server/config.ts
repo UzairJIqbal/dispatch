@@ -17,6 +17,8 @@ const EnvSchema = z.object({
   UPSTASH_REDIS_REST_TOKEN: required(z.string()),
   /** Overrides the prompt's model alias. `pnpm dev` and docker compose default it to mock. */
   DISPATCH_PROVIDER: optional(ProviderNameSchema),
+  /** Basic auth on /metrics. Unset: open, which is right only on a private network (docker compose). */
+  METRICS_PASSWORD: optional(z.string().min(16, "use at least 16 characters, e.g. from `openssl rand -hex 16`")),
 });
 
 export type ServiceConfig = {
@@ -25,6 +27,7 @@ export type ServiceConfig = {
   clients: ClientKeys;
   redis: { url: string; token: string };
   provider: z.infer<typeof ProviderNameSchema> | undefined;
+  metricsPassword: string | undefined;
 };
 
 const HINTS: Record<string, string> = {
@@ -57,5 +60,6 @@ export function parseServiceConfig(env: NodeJS.ProcessEnv): ServiceConfig {
     clients,
     redis: { url: e.UPSTASH_REDIS_REST_URL, token: e.UPSTASH_REDIS_REST_TOKEN },
     provider: e.DISPATCH_PROVIDER,
+    metricsPassword: e.METRICS_PASSWORD,
   };
 }

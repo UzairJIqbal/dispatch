@@ -1,11 +1,13 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID, timingSafeEqual } from "node:crypto";
 import { context, SpanKind, SpanStatusCode, type Context, type Span } from "@opentelemetry/api";
 import express, { type NextFunction, type Request, type Response } from "express";
 import type { Logger } from "pino";
 import { z } from "zod";
 import { gitSha } from "../env.js";
+import { ProviderNameSchema } from "../gateway/config.js";
 import { ProviderError, type ErrorClass } from "../gateway/errors.js";
 import { MAX_TICKET_CHARS } from "../golden/schema.js";
+import { routeOf, type Metrics } from "../metrics/metrics.js";
 import { captureIO, failSpan, labelsOut, startRoot, traceId, tracer } from "../tracing/tracing.js";
 import type { TriageResult } from "../triage/triage.js";
 import { clientForKey, type ClientKeys } from "./clients.js";
@@ -25,6 +27,10 @@ export type AppDeps = {
   readiness: Readonly<Record<string, ReadinessCheck>>;
   log: Logger;
   isShuttingDown: () => boolean;
+  /** The same instance the gateway counts into. */
+  metrics: Metrics;
+  /** When set, /metrics asks for basic auth (user `metrics`, this password). */
+  metricsPassword?: string | undefined;
 };
 
 // The request body. Closed, so an unexpected key is a 400, not silently ignored.
@@ -96,6 +102,15 @@ function endRoot(span: Span, c: RequestContext, status: number, aborted: boolean
   span.end();
 }
 
+// Constant-time on both the user and the password, so the reply time says nothing about either.
+function basicAuthOk(header: string | undefined, password: string): boolean {
+  const match = /^Basic\s+(\S+)$/i.exec(header ?? "");
+  if (!match?.[1]) return false;
+  const given = Buffer.from(match[1], "base64");
+  const want = Buffer.from(`metrics:${password}`);
+  return given.length === want.length && timingSafeEqual(given, want);
+}
+
 export function createApp(deps: AppDeps): express.Express {
   const { log } = deps;
   const app = express();
@@ -120,6 +135,15 @@ export function createApp(deps: AppDeps): express.Express {
     // While draining on SIGTERM, tell keep-alive clients not to send more on this connection.
     if (deps.isShuttingDown()) res.setHeader("Connection", "close");
     res.on("close", () => {
+      const route = routeOf(req.path);
+      deps.metrics.request({ route, status: res.statusCode, errorClass: c.errorClass });
+      // The latency SLI: triage requests that got as far as the model call
+      // (promptVersion is set once the body is valid), so a client's 4xx
+      // never counts as our latency.
+      if (route === "/v1/triage" && c.promptVersion && (res.statusCode < 400 || res.statusCode >= 500)) {
+        const provider = ProviderNameSchema.safeParse(c.provider);
+        deps.metrics.triageLatency({ promptVersion: c.promptVersion, provider: provider.success ? provider.data : "none", release: "stable", seconds: (performance.now() - c.started) / 1000 });
+      }
       const tid = traceId(c.span);
       if (c.span) endRoot(c.span, c, res.statusCode, !res.writableFinished);
       log.info(
@@ -169,6 +193,16 @@ export function createApp(deps: AppDeps): express.Express {
     );
     if (failing.length === 0) res.json({ status: "ready", checks });
     else res.status(503).json({ status: "not_ready", failing: failing.sort(), checks });
+  });
+
+  // Prometheus scrapes this. Locally (docker compose) it's open on the
+  // private network; deployed, METRICS_PASSWORD puts basic auth on it.
+  app.get("/metrics", async (req, res) => {
+    if (deps.metricsPassword !== undefined && !basicAuthOk(req.get("authorization"), deps.metricsPassword)) {
+      throw new HttpError("unauthorized", "Basic auth needed: user `metrics`, password METRICS_PASSWORD.", { "WWW-Authenticate": 'Basic realm="dispatch-metrics"' });
+    }
+    res.setHeader("Content-Type", deps.metrics.registry.contentType);
+    res.send(await deps.metrics.registry.metrics());
   });
 
   // Auth and the rate limit come before the body is even parsed: an unknown
@@ -254,7 +288,7 @@ export function createApp(deps: AppDeps): express.Express {
   });
 
   app.use((_req, _res, next) => {
-    next(new HttpError("not_found", "No such endpoint. Try POST /v1/triage, GET /healthz or GET /readyz."));
+    next(new HttpError("not_found", "No such endpoint. Try POST /v1/triage, GET /healthz, GET /readyz or GET /metrics."));
   });
 
   // The one error handler. Every failure leaves as { error: { class, message } };

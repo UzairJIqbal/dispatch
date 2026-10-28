@@ -1,0 +1,13 @@
+# Local only (docker compose). Deployed, Grafana Cloud scrapes instead.
+global:
+  # Every 15 s: a rate() needs at least 4 samples, so the dashboard's shortest
+  # window is 1 min (Grafana's $__rate_interval works this out from the
+  # data source's timeInterval, also 15s).
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: dispatch
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["dispatch:3000"]

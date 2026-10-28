@@ -4,7 +4,7 @@ import type { Logger } from "pino";
 
 // 60 requests a minute per client, a sliding window in Upstash. One number,
 // not a setting: changing it is a code change that goes through review.
-const LIMIT = 60;
+export const LIMIT = 60;
 const WINDOW = "1 m";
 
 export type LimitResult = { allowed: true } | { allowed: false; retryAfterS: number };

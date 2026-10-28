@@ -10,6 +10,7 @@ import { clientForKey, hashKey, newClientKey, parseClientKeys } from "../src/ser
 import { parseServiceConfig } from "../src/server/config.js";
 import { retryAfterSeconds, type Limiter } from "../src/server/ratelimit.js";
 import { Gateway, type GatewayOptions } from "../src/gateway/gateway.js";
+import { Metrics } from "../src/metrics/metrics.js";
 import { triage, type TriageResult } from "../src/triage/triage.js";
 
 const ACME = newClientKey();
@@ -34,7 +35,8 @@ async function serve(overrides: Partial<AppDeps> = {}, mocks: GatewayOptions["mo
   const logs: Captured = { lines: [] };
   const log = pino({ base: null }, { write: (s: string) => logs.lines.push(JSON.parse(s) as Record<string, unknown>) });
   // No jitter, so a retry doesn't make the test wait.
-  const gateway = new Gateway({ mocks: { mock: {}, mock_fallback: {}, ...mocks }, log, random: () => 0 });
+  const metrics = new Metrics();
+  const gateway = new Gateway({ mocks: { mock: {}, mock_fallback: {}, ...mocks }, log, random: () => 0, metrics });
   const app = createApp({
     clients,
     limiter: memoryLimiter(60),
@@ -44,6 +46,7 @@ async function serve(overrides: Partial<AppDeps> = {}, mocks: GatewayOptions["mo
     readiness: { config: () => Promise.resolve(), redis: () => Promise.resolve() },
     log,
     isShuttingDown: () => false,
+    metrics,
     ...overrides,
   });
   const server = await new Promise<Server>((resolve) => {

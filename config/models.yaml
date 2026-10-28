@@ -67,7 +67,8 @@ models:
     fallback: mock_fallback
   mock_fallback:
     provider: mock_fallback
-    model: mock-triage-1
+    # Its own name only so it can have its own price below.
+    model: mock-triage-fallback-1
 
 # How the gateway treats a provider. One set of numbers for every provider.
 gateway:
@@ -100,4 +101,8 @@ prices:
   models:
     gemini-3.5-flash-lite: { input: 0.30, output: 2.50 }
     command-a-03-2025: { input: 2.50, output: 10.00 }
-    mock-triage-1: { input: 0, output: 0 }
+    # The mocks are priced as the models they stand in for (Gemini, Cohere),
+    # so a drill on the mock shows real-looking cost: the cost panels move
+    # and a fallback storm can trip the cost-spike alert. Still $0 for real.
+    mock-triage-1: { input: 0.30, output: 2.50 }
+    mock-triage-fallback-1: { input: 2.50, output: 10.00 }
