@@ -7,6 +7,12 @@
       "skillPath": "skills/grafana-core/alerting-irm/SKILL.md",
       "computedHash": "4c3433322e2644acd2c20b0080b4d9eb871d63109a8b1ad3b7732cda07c5be59"
     },
+    "azure-deploy": {
+      "source": "microsoft/azure-skills",
+      "sourceType": "github",
+      "skillPath": "skills/azure-deploy/SKILL.md",
+      "computedHash": "6901fff25c0e1522a7f962f99d26bf9bb668a83ed3b6307c8eafdbaa24830ae2"
+    },
     "dashboarding": {
       "source": "grafana/skills",
       "sourceType": "github",

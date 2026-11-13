@@ -10,7 +10,7 @@ import { run } from "./run.js";
 // Dev-split tickets only: the test split is for grading. The output names
 // ticket ids, never their text, because Actions logs are public.
 
-// A cold Render free instance takes about a minute to answer its first request.
+// Staging scales to zero: its first request after a quiet spell waits for a cold start.
 const READY_TIMEOUT_MS = 90_000;
 const POLL_MS = 10_000;
 // Longer than the gateway's own 20 s budget, so the service always answers first.
@@ -24,8 +24,8 @@ run(async () => {
     throw new Error("SMOKE_KEY is not set: a client key the service knows (from `pnpm client-key smoke`). In Actions it comes from a repository secret.");
   }
 
-  // Wait until /readyz is 200 on the right commit. Render keeps the old
-  // instance serving while the new one starts, so "ready" alone isn't enough.
+  // Wait until /readyz is 200 on the right commit. The host keeps the old
+  // revision serving while the new one starts, so "ready" alone isn't enough.
   const deadline = Date.now() + args.waitS * 1000;
   const want = args.sha ? ` on ${args.sha}` : "";
   console.log(`Waiting up to ${String(args.waitS)} s for ${args.url}/readyz${want}`);

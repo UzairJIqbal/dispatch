@@ -100,7 +100,7 @@ Pressure to break this comes from wanting a good-looking README. Cached response
 - **The service**: Express 5, one endpoint, health checks, API keys, rate limits, Docker.
 - **The gateway**: timeouts, retries with backoff and jitter, fallback, circuit breaker, repair retry, typed errors, input caps.
 - **Observability**: OpenTelemetry traces to Langfuse, Prometheus metrics, a committed Grafana dashboard, SLOs, two alerts.
-- **Deploy**: Docker image on Render, staging and production, Grafana Cloud scraping production, a synthetic probe.
+- **Deploy**: Docker image on Azure Container Apps, staging and production, Grafana Cloud scraping production, a synthetic probe.
 - **CI/CD**: tests on every PR, the eval gate on PRs that touch the AI, staging deploy on merge, a manual promote to production.
 - **Releases**: a canary at a set share of traffic, rollback criteria written before it starts, automatic rollback, one command to roll back by hand.
 - **Load and cost**: k6 load test, cost per 1,000 successful requests, a monthly projection, one experiment that cuts cost.
@@ -110,7 +110,7 @@ Pressure to break this comes from wanting a good-looking README. Cached response
 
 - **An agent, tools, RAG.** VerifAI already proves agents and evals. This project proves operations. A single call keeps every eval and load test inside free limits.
 - **A frontend.** Grafana is the interface. A reviewer looks at the dashboard, traces and the README. (A one-line curl example in the README is the demo.)
-- **Kubernetes.** Render runs one container. Autoscaling on queue depth is a stretch goal, not a requirement.
+- **Kubernetes.** Each environment runs one container. Autoscaling on queue depth is a stretch goal, not a requirement.
 - **Self-hosting with vLLM.** It needs a paid GPU. The project stays on free tiers.
 - **Streaming.** The answer is a small JSON object; there's nothing to show token by token, so time-to-first-token isn't measured. The README says why.
 - **A semantic cache in production.** A cache that returns wrong answers for similar-looking tickets is a liability unless its false-hit rate is measured. Stretch goal.
@@ -137,7 +137,7 @@ Pressure to break this comes from wanting a good-looking README. Cached response
 | Load test | k6 | Scripts are JavaScript. |
 | Packaging | Docker + docker compose | `docker compose up` runs the service with Prometheus and Grafana. |
 | CI/CD | GitHub Actions | Free for public repos. |
-| Hosting | Render free | Runs a Docker image for free. Fly.io no longer has a free plan. |
+| Hosting | Azure Container Apps (Azure for Students) | Runs the same Docker image, and the student offer needs no card: a yearly credit, no charge when it runs out. Production kept always on is about $6 a month of that credit (list prices checked 2026-10-28); staging scales to zero. Render was the first choice but now asks for a card before creating any service (2026-10-28); Koyeb, Northflank and Hugging Face Docker Spaces also need a card or a paid plan, and Fly.io has no free plan. |
 
 Free-tier limits change. Before each phase that adds a service, check its current free plan and write the limit that matters in the README. The provider limits also live in the model config, which paces every call to stay under them.
 
@@ -213,7 +213,7 @@ Pure functions, per ticket:
 - Errors are typed JSON `{ error: { class, message } }` with the right status: `400 bad_request`, `401`, `413` (text too long), `429 rate_limit` with `Retry-After`, `502 schema_fail`, `503 circuit_open` / `provider_unavailable`, `504 timeout`.
 - **Client keys** are listed in an environment variable as hashes, each with a name. The name is what metrics and traces show, never the key.
 - **Per-client rate limit**: a sliding window in Upstash (60 requests per minute to start). Over it, `429` with `Retry-After`.
-- `GET /healthz`: the process is up. `GET /readyz`: config loaded, Redis reachable, and at least one real provider's circuit is closed. Render and the deploy job use `/readyz`.
+- `GET /healthz`: the process is up. `GET /readyz`: config loaded, Redis reachable, and at least one real provider's circuit is closed. The host's health check and the deploy job use `/readyz`.
 - `GET /metrics`: Prometheus format, behind basic auth when deployed.
 - **Docker**: a small multi-stage image running as a non-root user, tagged with the git sha. Secrets only from the environment. `.env.example` lists every variable.
 
@@ -276,8 +276,8 @@ Alerts email you from Grafana Cloud. Every alert has a runbook entry.
 
 ### Deploy
 
-- **Two Render free services from the same image**: staging and production. Merge to main → CI builds the image, tags it with the git sha, deploys staging, waits for `/readyz`, runs a smoke test (3 real tickets). Production is promoted by a manual GitHub Actions run with the same image tag. Nothing is rebuilt between staging and production.
-- **Render free services sleep after idle time.** Production is kept awake by a **synthetic probe**: a scheduled GitHub Action that calls `/readyz` every 10 minutes and sends one real triage request every 30 minutes, so the SLOs have data even with no users. Staging is allowed to sleep. Check Render's current free hours: they may cover only one always-on service.
+- **Two services from the same image** (Azure Container Apps; see Hosting): staging and production. Merge to main → CI builds the image, tags it with the git sha, deploys staging, waits for `/readyz`, runs a smoke test (3 real tickets). Production is promoted by a manual GitHub Actions run with the same image tag. Nothing is rebuilt between staging and production.
+- **Production stays up, staging may sleep.** A **synthetic probe**: a scheduled GitHub Action that calls `/readyz` every 10 minutes and sends one real triage request every 30 minutes, so the SLOs have data even with no users. Staging is allowed to sleep.
 - **Grafana Cloud scrapes production's `/metrics`** through its "metrics endpoint" integration, with basic auth.
 - The README says plainly that traffic is synthetic.
 
@@ -324,7 +324,7 @@ Alerts email you from Grafana Cloud. Every alert has a runbook entry.
 | Langfuse Cloud | traces | 10% sampling in load tests. |
 | Grafana Cloud | metric series, retention | Low-cardinality labels only. |
 | Upstash | commands | Release config read every 30 s; one command per rate-limit check. |
-| Render | instance hours, sleep | Only production kept awake. |
+| Azure for Students | the yearly credit | Production only, at the smallest size (0.25 vCPU, 0.5 GiB); staging scales to zero; no paid add-ons. |
 | GitHub Actions | minutes | Free on a public repo; the eval gate only runs when AI files change. |
 
 ## The phases
@@ -335,7 +335,7 @@ Alerts email you from Grafana Cloud. Every alert has a runbook entry.
 4. **The gateway**: timeouts, retries, fallback, circuit breaker, repair, typed errors. (PR + CodeRabbit)
 5. **Tracing**: OpenTelemetry to Langfuse, logs with trace ids.
 6. **Metrics, dashboard, SLOs and alerts**: locally first.
-7. **Deploy**: Render staging and production, Grafana Cloud, the synthetic probe.
+7. **Deploy**: staging and production on Azure Container Apps, Grafana Cloud, the synthetic probe.
 8. **The eval gate in CI**: and a PR it blocked. (PR + CodeRabbit)
 9. **Canary and rollback**: release config, auto-rollback, the drill.
 10. **Load and cost**: k6, cost model, one cost experiment.

@@ -95,11 +95,13 @@ What leaves the process for Langfuse: labels (category, priority), token counts,
 
 ## Deploy
 
-One image is built once per push to main and runs everywhere. Staging gets it automatically. Production gets the same image, by digest, only when promoted by hand. Every workflow reads its keys from GitHub secrets: nothing secret is in a workflow file or in the image.
+Staging and production are two Azure Container Apps (`dispatch-staging`, `dispatch-prod`) in one Consumption environment in Malaysia West, the allowed region closest to the Upstash database in Mumbai. Each app has its own client keys, `/metrics` password and Redis key prefix, set as secrets on the app. Health probes: `/healthz` for startup and liveness, `/readyz` for readiness.
+
+One image is built once per push to main and runs everywhere. Staging gets it automatically. Production gets the same image, by digest, only when promoted by hand. Workflows log in to Azure with OIDC (a short-lived token per run, no stored password) and read client keys from GitHub secrets: nothing secret is in a workflow file or in the image.
 
 | Workflow | When | What |
 |---|---|---|
-| `deploy` | every push to main | Builds and pushes `ghcr.io/<owner>/dispatch:<git sha>`, deploys that digest to `dispatch-staging` on Render, waits for `/readyz` on that commit, then sends 3 real dev tickets (`pnpm smoke`). |
+| `deploy` | every push to main | Builds and pushes `ghcr.io/<owner>/dispatch:<git sha>`, deploys that digest to `dispatch-staging` (`az containerapp update`), waits for `/readyz` on that commit, then sends 3 real dev tickets (`pnpm smoke`). |
 | `promote` | by hand: Actions → promote → Run workflow | Takes a tag (empty = whatever staging serves), finds its digest, deploys exactly that to `dispatch-prod`, waits for `/readyz` on that commit. No rebuild. |
 | `probe` | every 10 / 30 min | `/readyz` on production every 10 minutes, one real ticket with the `probe` client key every 30. A failed probe fails the run, and GitHub emails it. |
 
@@ -109,14 +111,14 @@ One image is built once per push to main and runs everywhere. Staging gets it au
 
 Production traffic is synthetic: the probe, the smoke tests and requests sent by hand. The dashboard shows how the service behaves, not real customer load.
 
-### Free limits (checked 2026-10-28)
+### Free limits and cost (checked 2026-11-13)
 
 | Service | Free limit | What it means here |
 |---|---|---|
-| Render | 750 instance hours per workspace per month. Sleeps after 15 min with no requests. Every free service in the workspace is suspended when the hours run out. One person can own up to 5 Hobby workspaces. | Production (about 744 h a month) fills one workspace on its own, so staging lives in a second free workspace. Staging sleeps, and its first request after a nap takes about a minute. |
+| Azure for Students | $100 credit a year, no card; services stop when it runs out, nothing is charged. Container Apps list prices in Malaysia West: $0.000028 per vCPU-second active, $0.000004 idle, $0.000004 per GiB-second; the first 180,000 vCPU-s and 360,000 GiB-s a month are free. | Production is one always-on replica at 0.25 vCPU / 0.5 GiB: about $6 a month if billed as idle, up to about $17 if every second counts as active (the scrape every minute may keep it active). That is 6 to 16 months of credit. Staging scales to zero and costs about nothing. No Log Analytics workspace, so logs cost nothing either; the real figure goes here after a few days of Cost Management data. |
 | Grafana Cloud | 10k active metric series, 14 days retention, 3 active users. The Metrics Endpoint integration scrapes HTTPS URLs only, with auth required, every minute by default. | Our labels are bounded (`test/metrics.test.ts`), far under 10k. The scrape every minute also keeps production awake. |
 | GitHub Actions | Free on a public repo. Schedules run at most every 5 minutes, can start late when GitHub is busy (worst at the top of the hour), and are switched off after 60 days with no repo activity. A failed scheduled run emails whoever last edited its cron line. | A late or skipped probe shows as a gap, not an error. |
-| GitHub Container Registry | Free for public images | The `dispatch` package is public, so Render pulls it with no credentials. |
+| GitHub Container Registry | Free for public images | The `dispatch` package is public, so Container Apps pulls it with no credentials. |
 | Gemini (free tier) | A daily request quota per model, shared by everything using the key | The probe spends about 48 calls a day and each staging deploy 3, from the same quota as `pnpm eval`. |
 
-Sources: [Render free instances](https://render.com/docs/free), [Render workspaces](https://render.com/docs/team-members), [Render deploy hooks](https://render.com/docs/deploy-hooks), [Grafana Cloud pricing](https://grafana.com/pricing/), [Metrics Endpoint integration](https://grafana.com/docs/grafana-cloud/monitor-infrastructure/integrations/integration-reference/integration-metrics-endpoint/), [GitHub schedule event](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows).
+Sources: [Container Apps pricing](https://azure.microsoft.com/pricing/details/container-apps/), [Container Apps billing](https://learn.microsoft.com/azure/container-apps/billing), [Azure Retail Prices API](https://learn.microsoft.com/rest/api/cost-management/retail-prices/azure-retail-prices), [Grafana Cloud pricing](https://grafana.com/pricing/), [Metrics Endpoint integration](https://grafana.com/docs/grafana-cloud/monitor-infrastructure/integrations/integration-reference/integration-metrics-endpoint/), [GitHub schedule event](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows).

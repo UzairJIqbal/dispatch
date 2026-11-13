@@ -3,8 +3,9 @@
 # staging, then smoke-test staging with 3 real tickets on that commit.
 # Production is never touched here: see promote.yml.
 #
-# Repository secrets: RENDER_STAGING_DEPLOY_HOOK, STAGING_SMOKE_KEY.
-# Repository variable: STAGING_URL.
+# Azure login is OIDC (a short-lived token per run, no stored password).
+# Repository secret: STAGING_SMOKE_KEY.
+# Repository variables: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID, STAGING_URL.
 name: deploy
 
 on:
@@ -67,28 +68,34 @@ jobs:
   staging:
     needs: image
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Check settings
         env:
-          HOOK: ${{ secrets.RENDER_STAGING_DEPLOY_HOOK }}
           KEY: ${{ secrets.STAGING_SMOKE_KEY }}
           URL: ${{ vars.STAGING_URL }}
+          CLIENT: ${{ vars.AZURE_CLIENT_ID }}
         run: |
           missing=""
-          [ -n "$HOOK" ] || missing="$missing secret RENDER_STAGING_DEPLOY_HOOK (Render → dispatch-staging → Settings → Deploy Hook);"
           [ -n "$KEY" ] || missing="$missing secret STAGING_SMOKE_KEY (the raw key from \`pnpm client-key smoke\`);"
-          [ -n "$URL" ] || missing="$missing variable STAGING_URL (e.g. https://dispatch-staging.onrender.com);"
+          [ -n "$URL" ] || missing="$missing variable STAGING_URL (the dispatch-staging app's URL in Azure);"
+          [ -n "$CLIENT" ] || missing="$missing variables AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID;"
           if [ -n "$missing" ]; then
             echo "::error::Missing in GitHub → Settings → Secrets and variables → Actions:$missing"
             exit 1
           fi
+      - uses: azure/login@v3
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       - name: Deploy the image to staging
         env:
-          HOOK: ${{ secrets.RENDER_STAGING_DEPLOY_HOOK }}
           IMAGE: ${{ needs.image.outputs.image }}@${{ needs.image.outputs.digest }}
         # By digest, not tag: what staging runs is exactly what was just built.
-        # Render accepts it as long as the repository matches the service's image URL.
-        run: curl -fsS --get --data-urlencode "imgURL=$IMAGE" -X POST "$HOOK" > /dev/null
+        run: az containerapp update -g dispatch -n dispatch-staging --image "$IMAGE" -o none
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7

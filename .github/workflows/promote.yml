@@ -2,8 +2,8 @@
 # exactly the image already built and tested on staging (by digest). Nothing
 # is rebuilt. Leave the tag empty to take whatever staging serves now.
 #
-# Repository secret: RENDER_PROD_DEPLOY_HOOK.
-# Repository variables: STAGING_URL, PROD_URL.
+# Azure login is OIDC (a short-lived token per run, no stored password).
+# Repository variables: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID, STAGING_URL, PROD_URL.
 name: promote
 
 on:
@@ -21,6 +21,7 @@ concurrency:
 permissions:
   contents: read
   packages: read
+  id-token: write
 
 jobs:
   production:
@@ -28,14 +29,14 @@ jobs:
     steps:
       - name: Check settings
         env:
-          HOOK: ${{ secrets.RENDER_PROD_DEPLOY_HOOK }}
+          CLIENT: ${{ vars.AZURE_CLIENT_ID }}
           STAGING_URL: ${{ vars.STAGING_URL }}
           PROD_URL: ${{ vars.PROD_URL }}
         run: |
           missing=""
-          [ -n "$HOOK" ] || missing="$missing secret RENDER_PROD_DEPLOY_HOOK (Render → dispatch-prod → Settings → Deploy Hook);"
+          [ -n "$CLIENT" ] || missing="$missing variables AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID;"
           [ -n "$STAGING_URL" ] || missing="$missing variable STAGING_URL;"
-          [ -n "$PROD_URL" ] || missing="$missing variable PROD_URL (e.g. https://dispatch-prod.onrender.com);"
+          [ -n "$PROD_URL" ] || missing="$missing variable PROD_URL (the dispatch-prod app's URL in Azure);"
           if [ -n "$missing" ]; then
             echo "::error::Missing in GitHub → Settings → Secrets and variables → Actions:$missing"
             exit 1
@@ -48,7 +49,7 @@ jobs:
         run: |
           tag="$INPUT"
           if [ -z "$tag" ]; then
-            # Staging may be asleep: the first request wakes it (about a minute).
+            # Staging scales to zero: the first request wakes it (a few seconds).
             tag=$(curl -fsS --max-time 120 --retry 3 --retry-delay 10 --retry-all-errors "$STAGING_URL/readyz" | jq -r .git_sha)
             echo "Staging serves $tag"
           fi
@@ -75,11 +76,15 @@ jobs:
           }
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
           echo "$REF is $digest"
+      - uses: azure/login@v3
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       - name: Deploy the image to production
         env:
-          HOOK: ${{ secrets.RENDER_PROD_DEPLOY_HOOK }}
           IMAGE: ${{ steps.tag.outputs.image }}@${{ steps.digest.outputs.digest }}
-        run: curl -fsS --get --data-urlencode "imgURL=$IMAGE" -X POST "$HOOK" > /dev/null
+        run: az containerapp update -g dispatch -n dispatch-prod --image "$IMAGE" -o none
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7

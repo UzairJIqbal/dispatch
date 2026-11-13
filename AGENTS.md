@@ -20,8 +20,9 @@ every boundary. Upstash Redis for rate limits and the release config.
 OpenTelemetry for traces, exported to Langfuse Cloud. `prom-client` for
 metrics, Prometheus + Grafana locally in docker compose, Grafana Cloud (free)
 when deployed. pino for logs. `node:sqlite` for the response cache. Vitest for
-tests, tsx for scripts, k6 for load tests. Docker. GitHub Actions. Render
-(free) for staging and production. pnpm.
+tests, tsx for scripts, k6 for load tests. Docker. GitHub Actions. Azure Container Apps on Azure for Students
+(no card, a yearly credit) for staging and production; Render dropped because
+it now needs a card. pnpm.
 
 Providers: Google Gemini (primary) and Cohere (fallback, trial key), both free
 with no card that work from Pakistan, plus a mock provider that runs
@@ -109,7 +110,7 @@ Short. If a sentence isn't telling me something I need, cut it.
 you'd go and why. Never pick a direction silently, never build both.
 
 **When you need something only I can give you** — an API key, a value in
-`.env`, a setting in Langfuse, Grafana Cloud, Render or Upstash — say exactly
+`.env`, a setting in Langfuse, Grafana Cloud, Azure or Upstash — say exactly
 what and exactly where, then stop.
 
 **No walls of text.** When a phase is done, the 2 to 3 line summary is enough.

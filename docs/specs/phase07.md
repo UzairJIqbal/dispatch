@@ -2,7 +2,11 @@
 
 ## Goal
 
-Dispatch runs on the internet in two places, staging and production, from the same Docker image. Production's metrics are on a Grafana Cloud dashboard, a synthetic probe keeps it awake and gives the SLOs data, and the alerts email you.
+Dispatch runs on the internet in two places, staging and production, from the same Docker image. Production's metrics are on a Grafana Cloud dashboard, a synthetic probe checks it and gives the SLOs data, and the alerts email you.
+
+## Hosting change (2026-11-01)
+
+Render now asks for a card before creating any service, so staging and production move to **Azure Container Apps on Azure for Students** (no card, a yearly credit). Everything below that says Render means that host: two container apps from the same image, health probe `/readyz`, env vars and secrets set on the app, and Actions deploying by digest with a short-lived login (OIDC), never a stored password. Production runs one always-on replica at the smallest size; staging scales to zero. Production is paid from the student credit, so the README shows its estimated monthly cost with the date of the price table. The account activated on 2026-11-13; region is Malaysia West, because the student subscription only allows a short list of regions.
 
 ## Where this starts
 

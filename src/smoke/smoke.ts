@@ -22,7 +22,7 @@ const ArgsSchema = z.strictObject({
   sha: z.string().regex(/^[0-9a-f]{7,40}$/, "a git sha, e.g. from `git rev-parse --short HEAD`").optional(),
   // Each ticket is a real model call: kept small on purpose.
   count: z.coerce.number().int().min(0).max(5).default(3),
-  // A Render free deploy pulls the image and cold-starts: a few minutes.
+  // A deploy pulls the image and starts a new revision: usually a minute or two.
   wait: z.coerce.number().int().positive().max(1800).default(600),
 });
 
