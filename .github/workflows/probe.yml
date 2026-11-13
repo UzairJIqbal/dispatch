@@ -2,6 +2,8 @@
 # minutes, one real triage request (one Gemini call) every 30. A failed probe
 # fails the run, and GitHub emails whoever last changed this schedule.
 #
+# Probes the Azure Container App `dispatch-prod`, which keeps one replica always on.
+#
 # Repository secret: PROBE_KEY (the raw key from `pnpm client-key probe`).
 # Repository variable: PROD_URL.
 name: probe
