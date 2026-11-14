@@ -73,3 +73,4 @@ run(async () => {
   if (a.markdown) await writeFile(a.markdown, markdown);
   if (!report.ok) process.exitCode = 1;
 });
+// acceptance check 4: second commit on the same PR
