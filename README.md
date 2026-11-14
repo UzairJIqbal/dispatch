@@ -123,3 +123,5 @@ Production traffic is synthetic: the probe, the smoke tests and requests sent by
 | Gemini (free tier) | A daily request quota per model, shared by everything using the key | The probe spends about 48 calls a day and each staging deploy 3, from the same quota as `pnpm eval`. |
 
 Sources: [Container Apps pricing](https://azure.microsoft.com/pricing/details/container-apps/), [Container Apps billing](https://learn.microsoft.com/azure/container-apps/billing), [Azure Retail Prices API](https://learn.microsoft.com/rest/api/cost-management/retail-prices/azure-retail-prices), [Grafana Cloud pricing](https://grafana.com/pricing/), [Metrics Endpoint integration](https://grafana.com/docs/grafana-cloud/monitor-infrastructure/integrations/integration-reference/integration-metrics-endpoint/), [GitHub schedule event](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows).
+
+<!-- acceptance check: README-only change -->
