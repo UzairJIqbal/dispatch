@@ -165,3 +165,7 @@ export async function findComparison(run: RunInfo): Promise<{ label: string; fil
   }
   return undefined;
 }
+
+/** A results file at any path: the gate reads the candidate and main's baseline from outside results/. */
+export const readResultsFile = (file: string): Promise<ResultsFile> => readJson(file, ResultsFileSchema);
+export const readNoiseFile = (file: string): Promise<Noise> => readJson(file, NoiseSchema);

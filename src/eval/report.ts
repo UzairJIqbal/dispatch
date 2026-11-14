@@ -83,10 +83,11 @@ export function computeMetrics(records: readonly TicketRecord[], price: Price, p
 
 // ---- formatting ----
 
-const pct = (r: Rate) => `${r.pct.toFixed(1)}%`;
-const frac = (r: Rate) => `${pct(r)} (${String(r.k)}/${String(r.n)})`;
-const secs = (s: number) => `${s.toFixed(2)} s`;
-const usd = (x: number) => `$${x < 0.01 ? x.toPrecision(2) : x.toFixed(4)}`;
+// Shared with the gate's table, so both read the same.
+export const pct = (r: Rate) => `${r.pct.toFixed(1)}%`;
+export const frac = (r: Rate) => `${pct(r)} (${String(r.k)}/${String(r.n)})`;
+export const secs = (s: number) => `${s.toFixed(2)} s`;
+export const usd = (x: number) => `$${x < 0.01 ? x.toPrecision(2) : x.toFixed(4)}`;
 
 function delta(now: Rate, then: Rate | undefined): string {
   if (!then) return "";

@@ -1,4 +1,5 @@
 import { mkdir } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
 import { parseEvalArgs } from "../src/eval/args.js";
 import { executeRun, loadSplit, type CompletedRun } from "../src/eval/command.js";
 import { formatReport } from "../src/eval/report.js";
@@ -56,8 +57,8 @@ run(async () => {
   console.log("");
   console.log(formatReport(done.run, done.metrics, await findComparison(done.run), matchingNoise));
 
-  await mkdir(paths.results, { recursive: true });
-  const out = runFileName(done.run);
+  const out = args.out ? resolve(args.out) : runFileName(done.run);
+  await mkdir(dirname(out), { recursive: true });
   await writeJson(out, file);
   console.log(`\nWrote ${rel(out)}.`);
   if (tracingConfig.langfuse) console.log(`Traces: Langfuse → Sessions → ${done.run.id} (each ticket's trace_id is in the file).`);

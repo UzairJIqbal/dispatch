@@ -1,0 +1,12 @@
+# gitleaks' built-in rules, plus one of our own.
+[extend]
+useDefault = true
+
+# Every provider here speaks the OpenAI-compatible API, and OpenAI-style keys
+# start with "sk-". The built-in rules only flag one next to a word like "key"
+# or "token", so a bare key pasted on its own line got through.
+[[rules]]
+id = "sk-style-api-key"
+description = "OpenAI-style API key (sk-...)"
+regex = '''\bsk-[A-Za-z0-9_-]{16,}\b'''
+keywords = ["sk-"]
