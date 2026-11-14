@@ -1,0 +1,60 @@
+# Every pull request: the checks that cost nothing. Mock provider only, no
+# real model call and no secret needed, so this runs on fork PRs too.
+name: ci
+
+on:
+  pull_request:
+
+# A new push to the same PR replaces the run still going for the old one.
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: CI checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Main's copy of the golden set is needed for the golden check.
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build
+      - name: Golden set changed only with a version bump
+        env:
+          BASE: ${{ github.base_ref }}
+        run: |
+          git show "origin/$BASE:evals/golden.jsonl" > "$RUNNER_TEMP/golden-main.jsonl"
+          pnpm golden:check --base "$RUNNER_TEMP/golden-main.jsonl"
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      # gitleaks comments on the line it found.
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Every commit in the PR is scanned, not just the last one.
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The default rules plus one for bare sk-... keys (see the file).
+          GITLEAKS_CONFIG: .gitleaks.toml

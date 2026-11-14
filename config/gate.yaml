@@ -1,0 +1,31 @@
+# The eval gate's rules. A pull request that touches the AI fails if any one
+# of them breaks, compared with the latest test-split result from main.
+#
+# In CI the gate reads this file from main, not from the pull request, so a
+# PR can't loosen the rules it is judged by. A change here applies from the
+# PR after the one that merges it. Never loosen a rule to get a PR through:
+# if one looks wrong, show the table and talk about it first.
+
+# Both category and priority right. The allowed drop is this many points, or
+# the measured noise floor (how far the number moves between two identical
+# runs) if that is larger: a drop inside the noise isn't evidence of anything.
+both_correct:
+  max_drop_pts: 2
+
+# A high ticket labelled low, on a ticket that main got right. Counted per
+# ticket, so swapping one dangerous miss for another still fails.
+dangerous_misses:
+  max_new: 0
+
+# Answers that passed the schema without the repair retry.
+schema_valid:
+  max_drop_pts: 2
+
+# From uncached calls only. When every call came from the cache there is no
+# latency to judge, and the rule says "not measured" rather than passing.
+latency_p95:
+  max_rise_pct: 15
+
+# List-price estimate per request (the free tiers actually cost $0).
+cost_per_request:
+  max_rise_pct: 15

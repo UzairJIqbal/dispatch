@@ -12,6 +12,8 @@
     "golden:stats": "tsx scripts/golden-stats.ts",
     "eval": "tsx scripts/eval.ts",
     "eval:noise": "tsx scripts/eval-noise.ts",
+    "gate": "tsx scripts/gate.ts",
+    "golden:check": "tsx scripts/golden-check.ts",
     "dev": "DISPATCH_PROVIDER=${DISPATCH_PROVIDER:-mock} tsx watch src/server/main.ts",
     "client-key": "tsx scripts/client-key.ts",
     "traffic": "tsx scripts/traffic.ts",

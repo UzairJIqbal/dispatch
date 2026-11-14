@@ -27,6 +27,7 @@ export const paths = {
   golden: `${root}evals/golden.jsonl`,
   models: `${root}config/models.yaml`,
   release: `${root}config/release.yaml`,
+  gateRules: `${root}config/gate.yaml`,
   prompts: `${root}prompts/triage`,
   repairPrompt: `${root}prompts/repair.yaml`,
   results: `${root}results`,

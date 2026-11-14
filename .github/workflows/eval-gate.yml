@@ -1,0 +1,302 @@
+# The eval gate. A pull request that touches the AI (prompts, model config,
+# triage, gateway, grading or the golden set) runs the test-split eval with
+# real calls and is compared, rule by rule, with main's latest result. Every
+# push to main that touches the AI runs the same eval and keeps it as the
+# "eval-baseline" artifact: that is what the next PR is compared against.
+#
+# Repository secrets: GEMINI_API_KEY, COHERE_API_KEY (the fallback).
+# One uncached run is about 74 Gemini calls, paced to the free 10 per minute.
+name: eval-gate
+
+# No `paths:` filter on purpose. A required check whose workflow never starts
+# stays "pending" and blocks the merge forever, so the workflow always starts
+# and the `changes` job decides. A job skipped by its `if:` counts as passed.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  # Refreshes main's baseline by hand, e.g. when the artifact has expired.
+  workflow_dispatch:
+
+concurrency:
+  group: eval-gate-${{ github.event.pull_request.number || github.ref }}
+  # A new push to a PR makes the old run pointless; a main run is a baseline
+  # and always finishes.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Changed files
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      ai: ${{ steps.diff.outputs.ai }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: diff
+        name: Does this change touch the AI?
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          # The one list of what the gate guards.
+          ai='^(prompts/|config/models\.yaml$|config/gate\.yaml$|src/(triage|gateway|eval|golden)/|src/categories\.ts$|evals/golden\.jsonl$|scripts/(eval|gate)\.ts$|\.github/workflows/eval-gate\.yml$)'
+          if [ "$EVENT" = pull_request ]; then
+            # The checkout is the PR merged into main: its first parent is main.
+            files=$(git diff --name-only HEAD^1 HEAD)
+          elif [ "$EVENT" = push ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            files=$(git diff --name-only "$BEFORE" HEAD)
+          else
+            echo "ai=true" >> "$GITHUB_OUTPUT"
+            echo "Run by hand or no previous commit: running the eval."
+            exit 0
+          fi
+          echo "$files"
+          if echo "$files" | grep -Eq "$ai"; then echo "ai=true" >> "$GITHUB_OUTPUT"; else echo "ai=false" >> "$GITHUB_OUTPUT"; fi
+
+  gate:
+    name: Eval gate
+    needs: changes
+    # Fail-safe: if the file check broke, the gate runs rather than being skipped.
+    if: ${{ !cancelled() && github.event_name == 'pull_request' && (needs.changes.result != 'success' || needs.changes.outputs.ai == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # The free quota is per key, so two evals at once would slow each other
+    # into 429s and fallbacks. They queue instead.
+    concurrency:
+      group: gemini-quota
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pull-requests: write
+      # Reading main's eval-baseline artifact.
+      actions: read
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR: ${{ github.event.pull_request.number }}
+      BASE: ${{ github.base_ref }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Provider keys
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+        run: |
+          missing=""
+          [ -n "$GEMINI_API_KEY" ] || missing="$missing GEMINI_API_KEY"
+          [ -n "$COHERE_API_KEY" ] || missing="$missing COHERE_API_KEY"
+          if [ -n "$missing" ]; then
+            # A fork's PR gets no secrets. Skipping quietly would let it merge ungraded.
+            {
+              echo "<!-- dispatch-eval-gate -->"
+              echo "## Eval gate: ❌ skipped: no key"
+              echo
+              echo "Missing repository secret(s):$missing (Settings → Secrets and variables → Actions)."
+              echo "A pull request from a fork gets no secrets, so it can't be graded here and can't merge."
+            } > "$RUNNER_TEMP/gate.md"
+            echo "::error::skipped: no key (missing$missing)"
+            exit 1
+          fi
+
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Grade with main's tickets and rules
+        id: main
+        run: |
+          # The PR's own commit, recorded before anything below edits the tree.
+          echo "sha=$(git rev-parse --short "${{ github.event.pull_request.head.sha }}")" >> "$GITHUB_OUTPUT"
+          # Nothing in the PR can change which tickets are in test, or the
+          # rules and noise floor it is judged by: all three come from main.
+          git show "origin/$BASE:evals/golden.jsonl" > evals/golden.jsonl
+          if git show "origin/$BASE:config/gate.yaml" > "$RUNNER_TEMP/gate.yaml" 2>/dev/null; then
+            echo "rules_label=config/gate.yaml from main" >> "$GITHUB_OUTPUT"
+          else
+            cp config/gate.yaml "$RUNNER_TEMP/gate.yaml"
+            echo "rules_label=config/gate.yaml from this PR (main has none yet)" >> "$GITHUB_OUTPUT"
+          fi
+          git show "origin/$BASE:results/noise.json" > "$RUNNER_TEMP/noise.json" 2>/dev/null || rm -f "$RUNNER_TEMP/noise.json"
+
+      - name: Main's baseline
+        id: baseline
+        env:
+          REPO_ID: ${{ github.repository_id }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/baseline"
+          # The newest eval-baseline artifact from a push to main in this
+          # repository. A fork's run can't plant one: its head repository differs.
+          run_id=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=eval-baseline&per_page=100" --jq "
+            [.artifacts[] | select(.expired | not)
+              | select(.workflow_run.head_branch == \"$BASE\" and .workflow_run.head_repository_id == $REPO_ID)]
+            | sort_by(.created_at) | last | .workflow_run.id // empty")
+          if [ -n "$run_id" ]; then
+            event=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" --jq '.event + " " + .path')
+            case "$event" in
+              "push .github/workflows/eval-gate.yml"|"workflow_dispatch .github/workflows/eval-gate.yml") ;;
+              *) echo "::warning::Ignoring eval-baseline from run $run_id ($event)"; run_id="" ;;
+            esac
+          fi
+          if [ -n "$run_id" ]; then
+            gh run download "$run_id" -n eval-baseline -D "$RUNNER_TEMP/baseline"
+            echo "label=main's latest run ([run $run_id]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$run_id))" >> "$GITHUB_OUTPUT"
+          else
+            # Until main has run once, the committed baseline stands in.
+            git show "origin/$BASE:results/baseline.json" > "$RUNNER_TEMP/baseline/baseline.json"
+            echo "label=results/baseline.json committed on main (no eval-baseline artifact yet)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/cache/restore@v6
+        with:
+          path: .cache/responses.sqlite
+          key: eval-responses-${{ hashFiles('prompts/**', 'config/models.yaml') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: eval-responses-${{ hashFiles('prompts/**', 'config/models.yaml') }}-
+
+      - name: Eval on the test split
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+          GIT_SHA: ${{ steps.main.outputs.sha }}
+        run: |
+          pnpm eval --split test --out "$RUNNER_TEMP/candidate.json" 2>&1 | tee "$RUNNER_TEMP/eval.log" || {
+            {
+              echo "<!-- dispatch-eval-gate -->"
+              echo "## Eval gate: ❌ failed (the eval did not finish)"
+              echo
+              echo '```'
+              tail -n 15 "$RUNNER_TEMP/eval.log"
+              echo '```'
+            } > "$RUNNER_TEMP/gate.md"
+            exit 1
+          }
+
+      # Saved even when the eval or the gate fails, so a rerun doesn't pay for the same answers twice.
+      - uses: actions/cache/save@v6
+        if: ${{ !cancelled() && hashFiles('.cache/responses.sqlite') != '' }}
+        with:
+          path: .cache/responses.sqlite
+          key: eval-responses-${{ hashFiles('prompts/**', 'config/models.yaml') }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Gate
+        env:
+          BASELINE_LABEL: ${{ steps.baseline.outputs.label }}
+          RULES_LABEL: ${{ steps.main.outputs.rules_label }}
+        run: |
+          pnpm gate \
+            --candidate "$RUNNER_TEMP/candidate.json" \
+            --baseline "$RUNNER_TEMP/baseline/baseline.json" \
+            --rules "$RUNNER_TEMP/gate.yaml" \
+            --noise "$RUNNER_TEMP/noise.json" \
+            --baseline-label "$BASELINE_LABEL" \
+            --rules-label "$RULES_LABEL" \
+            --markdown "$RUNNER_TEMP/gate.md"
+
+      - name: Job summary
+        if: ${{ !cancelled() }}
+        run: '[ ! -f "$RUNNER_TEMP/gate.md" ] || cat "$RUNNER_TEMP/gate.md" >> "$GITHUB_STEP_SUMMARY"'
+
+      - name: PR comment (one, updated on every push)
+        if: ${{ !cancelled() }}
+        run: |
+          [ -f "$RUNNER_TEMP/gate.md" ] || exit 0
+          id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("<!-- dispatch-eval-gate -->"))) | .id' | head -n 1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" --raw-field body="$(cat "$RUNNER_TEMP/gate.md")" > /dev/null
+          else
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --raw-field body="$(cat "$RUNNER_TEMP/gate.md")" > /dev/null
+          fi || echo "::warning::Couldn't post the PR comment (a fork's token can't); the table is in the job summary."
+
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: eval-candidate
+          path: ${{ runner.temp }}/candidate.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+  baseline:
+    name: Main baseline
+    needs: changes
+    if: ${{ !cancelled() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && (needs.changes.result != 'success' || needs.changes.outputs.ai == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: gemini-quota
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Only a green main becomes the baseline.
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+
+      - name: Provider keys
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+        run: |
+          [ -n "$GEMINI_API_KEY" ] && [ -n "$COHERE_API_KEY" ] && exit 0
+          echo "::error::skipped: no key. Add GEMINI_API_KEY and COHERE_API_KEY in Settings → Secrets and variables → Actions."
+          exit 1
+
+      - uses: actions/cache/restore@v6
+        with:
+          path: .cache/responses.sqlite
+          key: eval-responses-${{ hashFiles('prompts/**', 'config/models.yaml') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: eval-responses-${{ hashFiles('prompts/**', 'config/models.yaml') }}-
+
+      # --no-cache: a baseline needs real latency. The answers are still
+      # stored, so a PR that leaves the prompts alone reruns from the cache.
+      - name: Eval on the test split
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+        run: |
+          export GIT_SHA=$(git rev-parse --short HEAD)
+          pnpm eval --split test --no-cache --out "$RUNNER_TEMP/eval-baseline/baseline.json"
+
+      - uses: actions/cache/save@v6
+        if: ${{ !cancelled() && hashFiles('.cache/responses.sqlite') != '' }}
+        with:
+          path: .cache/responses.sqlite
+          key: eval-responses-${{ hashFiles('prompts/**', 'config/models.yaml') }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Fit to be the baseline?
+        run: pnpm gate --check-baseline "$RUNNER_TEMP/eval-baseline/baseline.json"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: eval-baseline
+          path: ${{ runner.temp }}/eval-baseline/baseline.json
+          retention-days: 90
+
+      - name: Summary
+        run: |
+          {
+            echo "## Main baseline: kept"
+            echo
+            echo "The next pull request is compared against this run."
+            echo "To make it the committed baseline for a release:"
+            echo
+            echo '```'
+            echo "gh run download $GITHUB_RUN_ID -n eval-baseline -D /tmp/eval-baseline && cp /tmp/eval-baseline/baseline.json results/baseline.json"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

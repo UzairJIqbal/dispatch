@@ -4,7 +4,7 @@ import { ProviderNameSchema } from "../gateway/config.js";
 import { SplitSchema } from "../golden/schema.js";
 import { PromptVersionSchema, latestPromptVersion } from "../triage/prompt.js";
 
-const USAGE = "Usage: pnpm eval --split dev|test [--version v1] [--provider mock|gemini|cohere] [--no-cache] [--write-baseline]";
+const USAGE = "Usage: pnpm eval --split dev|test [--version v1] [--provider mock|gemini|cohere] [--no-cache] [--write-baseline] [--out file.json]";
 
 const EvalArgsSchema = z.strictObject({
   split: SplitSchema,
@@ -12,6 +12,7 @@ const EvalArgsSchema = z.strictObject({
   provider: ProviderNameSchema.optional(),
   "no-cache": z.boolean().default(false),
   "write-baseline": z.boolean().default(false),
+  out: z.string().min(1).optional(),
 });
 
 export type EvalArgs = {
@@ -20,6 +21,8 @@ export type EvalArgs = {
   provider?: z.infer<typeof ProviderNameSchema>;
   noCache: boolean;
   writeBaseline: boolean;
+  /** Where to write the results file instead of results/<run>.json (CI writes outside the repo). */
+  out?: string;
 };
 
 export function parseEvalArgs(argv: readonly string[]): EvalArgs {
@@ -33,6 +36,7 @@ export function parseEvalArgs(argv: readonly string[]): EvalArgs {
         provider: { type: "string" },
         "no-cache": { type: "boolean" },
         "write-baseline": { type: "boolean" },
+        out: { type: "string" },
       },
       strict: true,
       allowPositionals: false,
@@ -49,6 +53,7 @@ export function parseEvalArgs(argv: readonly string[]): EvalArgs {
     ...(a.provider ? { provider: a.provider } : {}),
     noCache: a["no-cache"],
     writeBaseline: a["write-baseline"],
+    ...(a.out ? { out: a.out } : {}),
   };
 }
 
