@@ -1,0 +1,28 @@
+apiVersion: syntheticmonitoring.ext.grafana.app/v1alpha1
+kind: Check
+metadata:
+  name: "dispatch-prod-readyz-5083"
+spec:
+  job: dispatch-prod-readyz
+  target: https://dispatch-prod.ashybay-480692f5.malaysiawest.azurecontainerapps.io/readyz
+  # 3 probes x every 2 min = ~65k runs a month, kept under the free plan's run limit.
+  frequency: 120000
+  timeout: 10000
+  enabled: true
+  labels:
+    - name: environment
+      value: production
+    - name: service
+      value: dispatch
+  probes:
+    - Mumbai
+    - Singapore
+    - Frankfurt
+  alertSensitivity: none
+  basicMetricsOnly: false
+  settings:
+    http:
+      validStatusCodes: [200]
+      method: GET
+      noFollowRedirects: false
+      failIfNotSSL: true

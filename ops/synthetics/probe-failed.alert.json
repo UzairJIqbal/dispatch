@@ -1,0 +1,36 @@
+{
+  "title": "Prod readyz probe failing (Synthetic Monitoring)",
+  "uid": "dispatch-probe-failed",
+  "ruleGroup": "dispatch-probe",
+  "folderUID": "dispatch",
+  "orgID": 1,
+  "condition": "C",
+  "for": "4m",
+  "noDataState": "NoData",
+  "execErrState": "Error",
+  "labels": { "severity": "page" },
+  "annotations": {
+    "summary": "Prod /readyz failed from most probes for 4+ minutes (success rate below 50% over 6 min).",
+    "description": "Open the Synthetic Monitoring check dispatch-prod-readyz, then runbook: check Azure app dispatch-prod and the provider keys."
+  },
+  "notification_settings": { "receiver": "dispatch-email" },
+  "data": [
+    {
+      "refId": "A",
+      "datasourceUid": "grafanacloud-prom",
+      "relativeTimeRange": { "from": 600, "to": 0 },
+      "model": {
+        "refId": "A",
+        "expr": "avg(avg_over_time(probe_success{job=\"dispatch-prod-readyz\"}[6m]))",
+        "instant": true,
+        "range": false
+      }
+    },
+    {
+      "refId": "C",
+      "datasourceUid": "__expr__",
+      "relativeTimeRange": { "from": 0, "to": 0 },
+      "model": { "refId": "C", "type": "math", "expression": "$A < 0.5" }
+    }
+  ]
+}
