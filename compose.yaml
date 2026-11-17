@@ -10,6 +10,14 @@
 #   MOCK_MODE=500 MOCK_FALLBACK_MODE=500 docker compose up -d dispatch   everything down
 #   MOCK_MODE=slow MOCK_DELAY_MS=3000 docker compose up -d dispatch      slow (about 6 s a call)
 #   docker compose up -d dispatch                                        back to normal
+#
+# Load tests (k6 in a container, profile "load"; results go to results/load/):
+#   Test 1, the service on the mock, no real calls, about 9 minutes:
+#     RATE_LIMIT=off MOCK_MODE=slow docker compose up -d --build dispatch
+#     docker compose --profile load run --rm --no-deps k6   # --no-deps: else compose recreates dispatch with default settings
+#   Test 2, real calls on staging, at most 300 requests (see load/ramp-real.js):
+#     docker compose --profile load run --rm --no-deps k6 run /work/load/ramp-real.js
+#   Afterwards put the service back:  docker compose up -d dispatch
 services:
   dispatch:
     build:
@@ -28,9 +36,16 @@ services:
       MOCK_MODE: ${MOCK_MODE:-ok}
       MOCK_FALLBACK_MODE: ${MOCK_FALLBACK_MODE:-ok}
       MOCK_DELAY_MS: ${MOCK_DELAY_MS:-}
+      # Off only for the mock load test. The service refuses to start with it
+      # off unless the provider is a mock.
+      RATE_LIMIT: ${RATE_LIMIT:-on}
       # Prometheus reaches /metrics over the compose network only, so no
       # password here. Deployed, METRICS_PASSWORD is set.
       METRICS_PASSWORD: ""
+    volumes:
+      # The mock's "slow" mode samples its latencies from the baseline; the
+      # image doesn't carry results/.
+      - ./results/baseline.json:/app/results/baseline.json:ro
     ports:
       # Host side is changeable when 3000 is taken by something else on this machine.
       - "${DISPATCH_HOST_PORT:-3000}:3000"
@@ -67,6 +82,25 @@ services:
       - grafana-data:/var/lib/grafana
     ports:
       - "3001:3000"
+
+  k6:
+    profiles: ["load"]
+    image: grafana/k6:1.7.0
+    depends_on:
+      - dispatch
+    # Test 1 unless the command says otherwise.
+    command: run /work/load/ramp-mock.js
+    environment:
+      TARGET_URL: http://dispatch:3000
+      # Only what the tests read, not the whole .env.
+      DISPATCH_TRAFFIC_KEYS: ${DISPATCH_TRAFFIC_KEYS:-}
+      STAGING_URL: ${STAGING_URL:-}
+      STAGING_KEY: ${STAGING_KEY:-}
+    volumes:
+      - ./load:/work/load:ro
+      - ./evals:/work/evals:ro
+      - ./results/baseline.json:/work/results/baseline.json:ro
+      - ./results/load:/work/results/load
 
 volumes:
   prometheus-data:

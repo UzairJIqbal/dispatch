@@ -288,6 +288,12 @@ describe("service config", () => {
   it("names a bad provider", () => {
     expect(() => parseServiceConfig({ ...good, DISPATCH_PROVIDER: "groq" })).toThrow(/DISPATCH_PROVIDER is invalid/);
   });
+  it("keeps the rate limit on unless told otherwise, and only lets it off for a mock", () => {
+    expect(parseServiceConfig(good).rateLimit).toBe("on");
+    expect(parseServiceConfig({ ...good, DISPATCH_PROVIDER: "mock", RATE_LIMIT: "off" }).rateLimit).toBe("off");
+    expect(() => parseServiceConfig({ ...good, RATE_LIMIT: "off" })).toThrow(/only allowed with a mock provider/);
+    expect(() => parseServiceConfig({ ...good, DISPATCH_PROVIDER: "gemini", RATE_LIMIT: "off" })).toThrow(/only allowed with a mock provider/);
+  });
   it("prefixes Redis keys with dispatch unless told otherwise", () => {
     expect(parseServiceConfig(good).redis.prefix).toBe("dispatch");
     expect(parseServiceConfig({ ...good, REDIS_KEY_PREFIX: "dispatch-staging" }).redis.prefix).toBe("dispatch-staging");

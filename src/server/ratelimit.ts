@@ -43,3 +43,6 @@ export function upstashLimiter(redis: Redis, log: Logger, keyPrefix: string): Li
     },
   };
 }
+
+/** Lets everything through. Only for the mock load test: parseServiceConfig refuses RATE_LIMIT=off with a real provider. */
+export const unlimited: Limiter = { check: () => Promise.resolve({ allowed: true }) };

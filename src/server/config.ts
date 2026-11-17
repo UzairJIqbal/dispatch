@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ProviderNameSchema } from "../gateway/config.js";
+import { isMock, ProviderNameSchema } from "../gateway/config.js";
 import { parseClientKeys, type ClientKeys } from "./clients.js";
 
 // Everything the service reads from the environment. Checked once at startup:
@@ -17,6 +17,11 @@ const EnvSchema = z.object({
   UPSTASH_REDIS_REST_TOKEN: required(z.string()),
   /** Overrides the prompt's model alias. `pnpm dev` and docker compose default it to mock. */
   DISPATCH_PROVIDER: optional(ProviderNameSchema),
+  /**
+   * "off" removes the per-client limit, for the mock-only load test (60 a minute per client is 1 RPS).
+   * Refused with a real provider: see parseServiceConfig.
+   */
+  RATE_LIMIT: optional(z.enum(["on", "off"])),
   /** Basic auth on /metrics. Unset: open, which is right only on a private network (docker compose). */
   METRICS_PASSWORD: optional(z.string().min(16, "use at least 16 characters, e.g. from `openssl rand -hex 16`")),
   /** Start of every Redis key. Lets staging share production's free database (one per free account) without touching its keys. */
@@ -29,6 +34,7 @@ export type ServiceConfig = {
   clients: ClientKeys;
   redis: { url: string; token: string; prefix: string };
   provider: z.infer<typeof ProviderNameSchema> | undefined;
+  rateLimit: "on" | "off";
   metricsPassword: string | undefined;
 };
 
@@ -37,6 +43,7 @@ const HINTS: Record<string, string> = {
   UPSTASH_REDIS_REST_URL: "Upstash console → your database → REST API → UPSTASH_REDIS_REST_URL.",
   UPSTASH_REDIS_REST_TOKEN: "Upstash console → your database → REST API → UPSTASH_REDIS_REST_TOKEN.",
   DISPATCH_PROVIDER: "One of gemini, cohere, mock; or leave it unset to use the prompt's model alias.",
+  RATE_LIMIT: "Leave it unset, or set it to on. off is only for the mock load test (DISPATCH_PROVIDER=mock).",
 };
 
 export function parseServiceConfig(env: NodeJS.ProcessEnv): ServiceConfig {
@@ -50,6 +57,11 @@ export function parseServiceConfig(env: NodeJS.ProcessEnv): ServiceConfig {
     throw new Error(`The service can't start:\n${lines.join("\n")}\nSet these in .env in the repo root (every variable is listed in .env.example).`);
   }
   const e = parsed.data;
+  // The limit is what keeps one client from spending the free model quotas, so
+  // it can only come off when no real model sits behind the service.
+  if (e.RATE_LIMIT === "off" && !(e.DISPATCH_PROVIDER && isMock(e.DISPATCH_PROVIDER))) {
+    throw new Error(`The service can't start:\n- RATE_LIMIT=off is only allowed with a mock provider. ${HINTS.RATE_LIMIT ?? ""} Set DISPATCH_PROVIDER=mock, or remove RATE_LIMIT.`);
+  }
   let clients: ClientKeys;
   try {
     clients = parseClientKeys(e.DISPATCH_CLIENT_KEYS);
@@ -62,6 +74,7 @@ export function parseServiceConfig(env: NodeJS.ProcessEnv): ServiceConfig {
     clients,
     redis: { url: e.UPSTASH_REDIS_REST_URL, token: e.UPSTASH_REDIS_REST_TOKEN, prefix: e.REDIS_KEY_PREFIX ?? "dispatch" },
     provider: e.DISPATCH_PROVIDER,
+    rateLimit: e.RATE_LIMIT ?? "on",
     metricsPassword: e.METRICS_PASSWORD,
   };
 }

@@ -123,3 +123,36 @@ Production traffic is synthetic: the probe, the smoke tests and requests sent by
 | Gemini (free tier) | A daily request quota per model, shared by everything using the key | The probe spends about 48 calls a day and each staging deploy 3, from the same quota as `pnpm eval`. |
 
 Sources: [Container Apps pricing](https://azure.microsoft.com/pricing/details/container-apps/), [Container Apps billing](https://learn.microsoft.com/azure/container-apps/billing), [Azure Retail Prices API](https://learn.microsoft.com/rest/api/cost-management/retail-prices/azure-retail-prices), [Grafana Cloud pricing](https://grafana.com/pricing/), [Metrics Endpoint integration](https://grafana.com/docs/grafana-cloud/monitor-infrastructure/integrations/integration-reference/integration-metrics-endpoint/), [GitHub schedule event](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows).
+
+## Load and cost
+
+Terms: **RPS** is requests per second. **p50/p95/p99** are the latency that 50%, 95% and 99% of requests beat. An **open model** sends requests on the clock whether or not the last one has answered, like real users, so a slow service shows as latency, not as fewer requests.
+
+**Test 1, the service on the mock (no real calls).** The mock's latency is sampled from `results/baseline.json` (real Gemini, n=74 uncached calls), so what changes with load is our own code. k6 ramps 1, 2, 5, 10, 20, 30, 40, 50 RPS, 60 s each. The rate limit is off for this run (`RATE_LIMIT=off`, accepted only with a mock provider, the service refuses to start otherwise), so **test 1 excludes the Redis round trip** the limiter costs.
+
+```sh
+RATE_LIMIT=off MOCK_MODE=slow docker compose up -d --build dispatch
+docker compose --profile load run --rm --no-deps k6        # about 9 minutes
+docker compose up -d dispatch                    # back to normal
+```
+
+**Test 2, staging with real providers.** Short ramp (0.2 to 3 RPS, about 200 requests planned) that prints its call budget first, stops at 285 sent (budget 300) and stops after 10 responses with status 429. It refuses a URL containing `prod`. Set `STAGING_URL` and `STAGING_KEY` in `.env` and `TRACE_SAMPLE_RATE=0.1` on the staging app.
+
+```sh
+docker compose --profile load run --rm --no-deps k6 run /work/load/ramp-real.js
+```
+
+Both write a markdown table and the full k6 summary to `results/load/`. Every table says which test, how many requests, and mock or real. The gateway paces Gemini to the free 10 a minute, so on staging extra load mostly queues; expect our per-client 429s and queue latency before provider 429s.
+
+Test 1 result, 2026-11-17 ([table](results/load/2026-11-17T04-01-13Z-mock-ramp.md); mock, 9,613 requests, 0 dropped): p95 is over the 4 s SLO from 1 RPS, because the mock replays the real baseline (n=74, p95 9.6 s), which is already over it. Our own code added nothing measurable up to 50 RPS: p50 stayed between 1.37 and 1.53 s at every step against the floor's 1.52 s, with no errors. Fallback ran 1.6 to 5.1% at every step, because the baseline's slowest calls hit the 10 s attempt timeout. So the SLO is set by the provider's slow tail, not by load. 
+
+Test 2 result, 2026-11-17 ([table](results/load/2026-11-17T21-08-45Z-staging-real-ramp.md); staging, real Gemini, 95 sent of a 300 budget, 59 answered, 10% traces): the real path's ceiling is Gemini's free tier, which the gateway paces to 10 requests a minute (about 0.17 RPS). At 0.2 RPS (n=5) p50 was 6.0 s and p95 8.7 s with no errors. At 0.5 RPS (n=15) the queue in front of Gemini grew faster than it drained and 10 of 15 waited past k6's 30 s and got no answer; at 1 RPS (n=28) all of them did. At 2 RPS (n=11) our own per-client limit (60 a minute) answered 429 and the test stopped itself, before the 3 RPS step. Compared with test 1, where our code held 50 RPS on the mock: the limit is the free provider quota, not the service. A paid tier or a second key raises it; a client sending more than about 10 tickets a minute today waits.
+
+**Cost.** `pnpm cost [--file results/<run>.json]` prices a run's tokens at list price (price table dated 2026-10-27; the real bill is $0 on the free tiers). Failed requests still cost their tokens, so cost per 1,000 successes is total spend divided by successes. Baseline run, v2 on dev (n=198), 10,000 tickets a day for 30 days:
+
+| Model | Input / output tokens (avg) | Per 1,000 successes | Per month |
+|---|---:|---:|---:|
+| Gemini flash-lite (primary) | 663 / 35 | $0.29 | $86.46 |
+| Cohere command-a (fallback), primary's tokens assumed | 663 / 35 | $2.02 | $606.94 |
+
+What dominates: input tokens (70% of the primary's cost), and about 98% of those are the system prompt sent unchanged with every ticket. The trimmed-prompt experiment (v3) and its before/after table are in [docs/cost-experiment.md](docs/cost-experiment.md); v3 cut input tokens 14% and list cost 10% on dev with accuracy inside the noise floor, but the eval gate on [PR #7](https://github.com/UzairJIqbal/dispatch/pull/7) failed it on p95 latency (1.64 s → 8.38 s, n=74), so it doesn't ship; its canary step waits for Phase 9.

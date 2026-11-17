@@ -1,0 +1,6972 @@
+{
+  "run": {
+    "id": "2026-11-17T20:10:03.374Z-v3-dev",
+    "started_at": "2026-11-17T20:10:03.374Z",
+    "finished_at": "2026-11-17T20:31:51.416Z",
+    "split": "dev",
+    "prompt_version": "v3",
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "dataset_version": "v2",
+    "git_sha": "154d69e-dirty",
+    "cache": "used"
+  },
+  "metrics": {
+    "n": 198,
+    "both": {
+      "pct": 68.69,
+      "k": 136,
+      "n": 198
+    },
+    "category": {
+      "pct": 91.41,
+      "k": 181,
+      "n": 198
+    },
+    "priority": {
+      "pct": 71.21,
+      "k": 141,
+      "n": 198
+    },
+    "dangerous_misses": 9,
+    "schema_valid": {
+      "pct": 97.47,
+      "k": 193,
+      "n": 198
+    },
+    "success": {
+      "pct": 97.47,
+      "k": 193,
+      "n": 198
+    },
+    "summary_ok": {
+      "pct": 100,
+      "k": 193,
+      "n": 193
+    },
+    "by_source": {
+      "bitext": {
+        "pct": 66.85,
+        "k": 119,
+        "n": 178
+      },
+      "messy": {
+        "pct": 85,
+        "k": 17,
+        "n": 20
+      }
+    },
+    "errors": {
+      "timeout": 5
+    },
+    "calls": {
+      "cached": 0,
+      "uncached": 193,
+      "failed": 5
+    },
+    "latency_s": {
+      "n": 193,
+      "p50": 1.582,
+      "p95": 8.824,
+      "p99": 17.758
+    },
+    "tokens": {
+      "in_avg": 568,
+      "out_avg": 34,
+      "in_total": 109553,
+      "out_total": 6519
+    },
+    "cost_usd": {
+      "per_request": 0.0003148870466321244,
+      "total": 0.06077320000000001,
+      "price_date": "2026-10-27"
+    },
+    "gateway": {
+      "retries": 2,
+      "fallbacks": 8,
+      "repairs": 0
+    }
+  },
+  "tickets": [
+    {
+      "id": "bitext-02a829aa8c",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "low",
+        "summary": "Customer is asking how to make a purchase."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1987,
+      "tokens_in": 563,
+      "tokens_out": 34,
+      "trace_id": "46f91bc16d911ab95d8770ed69b0b8b3"
+    },
+    {
+      "id": "bitext-0335d3c2b6",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer needs help signing up for the corporate newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1770,
+      "tokens_in": 561,
+      "tokens_out": 27,
+      "trace_id": "45d2a0a4ed487d5bde894eece69329aa"
+    },
+    {
+      "id": "bitext-03c6a229ce",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is reporting errors with payments."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1343,
+      "tokens_in": 561,
+      "tokens_out": 24,
+      "trace_id": "081c3c6a5d2c92ce9648cb86260ddbda"
+    },
+    {
+      "id": "bitext-05ba49fb53",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is asking for bills for Person Name."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3415,
+      "tokens_in": 566,
+      "tokens_out": 34,
+      "trace_id": "4569e816cd659e89f9a8d0e3001b1069"
+    },
+    {
+      "id": "bitext-061d931dcd",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is asking how to report an issue with online payment."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1450,
+      "tokens_in": 563,
+      "tokens_out": 37,
+      "trace_id": "034728f8bf2555171a221f4c4fdb8fd5"
+    },
+    {
+      "id": "bitext-063cdd95c6",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants help leaving feedback for the services."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3060,
+      "tokens_in": 562,
+      "tokens_out": 34,
+      "trace_id": "2643333a4109a91342e7c44b150fac2d"
+    },
+    {
+      "id": "bitext-07724226a6",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Customer is asking for assistance to see available shipping methods."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 807,
+      "tokens_in": 560,
+      "tokens_out": 36,
+      "trace_id": "a6ceff0e17112377c53fc2e9046a31ac"
+    },
+    {
+      "id": "bitext-08587fe9f2",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs to know how to download invoice #37777"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1095,
+      "tokens_in": 571,
+      "tokens_out": 40,
+      "trace_id": "21ecdae9343580026f0e5af5a0c1eff7"
+    },
+    {
+      "id": "bitext-0f853fe297",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Trouble entering a secondary delivery address"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2824,
+      "tokens_in": 560,
+      "tokens_out": 33,
+      "trace_id": "210d6f7e6311977fa4f19dcd196a2fbd"
+    },
+    {
+      "id": "bitext-108e95fc19",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer wants to delete their premium account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2440,
+      "tokens_in": 561,
+      "tokens_out": 33,
+      "trace_id": "00fe2f841b2b2329ff444fc9d55ef862"
+    },
+    {
+      "id": "bitext-10e5927f40",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking for a status update on their refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1653,
+      "tokens_in": 565,
+      "tokens_out": 28,
+      "trace_id": "18f6cb71147d90279125fb3b33e4f96d"
+    },
+    {
+      "id": "bitext-1472128377",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs help finding invoice #37777."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 4822,
+      "tokens_in": 566,
+      "tokens_out": 37,
+      "trace_id": "74dc1799a59ba400fd0a3a5872794255"
+    },
+    {
+      "id": "bitext-18b0f35240",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Assistance needed to submit the secondary shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1388,
+      "tokens_in": 560,
+      "tokens_out": 35,
+      "trace_id": "a7602a651e6952feae25fc2e1cffff59"
+    },
+    {
+      "id": "bitext-1cad5df969",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Customer is inquiring about general shipping periods."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "cohere",
+      "fallback": true,
+      "retries": 1,
+      "repaired": false,
+      "latency_ms": 14670,
+      "tokens_in": 555,
+      "tokens_out": 26,
+      "trace_id": "9a6bb513570e7ed6dc19e822b67ebe7a"
+    },
+    {
+      "id": "bitext-1de5b8d3b9",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants help making a claim against the business."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 5624,
+      "tokens_in": 562,
+      "tokens_out": 35,
+      "trace_id": "35302a4ff5e831dc7f30af7f343d597d"
+    },
+    {
+      "id": "bitext-2194a66e74",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": null,
+      "error": {
+        "class": "timeout",
+        "message": "cohere did not answer in time"
+      },
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": false,
+      "latency_ms": null,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "trace_id": "9f2a94418eec4d341ce0621a8f14783a"
+    },
+    {
+      "id": "bitext-21a62bf9d9",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "high",
+        "summary": "User unable to open an account due to sign-up errors."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "cohere",
+      "fallback": true,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 17758,
+      "tokens_in": 561,
+      "tokens_out": 30,
+      "trace_id": "e23d083b3919ff3b007e4bb6b61da31e"
+    },
+    {
+      "id": "bitext-21f0319607",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "low",
+        "summary": "Customer is asking about withdrawal fees."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 9540,
+      "tokens_in": 566,
+      "tokens_out": 24,
+      "trace_id": "a324f4a6ea0b20c65c39d02a0a2e0978"
+    },
+    {
+      "id": "bitext-238a2b7df3",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs help getting bill #85632."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 9687,
+      "tokens_in": 564,
+      "tokens_out": 37,
+      "trace_id": "89d05f48add04e4e2a49d61c7f75e5f1"
+    },
+    {
+      "id": "bitext-23a6407f3a",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "medium",
+        "summary": "Customer wants to unsubscribe from the newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 8824,
+      "tokens_in": 563,
+      "tokens_out": 33,
+      "trace_id": "b7a63bcf4225f485f56ad4017dd9fb95"
+    },
+    {
+      "id": "bitext-24383a8db2",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer needs assistance finding the termination fees."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1896,
+      "tokens_in": 563,
+      "tokens_out": 25,
+      "trace_id": "434c5cea7bd0ea3266b314bc0551ea30"
+    },
+    {
+      "id": "bitext-2462644db4",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Request to sign up for the company newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 7593,
+      "tokens_in": 558,
+      "tokens_out": 26,
+      "trace_id": "41f102c5f356e97f1fb8db5af12a0a3b"
+    },
+    {
+      "id": "bitext-24ce4860c3",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer needs help purchasing several items."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 6762,
+      "tokens_in": 561,
+      "tokens_out": 32,
+      "trace_id": "cd59907336f73a22d9d156444d6c3144"
+    },
+    {
+      "id": "bitext-25a0e74cf5",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs help setting up a new delivery address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 971,
+      "tokens_in": 562,
+      "tokens_out": 27,
+      "trace_id": "2eac12467ea42577074cb0aef2eeb316"
+    },
+    {
+      "id": "bitext-27218ff1a6",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking how to request a refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 4938,
+      "tokens_in": 560,
+      "tokens_out": 26,
+      "trace_id": "6e418cb53a473ee3b1dae7cb0b381901"
+    },
+    {
+      "id": "bitext-28da896bd5",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking how to see the accepted payment modalities."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3318,
+      "tokens_in": 561,
+      "tokens_out": 28,
+      "trace_id": "803770a1b37b79ec02bf5463c6a3acee"
+    },
+    {
+      "id": "bitext-298939a055",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking about the conditions and cases for requesting reimbursements."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 755,
+      "tokens_in": 566,
+      "tokens_out": 38,
+      "trace_id": "18769602de2a43a40f1ce7927c02a55a"
+    },
+    {
+      "id": "bitext-2a9c6cd13a",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer is asking if the refund of {{Refund Amount}} dollars has been processed."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1895,
+      "tokens_in": 568,
+      "tokens_out": 41,
+      "trace_id": "b48eb6851b71394ac49aaed68bbe10a8"
+    },
+    {
+      "id": "bitext-2b9365e5c4",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking for a list of accepted payment options."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1047,
+      "tokens_in": 566,
+      "tokens_out": 36,
+      "trace_id": "01330f19ea808d34ff04f6140089a42a"
+    },
+    {
+      "id": "bitext-318776ec09",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking to check the early termination charge."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1065,
+      "tokens_in": 563,
+      "tokens_out": 35,
+      "trace_id": "d4e5129642ff1bf57146a1ce46bd08ea"
+    },
+    {
+      "id": "bitext-319db8fa0b",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer wants to know how to unsubscribe from the newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 994,
+      "tokens_in": 564,
+      "tokens_out": 36,
+      "trace_id": "6a1abacaa46c0ac858990f2d882c5ae9"
+    },
+    {
+      "id": "bitext-336fa8c5da",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer needs to retrieve their user account PIN code."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 955,
+      "tokens_in": 563,
+      "tokens_out": 27,
+      "trace_id": "2fb6ee65cfa8ec7d5ade977596fb0007"
+    },
+    {
+      "id": "bitext-36d292f122",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is reporting issues with payments."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1061,
+      "tokens_in": 562,
+      "tokens_out": 32,
+      "trace_id": "550122c105108da4c849f130b7ebd4f5"
+    },
+    {
+      "id": "bitext-3a5c049f06",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Customer asks if it is possible to place an order from {{Delivery Country}}."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1655,
+      "tokens_in": 565,
+      "tokens_out": 41,
+      "trace_id": "da42a5dedea10bfe194df03b8aff489a"
+    },
+    {
+      "id": "bitext-3af299829e",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer is requesting assistance to demand money reimbursements."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1377,
+      "tokens_in": 562,
+      "tokens_out": 27,
+      "trace_id": "b9d70b0c98076bcfc424e3cb2cdb18e1"
+    },
+    {
+      "id": "bitext-3cc23ba7b1",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs help updating their shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 4884,
+      "tokens_in": 558,
+      "tokens_out": 33,
+      "trace_id": "fb9c9fd1abe3995fe227956480c88192"
+    },
+    {
+      "id": "bitext-3dbf08fe82",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking how to submit feedback for the services."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1584,
+      "tokens_in": 564,
+      "tokens_out": 28,
+      "trace_id": "638166770f85dc74ccde05416433a54e"
+    },
+    {
+      "id": "bitext-4038407068",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "low",
+        "summary": "Customer is asking to see the withdrawal fees."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2278,
+      "tokens_in": 560,
+      "tokens_out": 34,
+      "trace_id": "61351a15580ff0d73b6e38041a89c2f3"
+    },
+    {
+      "id": "bitext-403cac0ef9",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking for help to subscribe to the newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 4190,
+      "tokens_in": 561,
+      "tokens_out": 36,
+      "trace_id": "ae15a638bb03c09af08e8dcb70266877"
+    },
+    {
+      "id": "bitext-415fb84cca",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking for assistance to view the cancellation fee."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1408,
+      "tokens_in": 561,
+      "tokens_out": 28,
+      "trace_id": "42a43d872591cd8bc0e95d4f4bf63d5d"
+    },
+    {
+      "id": "bitext-41daf1fc64",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Customer is asking how long shipping takes."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2934,
+      "tokens_in": 567,
+      "tokens_out": 33,
+      "trace_id": "c091022ec1eb6d6aa54b4b487634e425"
+    },
+    {
+      "id": "bitext-42bfd6e300",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "high",
+        "summary": "Customer needs help resetting their account password."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2906,
+      "tokens_in": 562,
+      "tokens_out": 33,
+      "trace_id": "100de2740abf6471b7581f5b0dee0f60"
+    },
+    {
+      "id": "bitext-444895f4b0",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking where to check the expected delivery time for an item."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1203,
+      "tokens_in": 565,
+      "tokens_out": 39,
+      "trace_id": "b71da2a1313ef295dbb488bbffc19e2a"
+    },
+    {
+      "id": "bitext-45fb6693fd",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants to lodge a claim against the organization."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 5389,
+      "tokens_in": 562,
+      "tokens_out": 27,
+      "trace_id": "045ceecbaaf6b7b7735573bb1028d793"
+    },
+    {
+      "id": "bitext-470f4df16f",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants to know how to file a reclamation."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1418,
+      "tokens_in": 567,
+      "tokens_out": 35,
+      "trace_id": "b4caf3095f6c28a7c0dad456b164065d"
+    },
+    {
+      "id": "bitext-4715229046",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is reporting payment problems."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 5215,
+      "tokens_in": 556,
+      "tokens_out": 31,
+      "trace_id": "b2feb9fd2e1001245d5801836e96a03b"
+    },
+    {
+      "id": "bitext-47b71d3343",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Customer is asking how to check available shipping options."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 824,
+      "tokens_in": 567,
+      "tokens_out": 35,
+      "trace_id": "bef7ca5e18ed39d1dac3f2f9df43ea3a"
+    },
+    {
+      "id": "bitext-4819f58099",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to chat with an operator."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 4778,
+      "tokens_in": 560,
+      "tokens_out": 35,
+      "trace_id": "369b381a483f9abb6e3fb8213873323c"
+    },
+    {
+      "id": "bitext-4b445c485d",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking where to sign up for the company newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 4587,
+      "tokens_in": 561,
+      "tokens_out": 29,
+      "trace_id": "d154709eb4364954b30741acf5720fe4"
+    },
+    {
+      "id": "bitext-4b65d1c8f7",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer needs assistance talking to customer service."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 5723,
+      "tokens_in": 559,
+      "tokens_out": 33,
+      "trace_id": "1ceee8ce694d58f115b47ac0eeb88f24"
+    },
+    {
+      "id": "bitext-4b8bc9efc8",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs to know how to download bill #00108."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 5575,
+      "tokens_in": 569,
+      "tokens_out": 40,
+      "trace_id": "9828463b7564b562a2dfd69ff2a8304a"
+    },
+    {
+      "id": "bitext-4d0bceb0fe",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking to see the early exit fees."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 870,
+      "tokens_in": 564,
+      "tokens_out": 35,
+      "trace_id": "fd4ddca1c93db98dc8186df84266c286"
+    },
+    {
+      "id": "bitext-50c9d70f9a",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer needs to report an issue with payment."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1263,
+      "tokens_in": 561,
+      "tokens_out": 26,
+      "trace_id": "dcea7395ab1319d3a1f40bac64c650dc"
+    },
+    {
+      "id": "bitext-51897a848d",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs help downloading invoices."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 4926,
+      "tokens_in": 567,
+      "tokens_out": 31,
+      "trace_id": "22f2064b5455914b954959c7bc1664fa"
+    },
+    {
+      "id": "bitext-52d1683037",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "low",
+        "summary": "Customer is asking how to view withdrawal charges."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3282,
+      "tokens_in": 564,
+      "tokens_out": 34,
+      "trace_id": "db64353c19a6a4e4fc3eea7d28479f9b"
+    },
+    {
+      "id": "bitext-539e21e56b",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is trying to modify a specific purchase order."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1457,
+      "tokens_in": 564,
+      "tokens_out": 35,
+      "trace_id": "951ef7af7b5f09d84604635077503094"
+    },
+    {
+      "id": "bitext-56212531ec",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer needs help with a payment problem."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1423,
+      "tokens_in": 563,
+      "tokens_out": 33,
+      "trace_id": "aedf066ed1c87bc834de6e97e0bea80b"
+    },
+    {
+      "id": "bitext-57658989ac",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants to leave feedback for a service."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 924,
+      "tokens_in": 563,
+      "tokens_out": 34,
+      "trace_id": "348ca9838ca602f1232a6987dad7cf56"
+    },
+    {
+      "id": "bitext-57a6b63362",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking for assistance to view the withdrawal penalty."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1493,
+      "tokens_in": 560,
+      "tokens_out": 36,
+      "trace_id": "6ce55301d9b6482a9e0f34569dbac9b4"
+    },
+    {
+      "id": "bitext-58405215b8",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking for assistance to send feedback about the company."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 5375,
+      "tokens_in": 561,
+      "tokens_out": 37,
+      "trace_id": "b8e081cec034a801ff024f0f1a21b24a"
+    },
+    {
+      "id": "bitext-5845e5493c",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer needs assistance editing purchase {{Order Number}}."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 607,
+      "tokens_in": 562,
+      "tokens_out": 35,
+      "trace_id": "4e2d2d81a8b68407cf4d5053352066a5"
+    },
+    {
+      "id": "bitext-58e09b39e1",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking for the delivery status and ETA of their order."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 4785,
+      "tokens_in": 564,
+      "tokens_out": 38,
+      "trace_id": "f068eca226f2dee3c8d0ca3cc5acd657"
+    },
+    {
+      "id": "bitext-591c5d6e73",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking when their package will arrive."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3782,
+      "tokens_in": 566,
+      "tokens_out": 34,
+      "trace_id": "46e701e5cc7d3b1324b1215c0f1931cf"
+    },
+    {
+      "id": "bitext-596f9aaf90",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs to know how to submit a new shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1095,
+      "tokens_in": 564,
+      "tokens_out": 29,
+      "trace_id": "279081e0bfb39115efa7beef2224eae4"
+    },
+    {
+      "id": "bitext-5a51d90565",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is asking to find a lost invoice."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2523,
+      "tokens_in": 566,
+      "tokens_out": 34,
+      "trace_id": "40421fbe7ccca5bed510dfd3d70814fd"
+    },
+    {
+      "id": "bitext-5eae44f303",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer needs to change their user information."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1423,
+      "tokens_in": 561,
+      "tokens_out": 33,
+      "trace_id": "72ae0204f9f7e0029801d426ece96f1a"
+    },
+    {
+      "id": "bitext-5f6a04ce40",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer is requesting a refund of their money."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1399,
+      "tokens_in": 562,
+      "tokens_out": 26,
+      "trace_id": "bde29f61e152be1f2f5366e710ac75bd"
+    },
+    {
+      "id": "bitext-6153de2bf4",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "low",
+        "summary": "Customer is asking how to view the withdrawal fee."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1027,
+      "tokens_in": 566,
+      "tokens_out": 35,
+      "trace_id": "ad87bf452ab8455539339b7cc75995a9"
+    },
+    {
+      "id": "bitext-632f3c96a9",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer needs help accessing or using the pro profile."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 960,
+      "tokens_in": 568,
+      "tokens_out": 35,
+      "trace_id": "add3a839ed3ae6402ffcaadee09aa644"
+    },
+    {
+      "id": "bitext-6337822dce",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is asking how to download an invoice."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1070,
+      "tokens_in": 568,
+      "tokens_out": 34,
+      "trace_id": "0c9aa2151d2bfa54e06997e322295dbe"
+    },
+    {
+      "id": "bitext-640e6f2d55",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is having trouble changing their shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 992,
+      "tokens_in": 556,
+      "tokens_out": 26,
+      "trace_id": "6f2c1b5cfde8aa00fdf132defde747fb"
+    },
+    {
+      "id": "bitext-644143113c",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "medium",
+        "summary": "Customer is asking how to cancel their newsletter subscription."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1671,
+      "tokens_in": 567,
+      "tokens_out": 35,
+      "trace_id": "0ffabd844d635d245194fc2693eb411e"
+    },
+    {
+      "id": "bitext-6675cc12d1",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs to know how to download bill #37777"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1220,
+      "tokens_in": 572,
+      "tokens_out": 40,
+      "trace_id": "d2566d236db00c0ee36bf8b978d745ec"
+    },
+    {
+      "id": "bitext-66c9327beb",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to contact customer service."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1578,
+      "tokens_in": 566,
+      "tokens_out": 34,
+      "trace_id": "24ba2b3b89b9efac8d15e640d81123b9"
+    },
+    {
+      "id": "bitext-69761de0be",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer needs help removing an account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1645,
+      "tokens_in": 570,
+      "tokens_out": 32,
+      "trace_id": "51c968827df03334688bf489788bc2db"
+    },
+    {
+      "id": "bitext-6a10ad7848",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "How to check the estimated delivery time for an order."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1068,
+      "tokens_in": 564,
+      "tokens_out": 36,
+      "trace_id": "0d848ab23f294deb01a2b866cf880be2"
+    },
+    {
+      "id": "bitext-6b13149ee1",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer wants assistance to switch to the standard account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1341,
+      "tokens_in": 562,
+      "tokens_out": 27,
+      "trace_id": "28c118c5d54d5bb3aaa5a4ae6650b433"
+    },
+    {
+      "id": "bitext-6b824dc7df",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer wants to update their delivery address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1272,
+      "tokens_in": 563,
+      "tokens_out": 33,
+      "trace_id": "642fcee6668ed4523c22b67d999e6b86"
+    },
+    {
+      "id": "bitext-6bc1ba4ba7",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking for customer support calling hours."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1263,
+      "tokens_in": 565,
+      "tokens_out": 34,
+      "trace_id": "287981c8b751a146f175f4dcfcec0975"
+    },
+    {
+      "id": "bitext-6e8142a12b",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs help correcting their shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1494,
+      "tokens_in": 566,
+      "tokens_out": 25,
+      "trace_id": "7b3b519ea18a2f4f0fe7bbaaaab1ae09"
+    },
+    {
+      "id": "bitext-6fd5993e5d",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking how to file a consumer reclamation or complaint."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3657,
+      "tokens_in": 564,
+      "tokens_out": 37,
+      "trace_id": "87a06ac13bb52de3f3b3449f2bd6a5c7"
+    },
+    {
+      "id": "bitext-70da4c5967",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking how to cancel their newsletter subscription."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1863,
+      "tokens_in": 566,
+      "tokens_out": 35,
+      "trace_id": "ffa4d5c1e8408ea0c1c021ac09499e41"
+    },
+    {
+      "id": "bitext-7146cd43a9",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer cannot change their address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1794,
+      "tokens_in": 559,
+      "tokens_out": 31,
+      "trace_id": "644ff9f91d0db70eaba261a50c51e375"
+    },
+    {
+      "id": "bitext-7327865ec6",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking how to check the arrival time of their purchase."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1097,
+      "tokens_in": 566,
+      "tokens_out": 38,
+      "trace_id": "2a53b2bc4eb5b9292c24729105ed72ce"
+    },
+    {
+      "id": "bitext-744e36f5af",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs help setting up a secondary shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1046,
+      "tokens_in": 562,
+      "tokens_out": 35,
+      "trace_id": "e77250423767e240127331848cca0b53"
+    },
+    {
+      "id": "bitext-7a39876530",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer needs to know how to cancel purchase {{Order Number}}"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1008,
+      "tokens_in": 564,
+      "tokens_out": 37,
+      "trace_id": "c737207b490a6cd6b1bdca7fe36b3237"
+    },
+    {
+      "id": "bitext-7b616e1f40",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to get in touch with customer service."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2552,
+      "tokens_in": 564,
+      "tokens_out": 29,
+      "trace_id": "631202b918eb576f550c645d2ce9a512"
+    },
+    {
+      "id": "bitext-7c61444f5e",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants to lodge a consumer complaint against the business."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1296,
+      "tokens_in": 562,
+      "tokens_out": 36,
+      "trace_id": "ecf416f8d49081b8205316300669dbe5"
+    },
+    {
+      "id": "bitext-7c7ecb2dd5",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Information request regarding delivery address correction"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 993,
+      "tokens_in": 559,
+      "tokens_out": 23,
+      "trace_id": "b332f1bba40aafa62770e260a43d384e"
+    },
+    {
+      "id": "bitext-7ec79ef081",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is reporting issues with online payment."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1364,
+      "tokens_in": 562,
+      "tokens_out": 33,
+      "trace_id": "c307da4e93671a4dd3a28f07a4f93fc8"
+    },
+    {
+      "id": "bitext-7f02cf3b56",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is experiencing issues editing their shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1106,
+      "tokens_in": 559,
+      "tokens_out": 34,
+      "trace_id": "a3f4277fb6238aa55a8fe69e39f1ffaa"
+    },
+    {
+      "id": "bitext-841524fb51",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs assistance to download invoice #85632"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1532,
+      "tokens_in": 566,
+      "tokens_out": 29,
+      "trace_id": "14e67882e4090d7098f9e4d0cfb5ed66"
+    },
+    {
+      "id": "bitext-8415f16253",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer needs assistance checking payment methods."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 948,
+      "tokens_in": 563,
+      "tokens_out": 32,
+      "trace_id": "bd1b94b952eddbcc602b17723ec44c18"
+    },
+    {
+      "id": "bitext-85c54c41ff",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "low",
+        "summary": "Customer wants to know how to view cancellation fees."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 950,
+      "tokens_in": 568,
+      "tokens_out": 35,
+      "trace_id": "dad27379a4c23f9fbbb61f8b77eb04d1"
+    },
+    {
+      "id": "bitext-86965c5826",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is experiencing errors when trying to enter a new shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "cohere",
+      "fallback": true,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 11363,
+      "tokens_in": 554,
+      "tokens_out": 30,
+      "trace_id": "346ae09d3776b0bb678cc4c95f00f61f"
+    },
+    {
+      "id": "bitext-86c349fe1d",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer is asking how to change to the Account Type account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1000,
+      "tokens_in": 568,
+      "tokens_out": 37,
+      "trace_id": "843705176f33ea8ec300fa50b5ce7633"
+    },
+    {
+      "id": "bitext-86ff36d3a1",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "low",
+        "summary": "Customer is asking about information regarding cancellation fees."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1360,
+      "tokens_in": 561,
+      "tokens_out": 34,
+      "trace_id": "03eafb9016104ff73424c643076d2c4a"
+    },
+    {
+      "id": "bitext-8711f923f3",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs help getting invoice #00108."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1602,
+      "tokens_in": 567,
+      "tokens_out": 37,
+      "trace_id": "b79c2e65411f1186e979a03f9ecabc6d"
+    },
+    {
+      "id": "bitext-8a967335b0",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is asking where they can update their address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1061,
+      "tokens_in": 559,
+      "tokens_out": 27,
+      "trace_id": "882eaa9a26a177b8b2b4163876c153c5"
+    },
+    {
+      "id": "bitext-8b1762558c",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is asking how to notify the company of a payment error."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1168,
+      "tokens_in": 566,
+      "tokens_out": 38,
+      "trace_id": "a7cdf45af164cb0366bfd860947fb207"
+    },
+    {
+      "id": "bitext-8b3d802a5c",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer wants help upgrading to the platinum account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3236,
+      "tokens_in": 566,
+      "tokens_out": 34,
+      "trace_id": "4631603176b68b458d8ba57a38aaf787"
+    },
+    {
+      "id": "bitext-8b99e0cd25",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking about available payment methods."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2181,
+      "tokens_in": 561,
+      "tokens_out": 33,
+      "trace_id": "73f0b55861023def97e64f0a51562f4f"
+    },
+    {
+      "id": "bitext-8be54ff56c",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer needs assistance with cancelling an order."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1121,
+      "tokens_in": 563,
+      "tokens_out": 25,
+      "trace_id": "da1e4388b041893b91de6df7081a5653"
+    },
+    {
+      "id": "bitext-8c3d09a59d",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking how to leave feedback."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2444,
+      "tokens_in": 561,
+      "tokens_out": 33,
+      "trace_id": "9838cbfb3f352bcc8bc84659bf66cc98"
+    },
+    {
+      "id": "bitext-8c6efac599",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking for help writing a review for the company."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2024,
+      "tokens_in": 560,
+      "tokens_out": 37,
+      "trace_id": "ee424366bc4568751f9b389b41b3bbc4"
+    },
+    {
+      "id": "bitext-8d18e6cd33",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer wants help viewing the bill from {{Person Name}}"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1224,
+      "tokens_in": 564,
+      "tokens_out": 36,
+      "trace_id": "2502ed461ea26245aa43fb238ebb1274"
+    },
+    {
+      "id": "bitext-8d4cdeba2a",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is asking how to report a payment problem."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 1,
+      "repaired": false,
+      "latency_ms": 8506,
+      "tokens_in": 563,
+      "tokens_out": 35,
+      "trace_id": "e3a254c5456f7973e60b20816aad0593"
+    },
+    {
+      "id": "bitext-8e38afc312",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "low",
+        "summary": "Customer is asking where to find termination penalties."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3075,
+      "tokens_in": 561,
+      "tokens_out": 34,
+      "trace_id": "c1cea7c45e39bb4ddef0ba82c6efec8c"
+    },
+    {
+      "id": "bitext-90218bd716",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking for a refund of money."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3080,
+      "tokens_in": 562,
+      "tokens_out": 34,
+      "trace_id": "dbd9e1c6864f661e43c4663cbe388cf7"
+    },
+    {
+      "id": "bitext-9121a07a08",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer wants to know the termination fee."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 4153,
+      "tokens_in": 560,
+      "tokens_out": 33,
+      "trace_id": "2589d1d3e6138a35df64fb669d007f48"
+    },
+    {
+      "id": "bitext-917814e017",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking how to check the arrival status of their product."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 673,
+      "tokens_in": 568,
+      "tokens_out": 38,
+      "trace_id": "ef2e1ba85acdf93c1bca3f5c5539d228"
+    },
+    {
+      "id": "bitext-9591b8a39f",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking for customer assistance operating hours."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1006,
+      "tokens_in": 565,
+      "tokens_out": 26,
+      "trace_id": "fea08afd2c2838faaae29cf0e607cac1"
+    },
+    {
+      "id": "bitext-95c2e5c358",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking for the status of their refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1205,
+      "tokens_in": 564,
+      "tokens_out": 35,
+      "trace_id": "a3bfb4cbe946e4b5e3ff0b522b415e43"
+    },
+    {
+      "id": "bitext-95dfba8a33",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking about accepted payment methods."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1692,
+      "tokens_in": 560,
+      "tokens_out": 33,
+      "trace_id": "b3dead705c5e02207c4a2727229aba05"
+    },
+    {
+      "id": "bitext-96ede1b14d",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking when their product will arrive."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3431,
+      "tokens_in": 562,
+      "tokens_out": 34,
+      "trace_id": "1f0ad0a3ec62a8dfebce3d420bd7892c"
+    },
+    {
+      "id": "bitext-9af6567923",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants to lodge a consumer complaint against the company."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 841,
+      "tokens_in": 563,
+      "tokens_out": 36,
+      "trace_id": "850250e233e7f3ecf6a51a8092ac62af"
+    },
+    {
+      "id": "bitext-9c66e15e70",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is having problems submitting their shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1540,
+      "tokens_in": 558,
+      "tokens_out": 34,
+      "trace_id": "eef2fb3cf693b53e7fceb6cfb729b27c"
+    },
+    {
+      "id": "bitext-9e5096fa33",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking how to cancel their order."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1114,
+      "tokens_in": 567,
+      "tokens_out": 34,
+      "trace_id": "f129512041a5b812acd7b638fd33f620"
+    },
+    {
+      "id": "bitext-9f2bc37c57",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "low",
+        "summary": "Need help to open a freemium account for daughter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1379,
+      "tokens_in": 565,
+      "tokens_out": 37,
+      "trace_id": "3bb4b11fe310191207b971be203ecf89"
+    },
+    {
+      "id": "bitext-a08edfa586",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "medium",
+        "summary": "Customer needs help unsubscribing from the corporate newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1635,
+      "tokens_in": 562,
+      "tokens_out": 28,
+      "trace_id": "6b47a0208fe9a1bb47375f473dbb05ea"
+    },
+    {
+      "id": "bitext-a3a70a621e",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking how to lodge a consumer claim."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 893,
+      "tokens_in": 564,
+      "tokens_out": 35,
+      "trace_id": "95199f523cd623b15339f9f5ea34090b"
+    },
+    {
+      "id": "bitext-a60c04dae9",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants assistance to leave feedback about a product."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1587,
+      "tokens_in": 562,
+      "tokens_out": 35,
+      "trace_id": "8940aa065837c86bf5c8124903f3f35c"
+    },
+    {
+      "id": "bitext-a8b87ca6c4",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is asking how to obtain invoice #37777."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1222,
+      "tokens_in": 565,
+      "tokens_out": 39,
+      "trace_id": "4c1ef109a4479d807754113e61494764"
+    },
+    {
+      "id": "bitext-a9464bd84c",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "low",
+        "summary": "Customer is asking for help with shopping for some articles."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1510,
+      "tokens_in": 564,
+      "tokens_out": 36,
+      "trace_id": "1aa6ec9199022b04b3a718607d56e2af"
+    },
+    {
+      "id": "bitext-ae9c0f3abe",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer needs help checking the status of an order."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1045,
+      "tokens_in": 562,
+      "tokens_out": 35,
+      "trace_id": "b1d00a98ae1e53b0ddbab3844467886f"
+    },
+    {
+      "id": "bitext-b0022d3a4d",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer wants help to speak to someone."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2335,
+      "tokens_in": 559,
+      "tokens_out": 25,
+      "trace_id": "56830ce3c327979fbd715e51e47f6534"
+    },
+    {
+      "id": "bitext-b0419480c7",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking about the cases in which they can request a refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2145,
+      "tokens_in": 565,
+      "tokens_out": 39,
+      "trace_id": "1df1421e977e122c4556659f09f40fb7"
+    },
+    {
+      "id": "bitext-b0a79d1ee2",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking for assistance to view the cancellation penalty."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3146,
+      "tokens_in": 559,
+      "tokens_out": 36,
+      "trace_id": "f5e2665db27bd060b4baf1e6f849f1fd"
+    },
+    {
+      "id": "bitext-b2e479b417",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking where to request a reimbursement."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 829,
+      "tokens_in": 562,
+      "tokens_out": 34,
+      "trace_id": "3e9f104b02cda54b5a1b42cc4097be30"
+    },
+    {
+      "id": "bitext-b5880e5146",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants to make a complaint against the business."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1604,
+      "tokens_in": 562,
+      "tokens_out": 35,
+      "trace_id": "576b49f73f1be51a089834c15c0770d7"
+    },
+    {
+      "id": "bitext-b71979c7d8",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer is asking for assistance to leave feedback about a product."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 946,
+      "tokens_in": 561,
+      "tokens_out": 29,
+      "trace_id": "355dcac9dfad10a3b8bae8a4d4f86d67"
+    },
+    {
+      "id": "bitext-b7e7283e05",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking how to request a money refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1110,
+      "tokens_in": 564,
+      "tokens_out": 35,
+      "trace_id": "fc5f53904da2552d48e413f2a0c5f54b"
+    },
+    {
+      "id": "bitext-b81e2d46e1",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking for help to receive the newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1106,
+      "tokens_in": 561,
+      "tokens_out": 27,
+      "trace_id": "33525dc7379f14dbf77e75e7391ef3f3"
+    },
+    {
+      "id": "bitext-bccdf5acdd",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer needs help to cancel order {{Order Number}}"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1113,
+      "tokens_in": 563,
+      "tokens_out": 27,
+      "trace_id": "540bd2e1a65daed978029d146b2b116a"
+    },
+    {
+      "id": "bitext-bcd45ee9ca",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking for the shipment ETA of an order."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1066,
+      "tokens_in": 565,
+      "tokens_out": 36,
+      "trace_id": "1896c59b1c66836f0af7181ccc3643b5"
+    },
+    {
+      "id": "bitext-c26942b1a5",
+      "source": "bitext",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer wants to send product feedback."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1490,
+      "tokens_in": 562,
+      "tokens_out": 32,
+      "trace_id": "183e6f293af3440d4729a4cb1b1494cd"
+    },
+    {
+      "id": "bitext-c3cd1fe5ed",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs help viewing their bill."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1161,
+      "tokens_in": 562,
+      "tokens_out": 24,
+      "trace_id": "6e4990944a27c900ea0ced9cf26f28a4"
+    },
+    {
+      "id": "bitext-c7d6650cae",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking to speak with an operator."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": true,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1306,
+      "tokens_in": 563,
+      "tokens_out": 34,
+      "trace_id": "4b8a213bea37dee9ee57349f1058e628"
+    },
+    {
+      "id": "bitext-c88fa6cf43",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs to enter a shipping address"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1703,
+      "tokens_in": 560,
+      "tokens_out": 33,
+      "trace_id": "7b922ccf991e13c64d2c315f15be5383"
+    },
+    {
+      "id": "bitext-c96d51b9f2",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer forgot to include products in their purchase."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1782,
+      "tokens_in": 565,
+      "tokens_out": 34,
+      "trace_id": "e7a666137f20fe42ec6884e976ae9fcb"
+    },
+    {
+      "id": "bitext-ca5f39891c",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer wants to check the estimated delivery time for their order."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2638,
+      "tokens_in": 563,
+      "tokens_out": 37,
+      "trace_id": "86d259fe6223e29b187cdbf9859a77ff"
+    },
+    {
+      "id": "bitext-cb51d51d69",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking for the ETA of their purchase {{Order Number}}"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 742,
+      "tokens_in": 565,
+      "tokens_out": 38,
+      "trace_id": "ef49c480b3b335ac6308327f2f6891ff"
+    },
+    {
+      "id": "bitext-cbbf455ae0",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking for help to get rebates of their money."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3209,
+      "tokens_in": 561,
+      "tokens_out": 29,
+      "trace_id": "738ca4407f9e263bf84103e885fcb004"
+    },
+    {
+      "id": "bitext-cced7fd709",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is experiencing errors while trying to edit their shipping address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 8657,
+      "tokens_in": 562,
+      "tokens_out": 37,
+      "trace_id": "808de38d539d5c6a19f90395be447949"
+    },
+    {
+      "id": "bitext-cd5e004fb1",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer needs help requesting compensation."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 8389,
+      "tokens_in": 560,
+      "tokens_out": 31,
+      "trace_id": "1d53b417ce57d9229e2c6e9ab6e8ddcd"
+    },
+    {
+      "id": "bitext-d0acee6e3d",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer needs to know how to report a payment error."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 5102,
+      "tokens_in": 567,
+      "tokens_out": 36,
+      "trace_id": "401c594d09eb6adee956bd4119313ff3"
+    },
+    {
+      "id": "bitext-d1020392d2",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Customer is asking about normal delivery times for an item."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1750,
+      "tokens_in": 565,
+      "tokens_out": 36,
+      "trace_id": "ed8c2d8bb64c13f60dcfaaac62aca3b2"
+    },
+    {
+      "id": "bitext-d1e3b4a0ac",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": null,
+      "error": {
+        "class": "timeout",
+        "message": "cohere did not answer in time"
+      },
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": false,
+      "latency_ms": null,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "trace_id": "bb652f0fd8f6658aa9db11949e908fdf"
+    },
+    {
+      "id": "bitext-d2dc255aa2",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": null,
+      "error": {
+        "class": "timeout",
+        "message": "cohere did not answer in time"
+      },
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": false,
+      "latency_ms": null,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "trace_id": "32759bfdfdae188a66b42d523b3f4d40"
+    },
+    {
+      "id": "bitext-d775095183",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": null,
+      "error": {
+        "class": "timeout",
+        "message": "cohere did not answer in time"
+      },
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": false,
+      "latency_ms": null,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "trace_id": "a31c65379598220a845b8034c1edcfa0"
+    },
+    {
+      "id": "bitext-d8bcb7a9a0",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": null,
+      "error": {
+        "class": "timeout",
+        "message": "cohere did not answer in time"
+      },
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": null
+      },
+      "cached": false,
+      "latency_ms": null,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "trace_id": "b80275da9dfc0bef40ba18ca6ee40767"
+    },
+    {
+      "id": "bitext-da022b2203",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer wants to know how to reach customer support."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "cohere",
+      "fallback": true,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 19514,
+      "tokens_in": 560,
+      "tokens_out": 27,
+      "trace_id": "cb5fe1086eaf5c0a07b8e944c6fd235f"
+    },
+    {
+      "id": "bitext-dc1bfbf7b3",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer needs assistance to check the ETA of order {{Order Number}}"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "cohere",
+      "fallback": true,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 11947,
+      "tokens_in": 562,
+      "tokens_out": 35,
+      "trace_id": "f98a4ba9f29cba50d2041bf0ba08f735"
+    },
+    {
+      "id": "bitext-dc26c2f2b2",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "medium",
+        "summary": "Customer wants to cancel their newsletter subscription."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 6277,
+      "tokens_in": 563,
+      "tokens_out": 33,
+      "trace_id": "17292ecffce726e45b3f2b61e4f21686"
+    },
+    {
+      "id": "bitext-df7e4db1cf",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer wants to cancel order {{Order Number}}"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "cohere",
+      "fallback": true,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 5567,
+      "tokens_in": 556,
+      "tokens_out": 31,
+      "trace_id": "e67a1ca945a0dc2b640f598fca0a93d7"
+    },
+    {
+      "id": "bitext-dfca4e0062",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer is asking about how to sign up for the newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1220,
+      "tokens_in": 563,
+      "tokens_out": 29,
+      "trace_id": "e7a2088a256f87705b026933d72a7152"
+    },
+    {
+      "id": "bitext-e5590f7b4d",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "low",
+        "summary": "Customer wants information about opening accounts."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1379,
+      "tokens_in": 563,
+      "tokens_out": 32,
+      "trace_id": "9b4ead9a0bb3bb5592cea280e859d584"
+    },
+    {
+      "id": "bitext-e55c71d720",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to contact a customer service operator."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1853,
+      "tokens_in": 563,
+      "tokens_out": 36,
+      "trace_id": "0e7592374efe46a8877cd18f5c3f292b"
+    },
+    {
+      "id": "bitext-e6cdcd8cbf",
+      "source": "bitext",
+      "expected": {
+        "category": "order",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer needs help purchasing items."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1208,
+      "tokens_in": 560,
+      "tokens_out": 31,
+      "trace_id": "4659916d35adabb90ccbd2fe6947eca0"
+    },
+    {
+      "id": "bitext-ea62aff5e1",
+      "source": "bitext",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking for the expected delivery time of their order."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2153,
+      "tokens_in": 563,
+      "tokens_out": 37,
+      "trace_id": "a3dc1e387d61250f3fab23c26c92825c"
+    },
+    {
+      "id": "bitext-ebaeac11a2",
+      "source": "bitext",
+      "expected": {
+        "category": "cancel",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "low",
+        "summary": "Customer needs assistance to check the cancellation fee."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1950,
+      "tokens_in": 561,
+      "tokens_out": 34,
+      "trace_id": "6d5097e12a99a62b5ffbee30059000e1"
+    },
+    {
+      "id": "bitext-ec995abc80",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to contact a person."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2234,
+      "tokens_in": 560,
+      "tokens_out": 26,
+      "trace_id": "0a0858bd3f55d9db99e4ed5953270deb"
+    },
+    {
+      "id": "bitext-eeb0beafa4",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer cannot make payments and wants to know how to report payment issues."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1951,
+      "tokens_in": 564,
+      "tokens_out": 39,
+      "trace_id": "d0340a35421d92ef8574c02ea8d1b4df"
+    },
+    {
+      "id": "bitext-ef5c4f11a6",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is unable to check the status of their restitution."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1139,
+      "tokens_in": 566,
+      "tokens_out": 36,
+      "trace_id": "67629ad9b9b838fdd7e56a12b36e91ba"
+    },
+    {
+      "id": "bitext-efc703c5ac",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "medium",
+        "summary": "Customer is asking for help checking their refund status."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2349,
+      "tokens_in": 559,
+      "tokens_out": 35,
+      "trace_id": "8db812e671f5bb41e2653e3c8ba63830"
+    },
+    {
+      "id": "bitext-f047ad569e",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking for customer service calling hours."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1010,
+      "tokens_in": 565,
+      "tokens_out": 34,
+      "trace_id": "28caec20b82412f50a8f47345365ddc3"
+    },
+    {
+      "id": "bitext-f22c457e69",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer needs assistance with a signup issue."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1397,
+      "tokens_in": 564,
+      "tokens_out": 33,
+      "trace_id": "e78e949bab0f8bd894c8e1b077fb0890"
+    },
+    {
+      "id": "bitext-f26121c2e4",
+      "source": "bitext",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer needs assistance editing their delivery address."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "cohere",
+      "fallback": true,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 16118,
+      "tokens_in": 557,
+      "tokens_out": 30,
+      "trace_id": "b0064c4d2125b52b93fe8c057cd31f9c"
+    },
+    {
+      "id": "bitext-f4baaf7b7e",
+      "source": "bitext",
+      "expected": {
+        "category": "account",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "account",
+        "priority": "medium",
+        "summary": "Customer needs assistance with opening a standard account."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "cohere",
+      "fallback": true,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 10988,
+      "tokens_in": 554,
+      "tokens_out": 31,
+      "trace_id": "496825b06785567102a6965848ff525b"
+    },
+    {
+      "id": "bitext-f571b402be",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs help finding or downloading bill #85632."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 5418,
+      "tokens_in": 573,
+      "tokens_out": 39,
+      "trace_id": "6a4151db3dc67c37255cc8e512922a14"
+    },
+    {
+      "id": "bitext-f6f3b3a317",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs to know how to download invoice #85632"
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1529,
+      "tokens_in": 569,
+      "tokens_out": 31,
+      "trace_id": "8f347d5165230c24622a7110e6f4a9c3"
+    },
+    {
+      "id": "bitext-f730282c92",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking for customer support operating hours."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1788,
+      "tokens_in": 562,
+      "tokens_out": 26,
+      "trace_id": "eb3900f9c9bd3b4118f5b874bed4e2df"
+    },
+    {
+      "id": "bitext-f7d8114633",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer needs help speaking with a live agent."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1377,
+      "tokens_in": 562,
+      "tokens_out": 34,
+      "trace_id": "f8ba24fbf51ae4a7244fa253b5fbe6c9"
+    },
+    {
+      "id": "bitext-fb33bef3d4",
+      "source": "bitext",
+      "expected": {
+        "category": "subscription",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "low",
+        "summary": "Customer wants to sign up for the corporate newsletter."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1932,
+      "tokens_in": 562,
+      "tokens_out": 27,
+      "trace_id": "f9e14ee38ea1c76bc38891694e3d5006"
+    },
+    {
+      "id": "bitext-fcfaa3fd11",
+      "source": "bitext",
+      "expected": {
+        "category": "refund",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking how to request a refund."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1988,
+      "tokens_in": 561,
+      "tokens_out": 34,
+      "trace_id": "fcb29b8335e0a81b4726911c38e7c294"
+    },
+    {
+      "id": "bitext-fd18dd5c9d",
+      "source": "bitext",
+      "expected": {
+        "category": "payment",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "low",
+        "summary": "Customer is asking how to view accepted payment modalities."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1543,
+      "tokens_in": 567,
+      "tokens_out": 35,
+      "trace_id": "810c7a330b21671f6f24bbcaee60cf14"
+    },
+    {
+      "id": "bitext-feaa7e5279",
+      "source": "bitext",
+      "expected": {
+        "category": "contact",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking how to contact customer support."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 883,
+      "tokens_in": 567,
+      "tokens_out": 34,
+      "trace_id": "7c6074009169485bec7af802fd3ced00"
+    },
+    {
+      "id": "bitext-feb532ab36",
+      "source": "bitext",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer needs to know how to find invoice #85632."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1020,
+      "tokens_in": 569,
+      "tokens_out": 40,
+      "trace_id": "2fbcdba7ede7c5b818b755b5c22be26e"
+    },
+    {
+      "id": "messy-05",
+      "source": "messy",
+      "expected": {
+        "category": "cancel",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "cancel",
+        "priority": "medium",
+        "summary": "Customer is asking about cancellation fees and mentions a previous waiver."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1919,
+      "tokens_in": 579,
+      "tokens_out": 37,
+      "trace_id": "66b46d2933f2d3c185735da07eb46590"
+    },
+    {
+      "id": "messy-06",
+      "source": "messy",
+      "expected": {
+        "category": "contact",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "contact",
+        "priority": "low",
+        "summary": "Customer is asking for the customer service phone number."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1824,
+      "tokens_in": 575,
+      "tokens_out": 35,
+      "trace_id": "09876e1834c111d68e6bc5669dda9c4e"
+    },
+    {
+      "id": "messy-08",
+      "source": "messy",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Inquiring about delivery options and next day availability for Islamabad."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1011,
+      "tokens_in": 567,
+      "tokens_out": 38,
+      "trace_id": "4b5c3bf32ae9ba7eb649f3af7879f1c9"
+    },
+    {
+      "id": "messy-09",
+      "source": "messy",
+      "expected": {
+        "category": "delivery",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "medium",
+        "summary": "Customer is asking about delivery time and needs the order by Friday for a wedding."
+      },
+      "error": null,
+      "grade": {
+        "category": false,
+        "priority": true,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1085,
+      "tokens_in": 570,
+      "tokens_out": 41,
+      "trace_id": "c571f553939d46a1280172fd96e6145a"
+    },
+    {
+      "id": "messy-10",
+      "source": "messy",
+      "expected": {
+        "category": "delivery",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "delivery",
+        "priority": "low",
+        "summary": "Inquiring about standard delivery times to Lahore, Sunday deliveries, and express options."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1527,
+      "tokens_in": 582,
+      "tokens_out": 42,
+      "trace_id": "dba8fca235ae519a321d5db862869aca"
+    },
+    {
+      "id": "messy-11",
+      "source": "messy",
+      "expected": {
+        "category": "feedback",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "high",
+        "summary": "Customer complains about app crashing during checkout and unhelpful support, threatening to leave."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1249,
+      "tokens_in": 580,
+      "tokens_out": 41,
+      "trace_id": "209650c20e961dea67b68e939795bbfd"
+    },
+    {
+      "id": "messy-12",
+      "source": "messy",
+      "expected": {
+        "category": "feedback",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer shares a positive delivery experience and asks where to leave a review."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2125,
+      "tokens_in": 584,
+      "tokens_out": 39,
+      "trace_id": "b6d4708d4b3fed3551db395852774e91"
+    },
+    {
+      "id": "messy-13",
+      "source": "messy",
+      "expected": {
+        "category": "feedback",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "feedback",
+        "priority": "low",
+        "summary": "Customer complaining about a rude phone agent who hung up twice."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": false,
+        "both": false,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1160,
+      "tokens_in": 575,
+      "tokens_out": 29,
+      "trace_id": "2c8c74b2c733803d42f5e6e23933675e"
+    },
+    {
+      "id": "messy-14",
+      "source": "messy",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer cannot find the invoice for their last purchase in the app."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1533,
+      "tokens_in": 574,
+      "tokens_out": 38,
+      "trace_id": "8c42d6d7dfb3474791b07184254110d6"
+    },
+    {
+      "id": "messy-15",
+      "source": "messy",
+      "expected": {
+        "category": "invoice",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "medium",
+        "summary": "Customer is asking where to download invoices for the last three months for tax purposes."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 969,
+      "tokens_in": 575,
+      "tokens_out": 41,
+      "trace_id": "fa4edaff2248cef0ff53d24e0cde5ba3"
+    },
+    {
+      "id": "messy-16",
+      "source": "messy",
+      "expected": {
+        "category": "invoice",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "invoice",
+        "priority": "high",
+        "summary": "Incorrect company name and overcharge of 2,400 instead of 2,000 on invoice for order 48213."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2444,
+      "tokens_in": 602,
+      "tokens_out": 57,
+      "trace_id": "4670eee63763faf3e5e22729480dfd35"
+    },
+    {
+      "id": "messy-19",
+      "source": "messy",
+      "expected": {
+        "category": "order",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "high",
+        "summary": "Order is past its delivery date with no tracking updates for 9 days and threat of bank dispute."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1582,
+      "tokens_in": 593,
+      "tokens_out": 45,
+      "trace_id": "02a99c7256be639b5b6ca21e0bee720c"
+    },
+    {
+      "id": "messy-20",
+      "source": "messy",
+      "expected": {
+        "category": "order",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "order",
+        "priority": "high",
+        "summary": "Customer wants to locate missing order PK-77120 after failed delivery and unresponsive chat agents."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1569,
+      "tokens_in": 885,
+      "tokens_out": 46,
+      "trace_id": "3b3495b837ba880b59e032aa810ef5de"
+    },
+    {
+      "id": "messy-22",
+      "source": "messy",
+      "expected": {
+        "category": "payment",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "payment",
+        "priority": "medium",
+        "summary": "Customer is asking about accepted payment methods as their card is declined."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2267,
+      "tokens_in": 569,
+      "tokens_out": 38,
+      "trace_id": "93115e1bcc460fbfc2ec393bcc0e9985"
+    },
+    {
+      "id": "messy-24",
+      "source": "messy",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer is threatening legal action if their missing refund is not received by Monday."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 2185,
+      "tokens_in": 589,
+      "tokens_out": 40,
+      "trace_id": "c108be80a725a4ee59b98c7f5edc4b40"
+    },
+    {
+      "id": "messy-25",
+      "source": "messy",
+      "expected": {
+        "category": "refund",
+        "priority": "low"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "low",
+        "summary": "Customer is asking about the refund policy for opened products."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 3519,
+      "tokens_in": 576,
+      "tokens_out": 36,
+      "trace_id": "23789eca8f42044353fee1ffa2ab0cfc"
+    },
+    {
+      "id": "messy-26",
+      "source": "messy",
+      "expected": {
+        "category": "refund",
+        "priority": "high"
+      },
+      "answer": {
+        "category": "refund",
+        "priority": "high",
+        "summary": "Customer has not received a refund of 18,500 rupees after 18 days."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 4769,
+      "tokens_in": 837,
+      "tokens_out": 46,
+      "trace_id": "6ee8021be0ec9a20c76b349244a482c6"
+    },
+    {
+      "id": "messy-27",
+      "source": "messy",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer wants to change the shipping address to House 12, Street 4, G-11 Islamabad and checks order status."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 833,
+      "tokens_in": 594,
+      "tokens_out": 52,
+      "trace_id": "56e4d14e3251cdc198d7d5f856674df9"
+    },
+    {
+      "id": "messy-28",
+      "source": "messy",
+      "expected": {
+        "category": "shipping",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "shipping",
+        "priority": "medium",
+        "summary": "Customer is asking how to set up a different shipping address for gifts."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 6523,
+      "tokens_in": 573,
+      "tokens_out": 31,
+      "trace_id": "2442881c87a7be2c1c34197fbef9564a"
+    },
+    {
+      "id": "messy-29",
+      "source": "messy",
+      "expected": {
+        "category": "subscription",
+        "priority": "medium"
+      },
+      "answer": {
+        "category": "subscription",
+        "priority": "medium",
+        "summary": "Customer wants to unsubscribe from the newsletter as the link is not working."
+      },
+      "error": null,
+      "grade": {
+        "category": true,
+        "priority": true,
+        "both": true,
+        "dangerous_miss": false,
+        "summary": {
+          "present": true,
+          "length_ok": true,
+          "numbers_ok": true,
+          "ok": true
+        }
+      },
+      "cached": false,
+      "provider": "gemini",
+      "fallback": false,
+      "retries": 0,
+      "repaired": false,
+      "latency_ms": 1038,
+      "tokens_in": 574,
+      "tokens_out": 39,
+      "trace_id": "a8060d8eee46840b7dc0327733d8e540"
+    }
+  ]
+}

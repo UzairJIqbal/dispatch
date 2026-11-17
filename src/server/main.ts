@@ -13,7 +13,7 @@ import { loadPrompt } from "../triage/prompt.js";
 import { triage } from "../triage/triage.js";
 import { createApp } from "./app.js";
 import { parseServiceConfig } from "./config.js";
-import { upstashLimiter } from "./ratelimit.js";
+import { unlimited, upstashLimiter } from "./ratelimit.js";
 
 // How long in-flight requests get to finish after SIGTERM before we exit anyway.
 // Longer than the gateway's 20 s deadline, so a request in the middle of a
@@ -82,10 +82,12 @@ function start(): void {
     enableTelemetry: false,
   });
 
+  if (config.rateLimit === "off") log.warn({ event: "ratelimit.off" }, "RATE_LIMIT=off: no per-client limit (mock load test only)");
+
   let shuttingDown = false;
   const app = createApp({
     clients: config.clients,
-    limiter: upstashLimiter(redis, log, config.redis.prefix),
+    limiter: config.rateLimit === "off" ? unlimited : upstashLimiter(redis, log, config.redis.prefix),
     promptVersion: release.stable,
     triage: (text, { log: requestLog }) => triage(text, release.stable, { gateway, log: requestLog, ...(config.provider ? { provider: config.provider } : {}) }),
     readiness: {
