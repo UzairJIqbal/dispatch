@@ -70,10 +70,27 @@ to send v3 through. v3 can't ship through a canary until that exists.
 to let it through. Tokens went down 14% and list cost 10% on dev, accuracy moved inside the
 noise floor, and no new dangerous misses appeared.
 
-The latency fail is probably not the prompt: v3 sends fewer tokens, and the same night the
-dev run, Langfuse exports and Cohere fallbacks all showed slow or reset connections. That is
-a guess until a rerun of the gate job at a quiet hour (about 74 real calls) says otherwise.
-If it passes, v3 can merge; if it fails again, this experiment failed on latency.
+**Reruns (2026-11-17).** The first rerun passed, but it is not counted: 72 of 74 answers came
+from the response cache the failed run had saved, so its p95 (1.30 s) was measured on n=2.
+With that cache deleted, a full uncached rerun failed the same rule again:
+
+| Rule | main (v2) | v3, uncached rerun | Result |
+|---|---:|---:|---|
+| Both correct | 70.3% (52/74) | 70.3% (52/74) | pass |
+| New dangerous misses | 5 | 4 | pass (0 new, 1 fixed) |
+| Schema-valid first try | 100% | 100% | pass |
+| Cost per request | $0.00029 | $0.00029 | pass (+2.9%) |
+| p95 latency | 1.64 s (n=74) | 7.75 s (n=74) | **fail** (+371.7%) |
+
+v3's p50 was 0.92 s. Its p95 is set by the 3 or 4 slowest of 74 tickets, and in this run
+that was 1 retry and 2 Cohere fallbacks, each waiting out the 10 s attempt timeout. So this
+experiment failed on latency as the gate measures it. The prompt is a likely but unproven
+cause: the same v2 prompt measured a p95 of 9.57 s in Phase 2 (`results/baseline.json`)
+and 1.64 s on main's latest gate run.
+
+Two things about the gate itself, left for the owner to decide on (not changed here):
+a rerun can reuse the cache and judge latency on a handful of calls, and a p95 over 74
+tickets moves with two provider hiccups.
 
 The gate's own cost rule saw +3.4% on the test split while dev showed −10%: cost per request
 counts failed and fallback calls too, and the slow night pushed two tickets to Cohere, which
