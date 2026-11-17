@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { PROVIDERS } from "../src/gateway/config.js";
 import { ERROR_CLASSES } from "../src/gateway/errors.js";
 import { Gateway, type GatewayOptions } from "../src/gateway/gateway.js";
-import { LATENCY_BUCKETS, Metrics, ROUTES } from "../src/metrics/metrics.js";
+import { LATENCY_BUCKETS, Metrics, OUTCOMES, RELEASES, ROUTES } from "../src/metrics/metrics.js";
 import { createApp } from "../src/server/app.js";
 import { hashKey, newClientKey, parseClientKeys } from "../src/server/clients.js";
 import { HTTP_ERRORS } from "../src/server/errors.js";
@@ -31,8 +31,8 @@ async function serve(opts: { mocks?: GatewayOptions["mocks"]; metricsPassword?: 
   const app = createApp({
     clients,
     limiter: { check: () => Promise.resolve({ allowed: true }) },
-    promptVersion: "v2",
-    triage: (text, { log: requestLog }) => triage(text, "v2", { gateway, provider: "mock", log: requestLog }),
+    release: () => ({ release: "stable", version: "v2" }),
+    triage: (text, { log: requestLog, version }) => triage(text, version, { gateway, provider: "mock", log: requestLog }),
     readiness: {},
     log,
     isShuttingDown: () => false,
@@ -71,7 +71,7 @@ const LABELS: Readonly<Record<string, Readonly<Record<string, (v: string) => boo
   dispatch_request_duration_seconds: {
     prompt_version: (v) => /^v\d+$/.test(v),
     provider: (v) => PROVIDER_VALUES.has(v),
-    release: (v) => v === "stable",
+    release: (v) => (RELEASES as readonly string[]).includes(v),
     le: (v) => v === "+Inf" || LATENCY_BUCKETS.map(String).includes(v),
   },
   dispatch_attempt_duration_seconds: { provider: (v) => PROVIDER_VALUES.has(v), le: (v) => v === "+Inf" || LATENCY_BUCKETS.map(String).includes(v) },
@@ -83,6 +83,13 @@ const LABELS: Readonly<Record<string, Readonly<Record<string, (v: string) => boo
   dispatch_schema_failures_total: { provider: (v) => PROVIDER_VALUES.has(v) },
   dispatch_circuit_state: { provider: (v) => PROVIDER_VALUES.has(v) },
   dispatch_price_table_info: { date: (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) },
+  dispatch_release_requests_total: {
+    release: (v) => (RELEASES as readonly string[]).includes(v),
+    prompt_version: (v) => /^v\d+$/.test(v),
+    outcome: (v) => (OUTCOMES as readonly string[]).includes(v),
+  },
+  dispatch_release_rollbacks_total: {},
+  dispatch_release_canary_weight: {},
 };
 
 describe("labels", () => {

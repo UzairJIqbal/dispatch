@@ -51,8 +51,8 @@ async function serve(mocks: GatewayOptions["mocks"] = {}): Promise<{ url: string
   const app = createApp({
     clients,
     limiter: { check: () => Promise.resolve({ allowed: true }) },
-    promptVersion: "v2",
-    triage: (text, { log: requestLog }) => triage(text, "v2", { gateway, provider: "mock", log: requestLog }),
+    release: () => ({ release: "stable", version: "v2" }),
+    triage: (text, { log: requestLog, version }) => triage(text, version, { gateway, provider: "mock", log: requestLog }),
     readiness: {},
     log,
     isShuttingDown: () => false,

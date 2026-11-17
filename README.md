@@ -69,9 +69,9 @@ curl -s localhost:3000/v1/triage \
   -d '{"text": "I was charged twice for my order"}'
 ```
 
-The answer is the triage JSON plus `meta: { prompt_version, model, provider, fallback, git_sha, request_id, trace_id, latency_ms }`; `fallback: true` means the primary failed and the fallback provider answered. Errors are `{ "error": { "class", "message" } }`. About the client's request: `bad_request` 400, `unauthorized` 401, `too_large` 413 (over 4,000 characters), `rate_limit` 429 with `Retry-After`. From the gateway (never the client's fault): `rate_limit`, `provider_5xx`, `connection`, `auth` and `circuit_open` 503, `timeout` 504, `schema_fail` and `bad_request` 502. `GET /healthz` says the process is up; `GET /readyz` checks config, Redis, provider keys and the circuits, and names the one that fails.
+The answer is the triage JSON plus `meta: { prompt_version, release, model, provider, fallback, git_sha, request_id, trace_id, latency_ms }`; `fallback: true` means the primary failed and the fallback provider answered. Errors are `{ "error": { "class", "message" } }`. About the client's request: `bad_request` 400, `unauthorized` 401, `too_large` 413 (over 4,000 characters), `rate_limit` 429 with `Retry-After`. From the gateway (never the client's fault): `rate_limit`, `provider_5xx`, `connection`, `auth` and `circuit_open` 503, `timeout` 504, `schema_fail` and `bad_request` 502. `GET /healthz` says the process is up; `GET /readyz` checks config, Redis, provider keys and the circuits, and names the one that fails.
 
-Both `pnpm dev` and docker compose use the mock unless `DISPATCH_PROVIDER=gemini` is set. Which prompt version is live comes from `config/release.yaml`. Every variable is in `.env.example`.
+Both `pnpm dev` and docker compose use the mock unless `DISPATCH_PROVIDER=gemini` is set. Which prompt version is live comes from the release config in Redis (`config/release.yaml` until one is written; see [Canary release](#canary-release)). Every variable is in `.env.example`.
 
 | Service | Free limit that matters (checked 2026-10-28) | What it means here |
 |---|---|---|
@@ -145,6 +145,33 @@ Production traffic is synthetic: the probe, the smoke tests and requests sent by
 | Gemini (free tier) | A daily request quota per model, shared by everything using the key | The probe spends about 48 calls a day and each staging deploy 3, from the same quota as `pnpm eval`. |
 
 Sources: [Container Apps pricing](https://azure.microsoft.com/pricing/details/container-apps/), [Container Apps billing](https://learn.microsoft.com/azure/container-apps/billing), [Azure Retail Prices API](https://learn.microsoft.com/rest/api/cost-management/retail-prices/azure-retail-prices), [Grafana Cloud pricing](https://grafana.com/pricing/), [Metrics Endpoint integration](https://grafana.com/docs/grafana-cloud/monitor-infrastructure/integrations/integration-reference/integration-metrics-endpoint/), [GitHub schedule event](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows).
+
+## Canary release
+
+A canary is a new prompt version that gets a small share of real traffic while the stable one keeps the rest, so a bad change hurts a few requests instead of all of them. Which version is stable, the canary and its share, and the rollback criteria live in Upstash Redis under `<REDIS_KEY_PREFIX>:release`, validated with Zod. The service re-reads it every 30 s, so a release never needs a rebuild or a redeploy. Every answer, log line, trace and metric says `release: stable | canary`.
+
+```bash
+pnpm release status                       # what is written, what the service serves, which prompts its image has
+pnpm release set-criteria                 # first: after 50 canary requests, roll back if p95 > 1.25x stable,
+                                          #   errors > stable + 2 points, or schema-valid < 95% (last 10 min)
+pnpm release canary v1 10 --target staging  # 10% to v1; refused if v1 isn't in the deployed image
+pnpm release promote                      # the canary becomes stable
+pnpm release rollback                     # every request back to stable within 30 s
+```
+
+Each command prints the config before and after. One canary at a time; criteria can't change while one runs. `--target` is `local` (default), `staging` (`STAGING_URL`) or `prod` (`PROD_URL`); the command asks that service which Redis key it reads, so staging's release can't land in production's key.
+
+**Auto-rollback.** Every minute the service compares the canary with stable over the last 10 minutes of its own requests (p95 is the latency 95% of requests are under). If a criterion breaks it sets the canary to none, logs `release.rollback` with the numbers, and counts `dispatch_release_rollbacks_total`. It runs inside the one instance we run. With more instances each would only see its share and they could race: the check would then run once, behind a Redis lock with a short expiry, judging on the summed Prometheus series instead of one process's memory.
+
+Drill on the mock, zero real calls: `MOCK_CANARY_MODE=slow` slows only canary requests (any `MOCK_MODE` value works). Locally (2026-11-18) it rolled the canary back after its 50th canary request: canary p95 8.13 s against stable 0.004 s (n=50 canary, 61 stable).
+
+```bash
+REDIS_KEY_PREFIX=dispatch-local MOCK_CANARY_MODE=slow RATE_LIMIT=off pnpm dev
+pnpm release set-criteria && pnpm release canary v1 50
+pnpm traffic --rate 1.5 --duration 150    # release.rollback in the log after ~50 canary requests
+```
+
+The Grafana dashboard has a "Canary vs stable" row: requests, p95, error rate and schema-valid rate by release, with markers for release changes and auto-rollbacks.
 
 ## Load and cost
 

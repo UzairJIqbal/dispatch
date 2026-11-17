@@ -5,11 +5,15 @@ import { collectDefaultMetrics } from "prom-client";
 import { gitSha, loadEnv } from "../env.js";
 import { loadModelsConfig, resolveChain } from "../gateway/config.js";
 import { Gateway } from "../gateway/gateway.js";
+import { mockSetupFromEnv } from "../gateway/mock.js";
 import { Metrics } from "../metrics/metrics.js";
-import { loadReleaseConfig } from "../release/config.js";
+import { loadReleaseConfig, releaseKey } from "../release/config.js";
+import { canaryAwareMocks, canaryModeFromEnv, withRelease } from "../release/mock.js";
+import { AutoRollback } from "../release/rollback.js";
+import { ReleaseStore, upstashBackend } from "../release/store.js";
 import { parseTracingConfig } from "../tracing/config.js";
 import { setupTracing, traceMixin, type Tracing } from "../tracing/tracing.js";
-import { loadPrompt } from "../triage/prompt.js";
+import { loadPrompt, promptVersions } from "../triage/prompt.js";
 import { triage } from "../triage/triage.js";
 import { createApp } from "./app.js";
 import { parseServiceConfig } from "./config.js";
@@ -23,6 +27,10 @@ const DRAIN_MS = 25_000;
 const REDIS_PING_TIMEOUT_MS = 2_000;
 // Pending spans get this long on exit. Inside the host's 30 s even after a full drain.
 const TRACE_FLUSH_MS = 3_000;
+// The spec's numbers: a release change reaches every request within 30 s,
+// and the canary is judged once a minute.
+const RELEASE_REFRESH_MS = 30_000;
+const ROLLBACK_CHECK_MS = 60_000;
 
 function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -35,12 +43,14 @@ function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
   });
 }
 
-function start(): void {
+async function start(): Promise<void> {
   loadEnv();
   // Everything that can be wrong with config is found here, before listening.
   const config = parseServiceConfig(process.env);
-  const release = loadReleaseConfig();
-  const prompt = loadPrompt(release.stable);
+  // The file is the default until Redis answers, and whenever Redis has no release config.
+  const releaseFile = loadReleaseConfig();
+  const prompt = loadPrompt(releaseFile.stable);
+  const canaryMode = canaryModeFromEnv();
   const models = loadModelsConfig();
   const chain = resolveChain(models, prompt.model, config.provider);
 
@@ -69,7 +79,8 @@ function start(): void {
   collectDefaultMetrics({ register: metrics.registry });
   metrics.priceTable(models.prices.date);
 
-  const gateway = new Gateway({ config: models, log, metrics });
+  const gateway = new Gateway({ config: models, log, metrics, mocks: canaryAwareMocks(mockSetupFromEnv(), canaryMode) });
+  if (canaryMode) log.warn({ event: "mock.canary_mode", mode: canaryMode }, `MOCK_CANARY_MODE=${canaryMode}: the mock fails on purpose for canary requests only`);
   // Makes every provider in the chain now, which fails here, naming the
   // variable, if the primary's or the fallback's key is missing.
   gateway.prepare(prompt.model, config.provider);
@@ -82,14 +93,48 @@ function start(): void {
     enableTelemetry: false,
   });
 
+  const backend = upstashBackend(config.redis.url, config.redis.token, releaseKey(config.redis.prefix));
+  const store = new ReleaseStore({
+    backend,
+    fallback: releaseFile,
+    // A version is servable when its prompt file is in this image and valid,
+    // and its model alias resolves to providers whose keys are set.
+    checkVersion: (version) => {
+      gateway.prepare(loadPrompt(version).model, config.provider);
+    },
+    log,
+  });
+  // Before listening, so the first request already follows Redis. If Redis
+  // doesn't answer, the file default serves and the timer keeps trying.
+  await withTimeout(store.refresh(), REDIS_PING_TIMEOUT_MS, "Redis").catch((err: unknown) => {
+    log.warn({ event: "release.startup" }, `release config not read at startup, serving ${releaseFile.stable} from the file: ${err instanceof Error ? err.message : String(err)}`);
+  });
+  store.start(RELEASE_REFRESH_MS);
+  metrics.readCanaryWeight(() => store.current().canary?.weight ?? 0);
+  metrics.releaseVersion("stable", store.current().stable);
+  const autoRollback = new AutoRollback({ store, backend, log, metrics });
+  autoRollback.start(ROLLBACK_CHECK_MS);
+
   if (config.rateLimit === "off") log.warn({ event: "ratelimit.off" }, "RATE_LIMIT=off: no per-client limit (mock load test only)");
 
   let shuttingDown = false;
   const app = createApp({
     clients: config.clients,
     limiter: config.rateLimit === "off" ? unlimited : upstashLimiter(redis, log, config.redis.prefix),
-    promptVersion: release.stable,
-    triage: (text, { log: requestLog }) => triage(text, release.stable, { gateway, log: requestLog, ...(config.provider ? { provider: config.provider } : {}) }),
+    release: () => {
+      const pick = store.pick();
+      metrics.releaseVersion(pick.release, pick.version);
+      return pick;
+    },
+    triage: (text, { log: requestLog, release, version }) =>
+      withRelease(release, () => triage(text, version, { gateway, log: requestLog, ...(config.provider ? { provider: config.provider } : {}) })),
+    observe: (o) => {
+      autoRollback.observe(o);
+    },
+    releaseInfo: () => {
+      const { config: current, source } = store.info();
+      return { stable: current.stable, canary: current.canary, criteria: current.criteria, source, key: store.key, prompt_versions: promptVersions() };
+    },
     readiness: {
       config: () => Promise.resolve(),
       redis: async () => {
@@ -102,7 +147,7 @@ function start(): void {
       // Not ready when a key is missing or every provider's circuit is open:
       // a load balancer should send traffic elsewhere until one recovers.
       providers: () => {
-        const problem = gateway.notReady(prompt.model, config.provider);
+        const problem = gateway.notReady(loadPrompt(store.current().stable).model, config.provider);
         return problem ? Promise.reject(new Error(problem)) : Promise.resolve();
       },
     },
@@ -114,7 +159,7 @@ function start(): void {
 
   const server: Server = app.listen(config.port, () => {
     log.info(
-      { event: "startup", port: config.port, prompt_version: prompt.version, chain: chain.map((m) => `${m.provider}/${m.model}`), clients: config.clients.size },
+      { event: "startup", port: config.port, prompt_version: store.current().stable, canary: store.current().canary, chain: chain.map((m) => `${m.provider}/${m.model}`), clients: config.clients.size },
       `dispatch listening on :${String(config.port)}`,
     );
     if (gitSha() === "unknown") log.warn({ event: "startup.no_git_sha" }, "git_sha is unknown: build the image with GIT_SHA=$(git rev-parse --short HEAD)");
@@ -153,10 +198,8 @@ function start(): void {
   process.on("SIGINT", shutdown);
 }
 
-try {
-  start();
-} catch (err) {
+start().catch((err: unknown) => {
   // Plain text, not JSON: this is for the person starting the service.
   console.error(`\n${err instanceof Error ? err.message : String(err)}\n`);
   process.exit(1);
-}
+});

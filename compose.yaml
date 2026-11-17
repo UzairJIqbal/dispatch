@@ -9,6 +9,7 @@
 #   MOCK_MODE=500 docker compose up -d dispatch                          primary down
 #   MOCK_MODE=500 MOCK_FALLBACK_MODE=500 docker compose up -d dispatch   everything down
 #   MOCK_MODE=slow MOCK_DELAY_MS=3000 docker compose up -d dispatch      slow (about 6 s a call)
+#   MOCK_CANARY_MODE=slow docker compose up -d dispatch                  only the canary slow (auto-rollback drill)
 #   docker compose up -d dispatch                                        back to normal
 #
 # Load tests (k6 in a container, profile "load"; results go to results/load/):
@@ -36,6 +37,7 @@ services:
       MOCK_MODE: ${MOCK_MODE:-ok}
       MOCK_FALLBACK_MODE: ${MOCK_FALLBACK_MODE:-ok}
       MOCK_DELAY_MS: ${MOCK_DELAY_MS:-}
+      MOCK_CANARY_MODE: ${MOCK_CANARY_MODE:-}
       # Off only for the mock load test. The service refuses to start with it
       # off unless the provider is a mock.
       RATE_LIMIT: ${RATE_LIMIT:-on}

@@ -1,9 +1,9 @@
 import { loadEnv } from "../src/env.js";
 import { loadSplit } from "../src/eval/command.js";
-import { Tally, TrafficAnswerSchema, TrafficErrorSchema, parseTrafficArgs, parseTrafficKeys } from "../src/traffic/traffic.js";
+import { Tally, TrafficAnswerSchema, TrafficErrorSchema, parseTrafficArgs, parseTrafficKeys, pickTicket } from "../src/traffic/traffic.js";
 import { run } from "./run.js";
 
-// `pnpm traffic [--rate 1] [--duration 300] [--url ...] [--real]`: dev-split
+// `pnpm traffic [--rate 1] [--duration 300] [--url ...] [--mix all|messy] [--real]`: dev-split
 // tickets at a steady rate, so every dashboard panel has data. Test tickets are
 // never sent: the test split is only for grading.
 
@@ -33,9 +33,11 @@ run(async () => {
   }
 
   const minutes = args.duration === undefined ? "until Ctrl-C" : `for ${String(Math.round(args.duration / 6) / 10)} min`;
-  console.log(`${String(args.rate)} RPS to ${args.url} on ${providers.join(" → ") || "unknown providers"}, ${minutes}. ${String(rows.length)} dev tickets, ${String(keys.length)} keys.`);
+  console.log(`${String(args.rate)} RPS to ${args.url} on ${providers.join(" → ") || "unknown providers"}, ${minutes}. ${String(rows.length)} dev tickets (${args.mix === "messy" ? "half of them messy" : "as they come"}), ${String(keys.length)} keys.`);
 
   const tally = new Tally();
+  // Which release answered: during a canary, about its weight in percent should say canary.
+  const releases = new Tally();
   let sent = 0;
   let inFlight = 0;
   let skipped = 0;
@@ -45,7 +47,7 @@ run(async () => {
   const maxInFlight = Math.ceil(args.rate * (REQUEST_TIMEOUT_MS / 1000));
 
   async function send(): Promise<void> {
-    const row = rows[Math.floor(Math.random() * rows.length)];
+    const row = pickTicket(rows, args.mix);
     const key = keys[sent % keys.length];
     if (!row || !key) return;
     sent++;
@@ -61,6 +63,7 @@ run(async () => {
       if (res.ok) {
         const ok = TrafficAnswerSchema.safeParse(body);
         tally.add(ok.success ? (ok.data.meta.fallback ? "200 fallback" : "200") : "200 unreadable");
+        if (ok.success && ok.data.meta.release) releases.add(ok.data.meta.release);
       } else {
         const err = TrafficErrorSchema.safeParse(body);
         tally.add(`${String(res.status)} ${err.success ? err.data.error.class : "?"}`);
@@ -79,7 +82,7 @@ run(async () => {
       else void send();
     }, 1000 / args.rate);
     const report = setInterval(() => {
-      console.log(`${new Date().toLocaleTimeString()}  ${tally.toString()}${skipped ? `  skipped (too many waiting): ${String(skipped)}` : ""}`);
+      console.log(`${new Date().toLocaleTimeString()}  ${tally.toString()}  [${releases.toString()}]${skipped ? `  skipped (too many waiting): ${String(skipped)}` : ""}`);
     }, 10_000);
     const stop = () => {
       clearInterval(tick);
@@ -92,5 +95,5 @@ run(async () => {
 
   // Requests already sent get their answer, so the summary counts them.
   while (inFlight > 0) await new Promise((r) => setTimeout(r, 100));
-  console.log(`\nDone. ${tally.toString()}${skipped ? `  skipped: ${String(skipped)}` : ""}`);
+  console.log(`\nDone. ${tally.toString()}  [${releases.toString()}]${skipped ? `  skipped: ${String(skipped)}` : ""}`);
 });

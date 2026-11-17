@@ -40,9 +40,9 @@ async function serve(overrides: Partial<AppDeps> = {}, mocks: GatewayOptions["mo
   const app = createApp({
     clients,
     limiter: memoryLimiter(60),
-    promptVersion: "v2",
+    release: () => ({ release: "stable", version: "v2" }),
     // The real triage(), on the mock provider: zero real calls.
-    triage: (text, { log: requestLog }) => triage(text, "v2", { gateway, provider: "mock", log: requestLog }),
+    triage: (text, { log: requestLog, version }) => triage(text, version, { gateway, provider: "mock", log: requestLog }),
     readiness: { config: () => Promise.resolve(), redis: () => Promise.resolve() },
     log,
     isShuttingDown: () => false,
@@ -81,7 +81,7 @@ describe("POST /v1/triage", () => {
     expect(res.status).toBe(200);
     const body = (await res.json()) as Record<string, unknown>;
     expect(body).toMatchObject({ category: "refund", priority: "high" });
-    expect(body.meta).toMatchObject({ prompt_version: "v2", model: "mock-triage-1", provider: "mock", fallback: false, git_sha: gitSha() });
+    expect(body.meta).toMatchObject({ prompt_version: "v2", release: "stable", model: "mock-triage-1", provider: "mock", fallback: false, git_sha: gitSha() });
     const meta = body.meta as Record<string, unknown>;
     expect(meta.request_id).toBe(res.headers.get("x-request-id"));
     expect(typeof meta.latency_ms).toBe("number");
@@ -303,8 +303,41 @@ describe("service config", () => {
 
 describe("release config", () => {
   it("reads the stable version and refuses anything else", () => {
-    expect(parseReleaseConfig("stable: v2\n")).toEqual({ stable: "v2" });
+    expect(parseReleaseConfig("stable: v2\n")).toEqual({ stable: "v2", canary: null, criteria: null });
     expect(() => parseReleaseConfig("stable: two\n")).toThrow(/invalid/);
     expect(() => parseReleaseConfig("stable: v2\ncanary: v3\n")).toThrow(/invalid/);
+    expect(() => parseReleaseConfig("stable: v2\nnext: v3\n")).toThrow(/invalid/);
+  });
+});
+
+describe("release routing", () => {
+  it("a canary request says so in meta, the log line and what the auto-rollback sees", async () => {
+    const seen: unknown[] = [];
+    const s = await serve({
+      release: () => ({ release: "canary", version: "v2" }),
+      observe: (o) => seen.push(o),
+    });
+    try {
+      const res = await post(s.url, { text: TICKET }, ACME);
+      expect(res.status).toBe(200);
+      expect(((await res.json()) as { meta: unknown }).meta).toMatchObject({ release: "canary", prompt_version: "v2" });
+      await new Promise((r) => setTimeout(r, 20));
+      expect(s.logs.lines.find((l) => l.event === "request" && l.path === "/v1/triage")).toMatchObject({ release: "canary", prompt_version: "v2" });
+      expect(seen).toEqual([expect.objectContaining({ release: "canary", version: "v2", outcome: "ok" })]);
+    } finally {
+      s.server.close();
+    }
+  });
+
+  it("a client's 4xx is never something the auto-rollback judges", async () => {
+    const seen: unknown[] = [];
+    const s = await serve({ observe: (o) => seen.push(o) });
+    try {
+      expect((await post(s.url, {}, ACME)).status).toBe(400);
+      await new Promise((r) => setTimeout(r, 20));
+      expect(seen).toEqual([]);
+    } finally {
+      s.server.close();
+    }
   });
 });

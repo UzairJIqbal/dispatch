@@ -7,7 +7,8 @@ import { gitSha } from "../env.js";
 import { ProviderNameSchema } from "../gateway/config.js";
 import { ProviderError, type ErrorClass } from "../gateway/errors.js";
 import { MAX_TICKET_CHARS } from "../golden/schema.js";
-import { routeOf, type Metrics } from "../metrics/metrics.js";
+import { routeOf, type Metrics, type Outcome, type Release } from "../metrics/metrics.js";
+import type { ReleasePick } from "../release/store.js";
 import { captureIO, failSpan, labelsOut, startRoot, traceId, tracer } from "../tracing/tracing.js";
 import type { TriageResult } from "../triage/triage.js";
 import { clientForKey, type ClientKeys } from "./clients.js";
@@ -19,10 +20,14 @@ export type ReadinessCheck = () => Promise<void>;
 export type AppDeps = {
   clients: ClientKeys;
   limiter: Limiter;
-  /** The prompt version this process serves, for logs when a call fails before answering. */
-  promptVersion: string;
-  /** The one triage call, bound to the live prompt version and provider. `log` carries the request id. */
-  triage: (text: string, ctx: { log: Logger }) => Promise<TriageResult>;
+  /** Which release (and so which prompt version) serves the next request. Called once per /v1 request. */
+  release: () => ReleasePick;
+  /** The one triage call, bound to the provider. `log` carries the request id. */
+  triage: (text: string, ctx: { log: Logger; release: Release; version: string }) => Promise<TriageResult>;
+  /** Told how each triage request that reached the model call ended: the auto-rollback's window. */
+  observe?: (o: { release: Release; version: string; seconds: number; outcome: Outcome }) => void;
+  /** What /readyz says about the release: `pnpm release` reads the deployed prompt versions and the Redis key from it. */
+  releaseInfo?: () => Record<string, unknown>;
   /** Each throws with the reason it isn't ready. */
   readiness: Readonly<Record<string, ReadinessCheck>>;
   log: Logger;
@@ -44,6 +49,8 @@ const TriageRequestSchema = z.strictObject({
 type RequestContext = {
   requestId: string;
   started: number;
+  /** Picked once, as the request arrives, so its trace, log line and metrics agree. */
+  pick?: ReleasePick;
   client?: string;
   errorClass?: HttpErrorClass;
   promptVersion?: string;
@@ -90,6 +97,7 @@ function endRoot(span: Span, c: RequestContext, status: number, aborted: boolean
     "http.response.status_code": status,
     ...(c.client ? { "app.client": c.client, "langfuse.user.id": c.client } : {}),
     ...(c.promptVersion ? { "app.prompt_version": c.promptVersion } : {}),
+    ...(c.pick ? { "app.release": c.pick.release } : {}),
     ...(c.model ? { "app.model": c.model } : {}),
     ...(c.provider ? { "app.provider": c.provider } : {}),
     "app.fallback": c.fallback ?? false,
@@ -123,11 +131,12 @@ export function createApp(deps: AppDeps): express.Express {
     contexts.set(req, c);
     res.setHeader("X-Request-Id", c.requestId);
     if (req.path === "/v1" || req.path.startsWith("/v1/")) {
+      c.pick = deps.release();
       // Started before auth, so a 401 or a 429 has a trace too.
       const root = startRoot(
         "triage.request",
         { kind: SpanKind.SERVER, attributes: { "http.request.method": req.method, "http.route": req.path, "app.request_id": c.requestId } },
-        { "langfuse.release": gitSha(), "langfuse.version": deps.promptVersion, "app.prompt_version": deps.promptVersion, "app.release": "stable", "app.git_sha": gitSha() },
+        { "langfuse.release": gitSha(), "langfuse.version": c.pick.version, "app.prompt_version": c.pick.version, "app.release": c.pick.release, "app.git_sha": gitSha() },
       );
       c.span = root.span;
       c.traceCtx = root.ctx;
@@ -140,9 +149,14 @@ export function createApp(deps: AppDeps): express.Express {
       // The latency SLI: triage requests that got as far as the model call
       // (promptVersion is set once the body is valid), so a client's 4xx
       // never counts as our latency.
-      if (route === "/v1/triage" && c.promptVersion && (res.statusCode < 400 || res.statusCode >= 500)) {
+      if (route === "/v1/triage" && c.promptVersion && c.pick && (res.statusCode < 400 || res.statusCode >= 500)) {
         const provider = ProviderNameSchema.safeParse(c.provider);
-        deps.metrics.triageLatency({ promptVersion: c.promptVersion, provider: provider.success ? provider.data : "none", release: "stable", seconds: (performance.now() - c.started) / 1000 });
+        const seconds = (performance.now() - c.started) / 1000;
+        // A schema failure is its own outcome: the schema-valid criterion needs it apart from the other errors.
+        const outcome: Outcome = res.statusCode < 400 ? "ok" : c.errorClass === "schema_fail" ? "schema_fail" : "error";
+        deps.metrics.triageLatency({ promptVersion: c.promptVersion, provider: provider.success ? provider.data : "none", release: c.pick.release, seconds });
+        deps.metrics.releaseRequest({ release: c.pick.release, promptVersion: c.promptVersion, outcome });
+        deps.observe?.({ release: c.pick.release, version: c.promptVersion, seconds, outcome });
       }
       const tid = traceId(c.span);
       if (c.span) endRoot(c.span, c, res.statusCode, !res.writableFinished);
@@ -158,6 +172,7 @@ export function createApp(deps: AppDeps): express.Express {
           error_class: c.errorClass ?? null,
           latency_ms: Math.round(performance.now() - c.started),
           prompt_version: c.promptVersion ?? null,
+          release: c.pick?.release ?? null,
           model: c.model ?? null,
           provider: c.provider ?? null,
           ...(c.fallback ? { fallback: true } : {}),
@@ -194,8 +209,9 @@ export function createApp(deps: AppDeps): express.Express {
     // git_sha: a deploy waits until /readyz is ready *and* names the new
     // commit, because Container Apps keeps the old revision answering until the
     // new one is healthy.
-    if (failing.length === 0) res.json({ status: "ready", git_sha: gitSha(), checks });
-    else res.status(503).json({ status: "not_ready", git_sha: gitSha(), failing: failing.sort(), checks });
+    const release = deps.releaseInfo ? { release: deps.releaseInfo() } : {};
+    if (failing.length === 0) res.json({ status: "ready", git_sha: gitSha(), checks, ...release });
+    else res.status(503).json({ status: "not_ready", git_sha: gitSha(), failing: failing.sort(), checks, ...release });
   });
 
   // Prometheus scrapes this. Locally (docker compose) it's open on the
@@ -252,11 +268,13 @@ export function createApp(deps: AppDeps): express.Express {
       throw new HttpError("too_large", `text is ${String(text.length)} characters; the limit is ${String(MAX_TICKET_CHARS)}.`);
     }
 
-    c.promptVersion = deps.promptVersion;
+    const pick = c.pick ?? deps.release();
+    c.pick = pick;
+    c.promptVersion = pick.version;
     let result: TriageResult;
     try {
       // The span is put back by hand: the body parser's callback loses the async context.
-      const run = () => deps.triage(text, { log: log.child({ request_id: c.requestId }) });
+      const run = () => deps.triage(text, { log: log.child({ request_id: c.requestId, release: pick.release }), release: pick.release, version: pick.version });
       result = c.traceCtx ? await context.with(c.traceCtx, run) : await run();
     } catch (err) {
       if (err instanceof ProviderError) {
@@ -279,6 +297,7 @@ export function createApp(deps: AppDeps): express.Express {
       ...result.answer,
       meta: {
         prompt_version: result.prompt_version,
+        release: pick.release,
         model: result.model,
         provider: result.provider,
         fallback: result.fallback,

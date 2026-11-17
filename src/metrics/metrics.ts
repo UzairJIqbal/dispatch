@@ -20,8 +20,13 @@ export const LATENCY_BUCKETS = [0.1, 0.25, 0.5, 1, 1.5, 2, 3, 4, 5, 7.5, 10, 15,
 export const ROUTES = ["/v1/triage", "/healthz", "/readyz", "/metrics", "other"] as const;
 export type Route = (typeof ROUTES)[number];
 
-/** Phase 9 adds "canary". Until then every request is the stable release. */
-export type Release = "stable";
+/** Which side of a release served a request: the stable prompt, or the canary on its share of traffic. */
+export const RELEASES = ["stable", "canary"] as const;
+export type Release = (typeof RELEASES)[number];
+
+/** How a triage request that reached the model call ended. Error rate and schema-valid rate come from these. */
+export const OUTCOMES = ["ok", "schema_fail", "error"] as const;
+export type Outcome = (typeof OUTCOMES)[number];
 
 // 0/1/2 so a panel can colour it and an alert can compare it.
 const CIRCUIT_VALUE: Readonly<Record<CircuitState, number>> = { closed: 0, half_open: 1, open: 2 };
@@ -102,6 +107,22 @@ export class Metrics {
     registers: [this.registry],
   });
 
+  /** Triage requests that reached the model call, per release: the canary-vs-stable panels and the rollback criteria. */
+  private readonly releaseRequests = new Counter({
+    name: "dispatch_release_requests_total",
+    help: "Triage requests that reached the model call, by release, prompt version and outcome (ok, schema_fail, error).",
+    labelNames: ["release", "prompt_version", "outcome"] as const,
+    registers: [this.registry],
+  });
+
+  private readonly rollbacks = new Counter({
+    name: "dispatch_release_rollbacks_total",
+    help: "Automatic canary rollbacks.",
+    registers: [this.registry],
+  });
+
+  private canaryReader: () => number = () => 0;
+
   private circuitReader: () => readonly (readonly [ProviderName, CircuitState])[] = () => [];
 
   constructor() {
@@ -115,6 +136,18 @@ export class Metrics {
         for (const [provider, state] of this.circuitReader()) gauge.set({ provider }, CIRCUIT_VALUE[state]);
       },
     });
+
+    // Read at scrape time: the canary share this process is routing now. A
+    // change in it is what the dashboard marks as a release event.
+    const weight: Gauge = new Gauge({
+      name: "dispatch_release_canary_weight",
+      help: "Percent of requests this process sends to the canary (0 = no canary).",
+      registers: [this.registry],
+      collect: () => {
+        weight.set(this.canaryReader());
+      },
+    });
+    this.rollbacks.inc(0);
 
     // Starts every triage response at 0, so the first failure of a kind is an
     // increase a rate() can see, and the availability panels read 100%, not
@@ -146,6 +179,24 @@ export class Metrics {
 
   fallbackPair(from: ProviderName, to: ProviderName): void {
     this.fallbacks.inc({ from, to }, 0);
+  }
+
+  /** Where the canary-weight gauge reads from. The release store sets it. */
+  readCanaryWeight(reader: () => number): void {
+    this.canaryReader = reader;
+  }
+
+  /** Starts a release's series at 0 when its version goes live. */
+  releaseVersion(release: Release, promptVersion: string): void {
+    for (const outcome of OUTCOMES) this.releaseRequests.inc({ release, prompt_version: promptVersion, outcome }, 0);
+  }
+
+  releaseRequest(r: { release: Release; promptVersion: string; outcome: Outcome }): void {
+    this.releaseRequests.inc({ release: r.release, prompt_version: r.promptVersion, outcome: r.outcome });
+  }
+
+  rollback(): void {
+    this.rollbacks.inc();
   }
 
   request(r: { route: Route; status: number; errorClass: HttpErrorClass | undefined }): void {

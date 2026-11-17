@@ -18,6 +18,7 @@
     "dev": "DISPATCH_PROVIDER=${DISPATCH_PROVIDER:-mock} tsx watch src/server/main.ts",
     "client-key": "tsx scripts/client-key.ts",
     "traffic": "tsx scripts/traffic.ts",
+    "release": "tsx scripts/release.ts",
     "smoke": "tsx scripts/smoke.ts",
     "grafana:push": "tsx scripts/grafana-push.ts",
     "typecheck": "tsc --noEmit",

@@ -4,11 +4,14 @@ import { parseArgs } from "node:util";
 import { z } from "zod";
 import { LIMIT } from "../server/ratelimit.js";
 
-const USAGE = "Usage: pnpm traffic [--rate 1] [--duration 300] [--url http://localhost:3000] [--real]";
+const USAGE = "Usage: pnpm traffic [--rate 1] [--duration 300] [--url http://localhost:3000] [--mix all|messy] [--real]";
 
 // The sliding window lets a key a little under LIMIT a minute in practice
 // (the previous minute still counts in part), so each key gets 45.
 const PER_KEY_PER_MINUTE = 45;
+
+export const MIXES = ["all", "messy"] as const;
+export type Mix = (typeof MIXES)[number];
 
 export type TrafficArgs = {
   /** Requests per second. */
@@ -16,6 +19,12 @@ export type TrafficArgs = {
   /** Seconds; undefined = until Ctrl-C. */
   duration: number | undefined;
   url: string;
+  /**
+   * Which dev tickets: `all` as they come (about 1 in 10 is messy), or
+   * `messy`, half messy and half bitext: the real-looking traffic a canary
+   * drill needs, where a prompt that only learned clean tickets breaks.
+   */
+  mix: Mix;
   /** Allow a real provider. Without it the first answer must come from a mock. */
   real: boolean;
 };
@@ -24,6 +33,7 @@ const ArgsSchema = z.strictObject({
   rate: z.coerce.number().positive().max(20, "at most 20 RPS: a load test is Phase 10, with k6").default(1),
   duration: z.coerce.number().int().positive().optional(),
   url: z.url().optional(),
+  mix: z.enum(MIXES).default("all"),
   real: z.boolean().default(false),
 });
 
@@ -32,7 +42,7 @@ export function parseTrafficArgs(argv: readonly string[], env: NodeJS.ProcessEnv
   try {
     ({ values } = parseArgs({
       args: [...argv],
-      options: { rate: { type: "string" }, duration: { type: "string" }, url: { type: "string" }, real: { type: "boolean" } },
+      options: { rate: { type: "string" }, duration: { type: "string" }, url: { type: "string" }, mix: { type: "string" }, real: { type: "boolean" } },
       strict: true,
       allowPositionals: false,
     }));
@@ -46,6 +56,7 @@ export function parseTrafficArgs(argv: readonly string[], env: NodeJS.ProcessEnv
     rate: a.rate,
     duration: a.duration,
     url: (a.url ?? `http://localhost:${env.DISPATCH_HOST_PORT ?? "3000"}`).replace(/\/+$/, ""),
+    mix: a.mix,
     real: a.real,
   };
 }
@@ -76,7 +87,7 @@ export function parseTrafficKeys(value: string | undefined, rate: number): strin
 
 /** What the script reads from an answer. The service's response is checked, not trusted. */
 export const TrafficAnswerSchema = z.object({
-  meta: z.object({ provider: z.string(), fallback: z.boolean() }),
+  meta: z.object({ provider: z.string(), fallback: z.boolean(), release: z.enum(["stable", "canary"]).optional() }),
 });
 export const TrafficErrorSchema = z.object({ error: z.object({ class: z.string() }) });
 
@@ -94,4 +105,11 @@ export class Tally {
     const parts = [...this.counts].sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k}: ${String(v)}`);
     return `n=${String(this.total)}  ${parts.join("  ")}`;
   }
+}
+
+/** One ticket for the next request. With the messy mix, half come from the messy tickets. */
+export function pickTicket<T extends { source: string }>(rows: readonly T[], mix: Mix, random: () => number = Math.random): T | undefined {
+  const messy = rows.filter((r) => r.source === "messy");
+  const pool = mix === "messy" && messy.length > 0 ? (random() < 0.5 ? messy : rows.filter((r) => r.source !== "messy")) : rows;
+  return pool[Math.floor(random() * pool.length)];
 }
