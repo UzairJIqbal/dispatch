@@ -35,6 +35,28 @@ Gemini's free tier may train on prompts. The golden set is public and synthetic 
 
 Cost is shown as a list-price estimate with the price table's date; on the free tiers it is $0.
 
+## Eval gate
+
+A pull request that makes the AI worse can't be merged. `ci.yml` runs on every PR: types, lint, tests on the mock and a gitleaks secret scan. `eval-gate.yml` runs when a PR touches prompts, the model config, the triage, gateway, grading or golden-set code: it grades the candidate on the test split (n=74, about 74 real Gemini calls uncached) and compares it with main's latest baseline, kept as a CI artifact by every push to main that touches the AI. Branch protection needs both to pass.
+
+The rules live in `config/gate.yaml` and each is checked on its own:
+
+| Rule | Fails when |
+|---|---|
+| Both correct | drops more than 2 points, or the noise floor if larger (4.1 points: 3 of 74 tickets flipped between two identical runs) |
+| Dangerous misses (high labelled low) | any new one |
+| Schema-valid first try | drops more than 2 points |
+| p95 latency | rises more than 15%; uncached calls only, and "not measured" (not a pass) when every call was cached |
+| Cost per request (list price) | rises more than 15% |
+
+The table, with n and a per-slice breakdown shown for information only, is one PR comment updated on each push, and the job summary. A PR from a fork has no key, so the gate says "skipped: no key" and fails. A PR that changes the golden set without bumping its version fails. The response cache is kept between runs, so an unchanged rerun spends nothing.
+
+Proof, against main's v2 baseline (both correct 70.3%, 52/74):
+
+- [PR #6](https://github.com/UzairJIqbal/dispatch/pull/6), a deliberately worse prompt (priority rules removed): **failed**, both correct 52.7% (39/74), −17.6 points against a 4.1-point limit. Merge blocked.
+- [PR #5](https://github.com/UzairJIqbal/dispatch/pull/5), an equal prompt: passed, 73.0% (54/74), within the noise floor.
+- [PR #7](https://github.com/UzairJIqbal/dispatch/pull/7), the real trimmed-prompt experiment: accuracy, cost and schema passed, p95 failed (1.64 s → 8.38 s, n=74), so it didn't ship (see [Load and cost](#load-and-cost)).
+
 ## The service
 
 ```sh
@@ -155,4 +177,4 @@ Test 2 result, 2026-11-17 ([table](results/load/2026-11-17T21-08-45Z-staging-rea
 | Gemini flash-lite (primary) | 663 / 35 | $0.29 | $86.46 |
 | Cohere command-a (fallback), primary's tokens assumed | 663 / 35 | $2.02 | $606.94 |
 
-What dominates: input tokens (70% of the primary's cost), and about 98% of those are the system prompt sent unchanged with every ticket. The trimmed-prompt experiment (v3) and its before/after table are in [docs/cost-experiment.md](docs/cost-experiment.md); v3 cut input tokens 14% and list cost 10% on dev with accuracy inside the noise floor, but the eval gate on [PR #7](https://github.com/UzairJIqbal/dispatch/pull/7) failed it on p95 latency twice (1.64 s → 8.38 s, then 7.75 s uncached, n=74 each), so it doesn't ship; its canary step waits for Phase 9.
+What dominates: input tokens (70% of the primary's cost), and about 98% of those are the system prompt sent unchanged with every ticket. The trimmed-prompt experiment (v3) and its before/after table are in [docs/cost-experiment.md](docs/cost-experiment.md); v3 cut input tokens 14% and list cost 10% on dev with accuracy inside the noise floor, but the eval gate on [PR #7](https://github.com/UzairJIqbal/dispatch/pull/7) failed it on p95 latency twice (1.64 s → 8.38 s, then 7.75 s uncached, n=74 each), so it doesn't ship. A version that fails the gate never reaches a canary, so v3 had none; the PR is closed unmerged and kept as the record.

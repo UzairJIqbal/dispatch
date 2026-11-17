@@ -61,8 +61,8 @@ change is judged on dev only, and the test split is only graded by the gate.
 
 ## Canary
 
-Not done. The canary release is Phase 9, which isn't built, so there is no traffic split
-to send v3 through. v3 can't ship through a canary until that exists.
+None, by design. A version reaches a canary only after the gate passes (`pnpm release`,
+README "Canary release"), and v3 failed it, so there was nothing to canary.
 
 ## Outcome
 
