@@ -24,9 +24,11 @@ run(async () => {
   const scrape = await fetch(`${args.url}/metrics`, { ...(auth ? { headers: auth } : {}) }).catch((err: unknown) => {
     throw new Error(`Can't reach ${args.url} (${err instanceof Error ? err.message : String(err)}). Start it with \`docker compose up\` or \`pnpm dev\`.`);
   });
-  if (scrape.status === 401) throw new Error(`${args.url}/metrics wants a password: set METRICS_PASSWORD in .env to the service's.`);
-  if (!scrape.ok) throw new Error(`${args.url}/metrics answered ${String(scrape.status)}.`);
-  const providers = [...(await scrape.text()).matchAll(/^dispatch_circuit_state\{provider="([a-z_]+)"\}/gm)].map((m) => m[1] ?? "");
+  // A deployed service guards /metrics. With --real the answer to "is it a
+  // real model?" no longer matters, so an unreadable /metrics isn't a stop.
+  if (scrape.status === 401 && !args.real) throw new Error(`${args.url}/metrics wants a password: set METRICS_PASSWORD in .env to the service's, or pass --real if real model calls are fine.`);
+  if (!scrape.ok && scrape.status !== 401) throw new Error(`${args.url}/metrics answered ${String(scrape.status)}.`);
+  const providers = scrape.status === 401 ? [] : [...(await scrape.text()).matchAll(/^dispatch_circuit_state\{provider="([a-z_]+)"\}/gm)].map((m) => m[1] ?? "");
   const real = providers.filter((p) => !p.startsWith("mock"));
   if (real.length > 0 && !args.real) {
     throw new Error(`The service at ${args.url} calls ${real.join(" and ")}: every request here would be a real model call. Pass --real if that's what you want.`);
