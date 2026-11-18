@@ -56,3 +56,4 @@ groups:
         annotations:
           summary: "Dispatch costs ${{ if $values.A.Value }}{{ humanize $values.A.Value }}{{ else }}?{{ end }}/min, over 3x its 24 h average of ${{ if $values.B.Value }}{{ humanize $values.B.Value }}{{ else }}?{{ end }}/min (list price)."
           description: "Check the fallback rate and tokens panels: a fallback storm or longer answers are the usual causes."
+          runbook_url: "https://github.com/UzairJIqbal/dispatch/blob/main/RUNBOOK.md#alert-cost-spike"

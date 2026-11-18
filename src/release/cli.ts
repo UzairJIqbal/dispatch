@@ -12,6 +12,7 @@ export const USAGE = `Usage: pnpm release <command> [--target local|staging|prod
   canary <version> <weight>  send <weight>% of requests to <version> (1-${String(MAX_CANARY_WEIGHT)})
   promote                    the canary becomes stable
   rollback                   stop the canary; every request goes to stable
+  force-fallback on|off      on: skip the primary provider, every request starts on the fallback
 --target picks the service: local (default, localhost), staging (STAGING_URL) or prod (PROD_URL).`;
 
 export const TARGETS = ["local", "staging", "prod"] as const;
@@ -22,6 +23,7 @@ export type Command =
   | { name: "canary"; version: string; weight: number }
   | { name: "promote" }
   | { name: "rollback" }
+  | { name: "force-fallback"; on: boolean }
   | { name: "set-criteria"; criteria: Criteria };
 
 export type ReleaseArgs = { command: Command; target: Target; url: string };
@@ -83,6 +85,12 @@ export function parseReleaseArgs(argv: readonly string[], env: NodeJS.ProcessEnv
       command = { name, version: v.data, weight: w };
       break;
     }
+    case "force-fallback": {
+      const [state, ...extra] = rest;
+      if ((state !== "on" && state !== "off") || extra.length > 0) return fail("force-fallback takes on or off, e.g. `pnpm release force-fallback on --target staging`.");
+      command = { name, on: state === "on" };
+      break;
+    }
     case "set-criteria": {
       noMore();
       const num = (flag: (typeof criteriaFlags)[number], fallback: number) => (values[flag] === undefined ? fallback : Number(values[flag]));
@@ -113,6 +121,8 @@ export const ServiceReleaseSchema = z.object({
     source: z.enum(["redis", "file"]),
     stable: PromptVersionSchema,
     canary: z.object({ version: PromptVersionSchema, weight: z.number() }).nullable(),
+    // Missing from images older than the switch: they can't skip the primary.
+    force_fallback: z.boolean().optional(),
     prompt_versions: z.array(PromptVersionSchema),
   }),
 });
@@ -151,6 +161,10 @@ export function applyCommand(command: Command, current: ReleaseConfig, deployed:
       if (!current.canary) return refuse("there is no canary to roll back.");
       next = { ...current, canary: null };
       break;
+    case "force-fallback":
+      if (current.force_fallback === command.on) return refuse(`force-fallback is already ${command.on ? "on" : "off"}.`);
+      next = { ...current, force_fallback: command.on };
+      break;
   }
   // The same rules the service reads it with.
   return ReleaseConfigSchema.parse(next);
@@ -162,5 +176,6 @@ export function describeRelease(c: ReleaseConfig): string {
   const criteria = k
     ? `after ${String(k.min_requests)} canary requests, roll back if p95 > ${String(k.p95_ratio)}× stable, errors > stable + ${String(k.error_rate_points)} pts, or schema-valid < ${String(k.schema_valid_min)}% (last ${String(k.window_minutes)} min)`
     : "none";
-  return `stable ${c.stable} · canary ${canary}\n          criteria: ${criteria}`;
+  const primary = c.force_fallback ? " · FORCE-FALLBACK ON (primary skipped)" : "";
+  return `stable ${c.stable} · canary ${canary}${primary}\n          criteria: ${criteria}`;
 }

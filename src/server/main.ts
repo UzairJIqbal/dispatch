@@ -127,13 +127,13 @@ async function start(): Promise<void> {
       return pick;
     },
     triage: (text, { log: requestLog, release, version }) =>
-      withRelease(release, () => triage(text, version, { gateway, log: requestLog, ...(config.provider ? { provider: config.provider } : {}) })),
+      withRelease(release, () => triage(text, version, { gateway, log: requestLog, forceFallback: store.current().force_fallback, ...(config.provider ? { provider: config.provider } : {}) })),
     observe: (o) => {
       autoRollback.observe(o);
     },
     releaseInfo: () => {
       const { config: current, source } = store.info();
-      return { stable: current.stable, canary: current.canary, criteria: current.criteria, source, key: store.key, prompt_versions: promptVersions() };
+      return { stable: current.stable, canary: current.canary, criteria: current.criteria, force_fallback: current.force_fallback, source, key: store.key, prompt_versions: promptVersions() };
     },
     readiness: {
       config: () => Promise.resolve(),

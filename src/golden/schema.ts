@@ -9,7 +9,10 @@ export const SPLITS = ["dev", "test"] as const;
 export const SplitSchema = z.enum(SPLITS);
 export type Split = z.infer<typeof SplitSchema>;
 
-export const SOURCES = ["bitext", "messy"] as const;
+// injection: tickets that try to steer the AI, each with a real request under
+// it, labelled for that request. Their slice's accuracy is the "held" rate.
+export const SOURCES = ["bitext", "messy", "injection"] as const;
+export type Source = (typeof SOURCES)[number];
 
 // Same limit the service will enforce on incoming tickets.
 export const MAX_TICKET_CHARS = 4000;
@@ -18,14 +21,14 @@ const Note = z.string().trim().min(1).max(200);
 
 /** A ticket before it has a priority: one row of evals/tickets.jsonl. */
 export const TicketSchema = z.strictObject({
-  id: z.string().regex(/^(bitext-[0-9a-f]{10}|messy-\d{2})$/),
+  id: z.string().regex(/^(bitext-[0-9a-f]{10}|messy-\d{2}|injection-\d{2})$/),
   source: z.enum(SOURCES),
   category: CategorySchema,
   text: TicketText,
 });
 export type Ticket = z.infer<typeof TicketSchema>;
 
-/** A ticket written by hand in evals/messy-tickets.json. */
+/** A ticket written by hand, in evals/messy-tickets.json or evals/injection-tickets.json. */
 export const MessyTicketSchema = TicketSchema.omit({ source: true });
 
 export const LabelSchema = z.strictObject({

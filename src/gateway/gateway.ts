@@ -36,6 +36,8 @@ export type GatewayRequest<T> = {
   cache?: { store: ResponseCache; parts: Omit<CacheKeyParts, "provider" | "model" | "params" | "repair">; refresh: boolean };
   /** Where this request's attempt lines go: the server passes a logger carrying the request id. */
   log?: Logger;
+  /** Skip the chain's first provider (the release config's force-fallback switch). Ignored when there is nothing after it. */
+  forceFallback?: boolean;
 };
 
 export type GatewayMeta = {
@@ -326,9 +328,19 @@ export class Gateway {
       // Once per provider: a fallback's broken answer gets its own repair.
       let toRepair: { raw: string; error: string } | undefined;
 
+      // Forced: the primary is skipped before anything is sent, so its circuit
+      // and error metrics hear nothing. Not an error, so no error class.
+      const forced = req.forceFallback === true && chain.length > 1;
+      if (forced && index === 0) {
+        log.warn({ event: "gateway.skip", ...line, attempt: 0, error_class: null, wait_ms: null, decision: next, reason: "forced fallback" }, `${model.provider} skipped: force-fallback is on`);
+        decision("gateway.skip", { "app.provider": model.provider, "app.attempt": 0, "app.reason": "forced fallback" });
+        continue;
+      }
+
       if (index > 0) {
         const from = chain[index - 1]?.provider ?? "gateway";
-        decision("gateway.fallback", { "app.from": from, "app.to": model.provider, "app.error_class": lastError?.errorClass ?? "circuit_open" });
+        const why = forced && index === 1 ? { "app.reason": "forced" } : { "app.error_class": lastError?.errorClass ?? "circuit_open" };
+        decision("gateway.fallback", { "app.from": from, "app.to": model.provider, ...why });
         const prev = chain[index - 1];
         if (prev) this.metrics.fallback(prev.provider, model.provider);
       }

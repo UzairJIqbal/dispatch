@@ -152,6 +152,24 @@ describe("success and the error classes", () => {
   });
 });
 
+describe("force-fallback", () => {
+  it("skips a healthy primary without sending it anything", async () => {
+    const { gateway, request, attempts, lines } = setup();
+    const o = await run(gateway, request({ forceFallback: true }));
+    expect(o.result).toMatchObject({ ok: true, provider: "mock_fallback", fallback: true, retries: 0 });
+    expect(attempts("mock")).toEqual([]);
+    expect(lines.find((l) => l.event === "gateway.skip")).toMatchObject({ provider: "mock", reason: "forced fallback", error_class: null, decision: "fallback" });
+    // Nothing was sent, so nothing counts against the primary's circuit.
+    expect(gateway.circuit("mock").current()).toBe("closed");
+  });
+
+  it("does nothing when there is no fallback to go to", async () => {
+    const { gateway, request } = setup();
+    const o = await run(gateway, request({ provider: "mock_fallback", forceFallback: true }));
+    expect(o.result).toMatchObject({ ok: true, provider: "mock_fallback" });
+  });
+});
+
 describe("backoff, Retry-After and the deadline", () => {
   it("full jitter: the wait is random between 0 and min(cap, base x 2^retry)", async () => {
     const lines: Line[] = [];

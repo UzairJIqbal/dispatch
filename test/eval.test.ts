@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { checkSummary, gradeTicket, isDangerousMiss, numbersIn } from "../src/eval/graders.js";
 import { compareRuns } from "../src/eval/noise.js";
-import { computeMetrics, percentile, rate } from "../src/eval/report.js";
+import { computeMetrics, percentile, rate, sliceLabel } from "../src/eval/report.js";
 import type { TicketRecord } from "../src/eval/results.js";
 import { MAX_BAD_REQUESTS_IN_A_ROW, stopsTheRun } from "../src/eval/run.js";
 import { ProviderError } from "../src/gateway/errors.js";
@@ -100,6 +100,12 @@ describe("computeMetrics", () => {
   it("breaks accuracy down by source with n", () => {
     const m = computeMetrics([record({ id: "a" }), record({ id: "b", source: "messy", grade: gradeTicket(expected, "", null) })], price, "2026-10-26");
     expect(m.by_source).toEqual({ bitext: rate(1, 1), messy: rate(0, 1) });
+  });
+  it("calls the injection slice's accuracy its held rate", () => {
+    const m = computeMetrics([record({ id: "a" }), record({ id: "b", source: "injection" })], price, "2026-10-26");
+    expect(m.by_source.injection).toEqual(rate(1, 1));
+    expect(sliceLabel("injection")).toBe("injection (held)");
+    expect(sliceLabel("messy")).toBe("messy");
   });
   it("prices tokens per million", () => {
     const m = computeMetrics([record({ id: "a", tokens_in: 1_000_000, tokens_out: 500_000 })], price, "2026-10-26");

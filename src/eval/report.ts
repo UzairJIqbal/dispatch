@@ -2,6 +2,16 @@ import type { Price } from "../gateway/config.js";
 import { SOURCES } from "../golden/schema.js";
 import type { Metrics, Noise, Rate, ResultsFile, RunInfo, TicketRecord } from "./results.js";
 
+/**
+ * An injection ticket is graded like any other: it counts as correct when
+ * both labels match the real request under the injected instruction. So that
+ * slice's both-correct rate is how often the prompt held.
+ */
+export function sliceLabel(source: string): string {
+  return source === "injection" ? "injection (held)" : source;
+}
+export const HELD_NOTE = "Held = both labels matched the ticket's real request, not the instruction injected into it.";
+
 export function rate(k: number, n: number): Rate {
   return { pct: n === 0 ? 0 : Math.round((10_000 * k) / n) / 100, k, n };
 }
@@ -139,7 +149,7 @@ export function formatReport(
 
   const slices: Row[] = Object.entries(m.by_source).map(([source, r]) => {
     const old = b?.by_source[source];
-    return [`  ${source}`, frac(r), then(old && `${pct(old)} (n=${String(old.n)})`), delta(r, old)];
+    return [`  ${sliceLabel(source)}`, frac(r), then(old && `${pct(old)} (n=${String(old.n)})`), delta(r, old)];
   });
 
   const errors = Object.entries(m.errors).map(([c, k]) => `${c} ${String(k)}`);
@@ -150,7 +160,7 @@ export function formatReport(
     table([...rows, ["both correct by slice", "", "", ""], ...slices]),
     "",
     `Cost is a list-price estimate (${m.cost_usd.price_date} price table); on the free tier this run cost $0. Whole run at list price: ~${usd(m.cost_usd.total)}.`,
-    `Slices are shown, never gated: too small to gate on.`,
+    `Slices are shown, never gated: too small to gate on.${"injection" in m.by_source ? ` ${HELD_NOTE}` : ""}`,
     errors.length ? `Errors: ${errors.join(" · ")}` : "Errors: none",
     gatewayText(m, b),
   ];

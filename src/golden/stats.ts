@@ -1,5 +1,5 @@
 import { CATEGORIES } from "../categories.js";
-import { PRIORITIES, SPLITS, type GoldenRow } from "./schema.js";
+import { PRIORITIES, SOURCES, SPLITS, type GoldenRow } from "./schema.js";
 
 type Counts = Record<string, { dev: number; test: number }>;
 
@@ -15,7 +15,7 @@ function countBy(rows: readonly GoldenRow[], keys: readonly string[], key: (r: G
 export function goldenStats(rows: readonly GoldenRow[]) {
   const byCategory = countBy(rows, CATEGORIES, (r) => r.category);
   const byPriority = countBy(rows, PRIORITIES, (r) => r.priority);
-  const bySource = countBy(rows, ["bitext", "messy"], (r) => r.source);
+  const bySource = countBy(rows, SOURCES, (r) => r.source);
   const bySplit = Object.fromEntries(SPLITS.map((s) => [s, rows.filter((r) => r.split === s).length]));
   // What the set must have for a per-split number to mean anything.
   const gaps: string[] = [];

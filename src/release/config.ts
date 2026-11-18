@@ -39,6 +39,12 @@ export const ReleaseConfigSchema = z
     stable: PromptVersionSchema,
     canary: CanarySchema.nullable().default(null),
     criteria: CriteriaSchema.nullable().default(null),
+    /**
+     * Skip the primary provider: every request starts on the fallback. The
+     * runbook's switch for a primary that is down or slow, flipped in Redis
+     * with no deploy.
+     */
+    force_fallback: z.boolean().default(false),
   })
   // Criteria first: a canary with nothing to judge it by can't be rolled back automatically.
   .refine((c) => c.canary === null || c.criteria !== null, { message: "a canary needs criteria: run `pnpm release set-criteria` first", path: ["criteria"] })
@@ -65,9 +71,19 @@ export function parseStoredRelease(raw: string, key: string): ReleaseConfig {
   return parsed.data;
 }
 
-/** Always written in the same shape and key order, so two equal configs are equal strings. */
+/**
+ * Always written in the same shape and key order, so two equal configs are
+ * equal strings. `force_fallback` is written only while it is on: images
+ * from before the switch read the key strictly and would reject it, and
+ * every config written before it stays the same string.
+ */
 export function serializeRelease(c: ReleaseConfig): string {
-  return JSON.stringify({ stable: c.stable, canary: c.canary ? { version: c.canary.version, weight: c.canary.weight } : null, criteria: c.criteria });
+  return JSON.stringify({
+    stable: c.stable,
+    canary: c.canary ? { version: c.canary.version, weight: c.canary.weight } : null,
+    criteria: c.criteria,
+    ...(c.force_fallback ? { force_fallback: true } : {}),
+  });
 }
 
 /** Where the live copy lives. The prefix keeps staging and production apart in one database. */

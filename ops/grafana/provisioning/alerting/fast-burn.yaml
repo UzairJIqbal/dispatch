@@ -59,3 +59,4 @@ groups:
         annotations:
           summary: "Dispatch is burning its error budget at {{ if $values.A.Value }}{{ humanize $values.A.Value }}{{ else }}?{{ end }}x (1 h) and {{ if $values.B.Value }}{{ humanize $values.B.Value }}{{ else }}?{{ end }}x (5 min)."
           description: "More than 14.4% of triage requests failed with a 5xx over the last hour and the last 5 minutes. See the errors panels for the class."
+          runbook_url: "https://github.com/UzairJIqbal/dispatch/blob/main/RUNBOOK.md#alert-fast-burn"

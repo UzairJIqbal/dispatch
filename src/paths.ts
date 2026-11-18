@@ -22,6 +22,7 @@ export const paths = {
   labellingGuide: `${root}evals/LABELLING.md`,
   changelog: `${root}evals/CHANGELOG.md`,
   messy: `${root}evals/messy-tickets.json`,
+  injection: `${root}evals/injection-tickets.json`,
   tickets: `${root}evals/tickets.jsonl`,
   labels: `${root}evals/labels.json`,
   golden: `${root}evals/golden.jsonl`,

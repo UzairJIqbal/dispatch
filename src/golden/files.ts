@@ -27,10 +27,21 @@ export function parseJsonl<T>(content: string, schema: z.ZodType<T>, file: strin
   });
 }
 
-export async function readMessyTickets(): Promise<Ticket[]> {
-  const parsed = z.array(MessyTicketSchema).safeParse(JSON.parse(await readFile(paths.messy, "utf8")));
-  if (!parsed.success) throw new Error(`${rel(paths.messy)} is invalid:\n${z.prettifyError(parsed.error)}`);
-  return parsed.data.map((t) => ({ ...t, source: "messy" as const }));
+/** The hand-written tickets of one source. Each id must carry its source's prefix. */
+async function readHandWritten(file: string, source: "messy" | "injection"): Promise<Ticket[]> {
+  const parsed = z.array(MessyTicketSchema).safeParse(JSON.parse(await readFile(file, "utf8")));
+  if (!parsed.success) throw new Error(`${rel(file)} is invalid:\n${z.prettifyError(parsed.error)}`);
+  const wrong = parsed.data.find((t) => !t.id.startsWith(`${source}-`));
+  if (wrong) throw new Error(`${rel(file)}: ${wrong.id} should start with ${source}-.`);
+  return parsed.data.map((t) => ({ ...t, source }));
+}
+
+export function readMessyTickets(): Promise<Ticket[]> {
+  return readHandWritten(paths.messy, "messy");
+}
+
+export function readInjectionTickets(): Promise<Ticket[]> {
+  return readHandWritten(paths.injection, "injection");
 }
 
 export function serializeTickets(tickets: readonly Ticket[]): string {

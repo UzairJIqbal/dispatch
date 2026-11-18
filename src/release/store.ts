@@ -169,7 +169,7 @@ export class ReleaseStore {
     const sameCanary = before.canary?.version === next.canary?.version && before.canary?.weight === next.canary?.weight;
     if (!sameCanary) this.canarySince = this.now();
     if (serializeRelease(before) !== serializeRelease(next)) {
-      this.opts.log.info({ event: "release.change", source, stable: next.stable, canary: next.canary, from: { stable: before.stable, canary: before.canary } }, `release: ${this.describe(next)}`);
+      this.opts.log.info({ event: "release.change", source, stable: next.stable, canary: next.canary, force_fallback: next.force_fallback, from: { stable: before.stable, canary: before.canary, force_fallback: before.force_fallback } }, `release: ${this.describe(next)}`);
     }
   }
 
@@ -191,6 +191,7 @@ export class ReleaseStore {
   }
 
   private describe(c: ReleaseConfig): string {
-    return c.canary ? `stable ${c.stable}, canary ${c.canary.version} at ${String(c.canary.weight)}%` : `stable ${c.stable}, no canary`;
+    const base = c.canary ? `stable ${c.stable}, canary ${c.canary.version} at ${String(c.canary.weight)}%` : `stable ${c.stable}, no canary`;
+    return c.force_fallback ? `${base}, primary skipped (force-fallback)` : base;
   }
 }

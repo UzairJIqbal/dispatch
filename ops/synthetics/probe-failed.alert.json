@@ -11,7 +11,8 @@
   "labels": { "severity": "page" },
   "annotations": {
     "summary": "Prod /readyz failed from most probes for 4+ minutes (success rate below 50% over 6 min).",
-    "description": "Open the Synthetic Monitoring check dispatch-prod-readyz, then runbook: check Azure app dispatch-prod and the provider keys."
+    "description": "Open the Synthetic Monitoring check dispatch-prod-readyz, then runbook: check Azure app dispatch-prod and the provider keys.",
+    "runbook_url": "https://github.com/UzairJIqbal/dispatch/blob/main/RUNBOOK.md#alert-prod-readyz-probe"
   },
   "notification_settings": { "receiver": "dispatch-email" },
   "data": [

@@ -148,5 +148,80 @@
     "id": "messy-30",
     "category": "subscription",
     "text": "how do i sign up for ur newsleter? want the discount codes"
+  },
+  {
+    "id": "messy-31",
+    "category": "account",
+    "text": "Password yaad nahi aur reset wali email bhi nahi aa rahi, spam bhi check kar liya. 2 din se account mein nahi ja saka."
+  },
+  {
+    "id": "messy-32",
+    "category": "delivery",
+    "text": "do u deliver to karachi DHA? and how much is delivery charge for a small parcel"
+  },
+  {
+    "id": "messy-33",
+    "category": "refund",
+    "text": "Refund 10 din pehle approve hua tha, email bhi aayi thi, lekin bank mein abhi tak paise nahi aaye. Kab tak aayenge?"
+  },
+  {
+    "id": "messy-34",
+    "category": "payment",
+    "text": "charged TWICE!!! two same amounts of 5,499 on my card for ONE order. fix this now"
+  },
+  {
+    "id": "messy-35",
+    "category": "order",
+    "text": "pls cancel my order 55102, ordered by mistake. not shipped yet i think"
+  },
+  {
+    "id": "messy-36",
+    "category": "invoice",
+    "text": "Can you add our company's tax number to the invoice for order 7731 and send it again? Our finance team won't accept it without it."
+  },
+  {
+    "id": "messy-37",
+    "category": "shipping",
+    "text": "address mein ghalti ho gayi, house no 45 ki jagah 54 likha gaya hai. ship hone se pehle theek kar dein please"
+  },
+  {
+    "id": "messy-38",
+    "category": "contact",
+    "text": "is there a whatsapp number for support? email replies take too long"
+  },
+  {
+    "id": "messy-39",
+    "category": "feedback",
+    "text": "app ka naya design acha hai but dark mode kahan gaya?? pls wapas lao"
+  },
+  {
+    "id": "messy-40",
+    "category": "subscription",
+    "text": "how do i change which emails i get from the newsletter, i only want sale alerts not the daily ones"
+  },
+  {
+    "id": "messy-41",
+    "category": "order",
+    "text": "Hi, I placed order 90211 on Monday for a blender and a kettle. I'd like to add a toaster to the same order so it all comes together, and change the kettle colour to black if that's possible. Can this be done before it ships? Thanks"
+  },
+  {
+    "id": "messy-42",
+    "category": "account",
+    "text": "Someone tried to log into my account from another city, I got an OTP I never asked for. Please lock it or tell me what to do"
+  },
+  {
+    "id": "messy-43",
+    "category": "delivery",
+    "text": "Eid se pehle delivery ho jayegi? Agar kal order karun to Multan tak kitne din lagenge?"
+  },
+  {
+    "id": "messy-44",
+    "category": "refund",
+    "text": "This is the SECOND time you sent me a broken product. I want my money back today or I am taking this to consumer court."
+  },
+  {
+    "id": "messy-45",
+    "category": "invoice",
+    "text": "invoice pe naam ki spelling galat hai, theek kar ke dobara bhej dein. office mein jama karwana hai"
   }
 ]

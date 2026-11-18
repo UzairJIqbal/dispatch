@@ -40,6 +40,8 @@ export type TriageOptions = {
   gateway?: Gateway;
   /** The request's logger, for the gateway's attempt lines. None: silent. */
   log?: Logger;
+  /** The release config's force-fallback switch: skip the primary provider. */
+  forceFallback?: boolean;
 };
 
 let defaultGateway: Gateway | undefined;
@@ -93,6 +95,7 @@ export async function triage(text: string, version: string, opts: TriageOptions 
         }
       : {}),
     ...(opts.log ? { log: opts.log } : {}),
+    ...(opts.forceFallback ? { forceFallback: true } : {}),
   });
 
   const meta: TriageMeta = {

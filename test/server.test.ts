@@ -303,7 +303,7 @@ describe("service config", () => {
 
 describe("release config", () => {
   it("reads the stable version and refuses anything else", () => {
-    expect(parseReleaseConfig("stable: v2\n")).toEqual({ stable: "v2", canary: null, criteria: null });
+    expect(parseReleaseConfig("stable: v2\n")).toEqual({ stable: "v2", canary: null, criteria: null, force_fallback: false });
     expect(() => parseReleaseConfig("stable: two\n")).toThrow(/invalid/);
     expect(() => parseReleaseConfig("stable: v2\ncanary: v3\n")).toThrow(/invalid/);
     expect(() => parseReleaseConfig("stable: v2\nnext: v3\n")).toThrow(/invalid/);

@@ -39,14 +39,15 @@ run(async () => {
   const service = await askService(args.url);
   const backend = upstashBackend(redisUrl, token, service.release.key);
   // When Redis has no config yet, the service serves its image's file default.
-  const fallback = { stable: service.release.stable, canary: null, criteria: null };
+  const fallback = { stable: service.release.stable, canary: null, criteria: null, force_fallback: false };
   console.log(`${args.target} (${args.url}, ${service.git_sha}) · Redis key ${backend.key}`);
 
   if (args.command.name === "status") {
     const { config, source } = await readRelease(backend, fallback);
     console.log(`config    ${describeRelease(config)}${source === "file" ? "\n          (nothing in Redis yet: this is the image's config/release.yaml)" : ""}`);
     const live = service.release;
-    console.log(`serving   stable ${live.stable} · canary ${live.canary ? `${live.canary.version} at ${String(live.canary.weight)}%` : "none"} (re-read every 30 s)`);
+    const primary = live.force_fallback === undefined ? " · this image has no force-fallback switch" : live.force_fallback ? " · FORCE-FALLBACK ON" : "";
+    console.log(`serving   stable ${live.stable} · canary ${live.canary ? `${live.canary.version} at ${String(live.canary.weight)}%` : "none"}${primary} (re-read every 30 s)`);
     console.log(`prompts   ${service.release.prompt_versions.join(", ")} in the image`);
     return;
   }

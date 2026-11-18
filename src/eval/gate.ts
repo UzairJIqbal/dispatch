@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { parse } from "yaml";
 import { z } from "zod";
 import { paths, rel } from "../paths.js";
-import { frac, secs, usd } from "./report.js";
+import { frac, HELD_NOTE, secs, sliceLabel, usd } from "./report.js";
 import type { Noise, Rate, ResultsFile } from "./results.js";
 
 const Pts = z.number().nonnegative();
@@ -265,9 +265,10 @@ export function formatGate(report: GateReport, baseline: ResultsFile, candidate:
     row(["Slice", "Baseline", "Candidate", "Change"]),
     row(["---", "---", "---", "---"]),
     ...report.slices.map((s) =>
-      row([s.source, s.baseline ? frac(s.baseline) : "—", s.candidate ? frac(s.candidate) : "—", s.baseline && s.candidate ? signed(ptsOf(s.candidate) - ptsOf(s.baseline), " pts") : ""]),
+      row([sliceLabel(s.source), s.baseline ? frac(s.baseline) : "—", s.candidate ? frac(s.candidate) : "—", s.baseline && s.candidate ? signed(ptsOf(s.candidate) - ptsOf(s.baseline), " pts") : ""]),
     ),
     "",
+    ...(report.slices.some((s) => s.source === "injection") ? [HELD_NOTE, ""] : []),
     `Cost is a list-price estimate; on the free tiers this run cost $0. Test tickets are graded, never shown: only counts appear here.`,
   );
   return lines.join("\n") + "\n";

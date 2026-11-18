@@ -22,10 +22,10 @@ function mulberry32(seed: number): () => number {
   };
 }
 
-const CANARY: ReleaseConfig = { stable: "v1", canary: { version: "v2", weight: 10 }, criteria: DEFAULT_CRITERIA };
+const CANARY: ReleaseConfig = { stable: "v1", canary: { version: "v2", weight: 10 }, criteria: DEFAULT_CRITERIA, force_fallback: false };
 
 function store(config: ReleaseConfig, backend = memoryBackend("t:release", serializeRelease(config)), now?: () => number) {
-  return new ReleaseStore({ backend, fallback: { stable: config.stable, canary: null, criteria: null }, checkVersion: () => undefined, log: silent, ...(now ? { now } : {}) });
+  return new ReleaseStore({ backend, fallback: { stable: config.stable, canary: null, criteria: null, force_fallback: false }, checkVersion: () => undefined, log: silent, ...(now ? { now } : {}) });
 }
 
 const obs = (release: "stable" | "canary", version: string, n: number, seconds: number, outcome: Observation["outcome"] = "ok"): Observation[] =>
@@ -75,7 +75,7 @@ describe("routing", () => {
   it("drops a canary this image can't serve and keeps stable", async () => {
     const s = new ReleaseStore({
       backend: memoryBackend("t:release", serializeRelease({ ...CANARY, canary: { version: "v9", weight: 10 } })),
-      fallback: { stable: "v1", canary: null, criteria: null },
+      fallback: { stable: "v1", canary: null, criteria: null, force_fallback: false },
       checkVersion: (v) => {
         if (v === "v9") throw new Error("No prompt prompts/triage/v9.yaml");
       },
@@ -135,7 +135,7 @@ describe("automatic rollback", () => {
     const backend = memoryBackend("t:release", serializeRelease(CANARY));
     const lines: Record<string, unknown>[] = [];
     const log = pino({ base: null }, { write: (s: string) => lines.push(JSON.parse(s) as Record<string, unknown>) });
-    const s = new ReleaseStore({ backend, fallback: { stable: "v1", canary: null, criteria: null }, checkVersion: () => undefined, log, now: () => now });
+    const s = new ReleaseStore({ backend, fallback: { stable: "v1", canary: null, criteria: null, force_fallback: false }, checkVersion: () => undefined, log, now: () => now });
     await s.refresh();
     const metrics = new Metrics();
     const auto = new AutoRollback({ store: s, backend, log, metrics, now: () => now });
@@ -204,7 +204,7 @@ describe("MOCK_CANARY_MODE", () => {
 
 describe("pnpm release", () => {
   const deployed = ["v1", "v2", "v3"];
-  const plain: ReleaseConfig = { stable: "v2", canary: null, criteria: DEFAULT_CRITERIA };
+  const plain: ReleaseConfig = { stable: "v2", canary: null, criteria: DEFAULT_CRITERIA, force_fallback: false };
 
   it("refuses a version the deployed image doesn't have", () => {
     expect(() => applyCommand({ name: "canary", version: "v9", weight: 10 }, plain, deployed)).toThrow(/Refused: v9 has no prompt file in the deployed image/);
@@ -224,9 +224,33 @@ describe("pnpm release", () => {
 
   it("promotes and rolls back", () => {
     const running = applyCommand({ name: "canary", version: "v3", weight: 10 }, plain, deployed);
-    expect(applyCommand({ name: "promote" }, running, deployed)).toEqual({ stable: "v3", canary: null, criteria: DEFAULT_CRITERIA });
+    expect(applyCommand({ name: "promote" }, running, deployed)).toEqual({ stable: "v3", canary: null, criteria: DEFAULT_CRITERIA, force_fallback: false });
     expect(applyCommand({ name: "rollback" }, running, deployed)).toEqual(plain);
     expect(() => applyCommand({ name: "rollback" }, plain, deployed)).toThrow(/no canary/);
+  });
+
+  it("turns force-fallback on and off, and stores it only while on", () => {
+    const on = applyCommand({ name: "force-fallback", on: true }, plain, deployed);
+    expect(on.force_fallback).toBe(true);
+    expect(() => applyCommand({ name: "force-fallback", on: true }, on, deployed)).toThrow(/already on/);
+    expect(JSON.parse(serializeRelease(on))).toMatchObject({ force_fallback: true });
+    // Off writes the same string as before the switch existed, so older images still read it.
+    const off = applyCommand({ name: "force-fallback", on: false }, on, deployed);
+    expect(serializeRelease(off)).toBe(JSON.stringify({ stable: "v2", canary: null, criteria: DEFAULT_CRITERIA }));
+    expect(parseReleaseArgs(["force-fallback", "on"], {}).command).toEqual({ name: "force-fallback", on: true });
+    expect(() => parseReleaseArgs(["force-fallback", "maybe"], {})).toThrow(/on or off/);
+  });
+
+  it("a store reading force-fallback from Redis sends the next request to the fallback", async () => {
+    const backend = memoryBackend("t:release", serializeRelease(plain));
+    const s = store(plain, backend);
+    await s.refresh();
+    expect(s.current().force_fallback).toBe(false);
+    await updateRelease(backend, s.current(), (c) => applyCommand({ name: "force-fallback", on: true }, c, deployed));
+    await s.refresh();
+    const gateway = new Gateway({ mocks: { mock: {}, mock_fallback: {} }, log: silent, random: () => 0, metrics: new Metrics() });
+    const r = await triage("I want a refund", "v2", { gateway, provider: "mock", forceFallback: s.current().force_fallback });
+    expect(r.provider).toBe("mock_fallback");
   });
 
   it("reads its arguments and says what's missing", () => {
