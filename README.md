@@ -171,6 +171,8 @@ pnpm release set-criteria && pnpm release canary v1 50
 pnpm traffic --rate 1.5 --duration 150    # release.rollback in the log after ~50 canary requests
 ```
 
+Staging drill, 2026-11-18 ([findings](docs/canary-drill.md)): v1 at 10% got 8.2% of answers (n=61), and `rollback` reached the service within 30 s. On the free tier a 10% canary never reaches 50 requests in 10 minutes, so the auto-rollback waits rather than judging on noise.
+
 The Grafana dashboard has a "Canary vs stable" row: requests, p95, error rate and schema-valid rate by release, with markers for release changes and auto-rollbacks.
 
 ## Load and cost
