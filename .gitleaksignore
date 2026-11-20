@@ -1,2 +1,5 @@
 # The fake key the Phase 8 spec tells you to plant, quoted in the spec itself.
 76e72742d2c30aee0df79c4d854f76b50f2b873c:docs/specs/phase08.md:sk-style-api-key:41
+# Phase 8 acceptance check 6: the same fake key planted on purpose in PR #4
+# (branch accept-6-fake-key, closed unmerged) to prove gitleaks fails a PR.
+fd2b2cad5315e88d4898b1b67363f283a33136bd:scratch/fake-key.ts:sk-style-api-key:1
