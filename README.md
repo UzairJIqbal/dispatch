@@ -39,7 +39,7 @@ Cost is shown as a list-price estimate with the price table's date; on the free 
 
 ## Eval gate
 
-A pull request that makes the AI worse can't be merged. `ci.yml` runs on every PR: types, lint, tests on the mock and a gitleaks secret scan. `eval-gate.yml` runs when a PR touches prompts, the model config, the triage, gateway, grading or golden-set code: it grades the candidate on the test split (n=74, about 74 real Gemini calls uncached) and compares it with main's latest baseline, kept as a CI artifact by every push to main that touches the AI. Branch protection needs both to pass.
+A pull request that makes the AI worse can't be merged. `ci.yml` runs on every PR: types, lint, tests on the mock and a gitleaks secret scan. `eval-gate.yml` runs when a PR touches prompts, the model config, the triage, gateway, grading or golden-set code: it grades the candidate on the test split (n=83 since golden v3, about 83 real Gemini calls uncached) and compares it with main's latest baseline, kept as a CI artifact by every push to main that touches the AI. Branch protection needs both to pass.
 
 The rules live in `config/gate.yaml` and each is checked on its own:
 
