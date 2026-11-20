@@ -232,7 +232,12 @@ describe("backoff, Retry-After and the deadline", () => {
   });
 
   it("slow answers, at a real provider's pace", async () => {
-    const { gateway, request } = setup({ mode: "slow" });
+    // `slow` picks a random real latency, and 3 of the 74 behind the baseline
+    // are over the 10 s attempt timeout: then it retried, and this test failed
+    // about once in 25 runs. Timeouts have their own tests; here every real
+    // latency must fit.
+    const config = { ...baseConfig, gateway: { ...baseConfig.gateway, attempt_timeout_ms: 30_000, deadline_ms: 60_000 } };
+    const { gateway, request } = setup({ mode: "slow" }, {}, config);
     const o = await run(gateway, request());
     expect(o.result).toMatchObject({ ok: true, provider: "mock" });
     expect(o.ms).toBeGreaterThan(0);
