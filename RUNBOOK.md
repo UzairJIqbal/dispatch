@@ -190,7 +190,8 @@ script's output and the staging logs are the signals.
 2. Start the logs in one terminal: `az containerapp logs show -n dispatch-staging -g dispatch --follow`.
 3. Start traffic above Gemini's 10-a-minute pace in another (real calls,
    about 120 in 10 minutes, half to each provider once mitigated):
-   `pnpm traffic --url $STAGING_URL --mix messy --rate 0.2 --duration 600 --real`.
+   `DISPATCH_TRAFFIC_KEYS=$STAGING_KEY pnpm traffic --url $STAGING_URL --mix messy --rate 0.2 --duration 600 --real`
+   (without `DISPATCH_TRAFFIC_KEYS` it sends your local keys and every request is a 401).
    Write down the start time: **T0**.
 4. **T_alert**: the first traffic line with `no answer in 30 s`, or a request
    log line with `"aborted":true`. This is the "alert": the moment a person
@@ -202,7 +203,7 @@ script's output and the staging logs are the signals.
 
 | Date | T0 | T_alert | T_mitigation | T_confirmed | Alert → mitigation | Notes |
 |---|---|---|---|---|---|---|
-| _not run yet_ | | | | | | |
+| 2026-11-20 (PKT) | 11:23:05 | 11:25:16 | 11:25:23 | 11:25:56 | 7 s (mitigation to first fallback answer: 33 s) | n=119 requests. Before: 18 answered by Gemini, then the pace queue backed up. Requests already queued for Gemini kept timing out until 11:26:26 (14 unanswered in all, the last at 11:26:26); every request after that was answered by Cohere (87). Gemini wasn't actually down: traffic above its 10-a-minute pace has the same symptom. Staging logs weren't read (`az login` blocked by the tenant's security defaults), so the traffic output was the only signal; T_alert was taken by a script watching it, so 7 s is faster than a person would be. |
 
 ## Both providers down
 
