@@ -69,18 +69,17 @@ curl -s localhost:3000/v1/triage -H "Authorization: Bearer $KEY" \
 
 The service listens on `:3000`, Prometheus on `:9090` and Grafana on `:3001` (user `admin`). Grafana opens on the Dispatch dashboard. `pnpm traffic --duration 300` gives every panel data.
 
-**Production: the rate limit.** Each client key gets 60 requests a minute (a sliding window in Redis). The demo key below is public on purpose. The loop sends an empty body: the rate limit is checked before the body, so the first 60 get a 400, the 61st gets a 429, and no model call is spent.
+**Production: a public demo key.** Each client key is limited to 60 requests a minute (a sliding window in Redis). The key below is public on purpose. An empty body is rejected with a 400 before any model call, so this costs nothing:
 
 ```sh
 URL=https://dispatch-prod.ashybay-480692f5.malaysiawest.azurecontainerapps.io
-KEY=dsp_wRrKYM8TEtOt7e92rS_hOQ4PZyiXTm0nP-aF1eT09tk   # public demo key, 60 a minute; gitleaks:allow
-for i in $(seq 61); do
-  curl -s -o /dev/null -w '%{http_code}\n' "$URL/v1/triage" \
-    -H "Authorization: Bearer $KEY" -H 'Content-Type: application/json' -d '{}'
-done | uniq -c
-#   60 400
-#    1 429      ← with Retry-After; the body is {"error":{"class":"rate_limit",...}}
+KEY=dsp_wRrKYM8TEtOt7e92rS_hOQ4PZyiXTm0nP-aF1eT09tk   # public demo key; gitleaks:allow
+curl -s -w '\n%{http_code}\n' "$URL/v1/triage" \
+  -H "Authorization: Bearer $KEY" -H 'Content-Type: application/json' -d '{}'
+# {"error":{"class":"bad_request",...}}   400
 ```
+
+**Known gap, checked on 2026-11-21:** 61 empty requests in a row to production got 61 × 400 and no 429 (n=61, one run). The limiter fails open if Redis answers slower than 1.5 s, and production requests were taking 1 to 3.5 s from here, so I suspect it was skipped. I have not confirmed that from the logs. The 429 is proven elsewhere: unit tests, and staging, where an own-limit 429 stopped the load test at 2 RPS (see [Load and cost](#load-and-cost)).
 
 Send a real ticket with `-d '{"text": "..."}'` instead. Gemini's free tier allows about 10 a minute, so expect a few seconds per answer.
 
