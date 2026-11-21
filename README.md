@@ -21,7 +21,7 @@ Ticket triage on its own is a commodity. The operating around it is what this re
 *The dashboard during a k6 ramp to 50 RPS on the mock provider (local docker compose from a clean clone, 2026-11-20, about 8,000 requests). The mock in its default mode answers at once, so the latency panel shows only our own code. The numbers on it are not the headline numbers.*
 
 - **Blocked PR:** [PR #6](https://github.com/UzairJIqbal/dispatch/pull/6), a deliberately worse prompt. The gate failed it at 52.7% both-correct against main's 70.3% (n=74; limit −4.1 points), and the merge was blocked.
-- **2-minute rollback video:** _link goes here once recorded_. It shows the auto-rollback of a slow canary on the mock (commands in [Canary release](#canary-release)).
+- **Rollback:** no video yet. The auto-rollback of a slow canary on the mock, and the manual `pnpm release rollback`, are reproducible with the commands in [Canary release](#canary-release); the staging drill is in [docs/canary-drill.md](docs/canary-drill.md).
 
 ## Headline numbers
 
